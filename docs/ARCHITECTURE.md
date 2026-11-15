@@ -94,6 +94,89 @@ TaskFlow 採用前後端分離責任的全端架構。
 
 ## 八、架構狀態
 
-目前為 M0 規劃版本。
+目前進入 M1 網站骨架與介面驗收階段。
 
-所有主要應用模組尚待實作。
+已建立：
+
+- Express HTTP Server
+- GET /api/health
+- HTML / CSS / JavaScript 前端
+- 三欄 Kanban 示範看板
+- Node.js 自動化測試
+
+尚未建立：
+
+- SQLite 資料庫
+- 正式使用者驗證
+- REST API 資料 CRUD
+- RBAC 權限管理
+- Socket.IO 即時同步
+- 正式多人協作功能
+
+## 九、M1 實際程式架構
+
+### Backend
+
+檔案：server/server.js
+
+職責：
+
+- 啟動 Express HTTP Server
+- 提供靜態網站
+- 處理 GET /api/health
+- 處理不存在的 API 路徑
+
+### Frontend
+
+檔案：
+
+- public/index.html
+- public/style.css
+- public/app.js
+
+職責：
+
+- 呈現 Dashboard 及 Kanban 版面
+- 渲染示範任務
+- 計算各狀態任務數量
+- 提供響應式介面
+
+### Testing
+
+檔案：tests/server.test.js
+
+使用 Node.js 內建測試框架。
+
+測試項目：
+
+- 健康檢查 API
+- 首頁及靜態資源
+- 不存在的 API 路徑
+
+### 資料流程
+
+M1：
+
+前端示範資料
+→ JavaScript 渲染
+→ Dashboard / Kanban
+
+未來 M2 至 M7：
+
+前端
+→ REST API
+→ Express Services
+→ SQLite
+
+資料庫操作成功後，
+再透過 Socket.IO 通知其他授權使用者。
+
+### 架構設計原則
+
+資料庫為正式資料的權威來源。
+
+所有正式的身分驗證與權限判斷
+必須由後端執行。
+
+M1 僅為介面及伺服器基礎，
+不代表多人協作已經完成。

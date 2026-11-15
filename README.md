@@ -37,15 +37,73 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，
 ## 專案狀態
 
 - 已完成階段：M0 — 專案初始化
-- 目前階段：M1 — 網站骨架與基本介面（待開始）
+- 目前階段：M1 — 網站骨架與基本介面（驗收中）
 - 開發狀態：建置中
 - 正式版本：尚未發布
 - 預定首個正式版本：v1.0.0
 
-M0 已完成專案目錄建立、Git 初始化、文件架構配置，
-以及首次 GitHub Commit 與 Push。
+M0 已完成專案目錄、Git 初始化、文件建置及 GitHub 同步。
 
-目前尚未開發可執行網站。
+M1 已建立 Express Server、健康檢查 API、
+深色系 Dashboard、Kanban 看板及自動化測試。
+
+目前 Express 自動化測試已通過，
+瀏覽器驗收與 GitHub 同步仍待完成。
+
+此階段的任務資料為前端示範資料，
+尚未實作 SQLite 持久化、登入及多人即時同步。
+
+## M1 本機開發說明
+
+### 系統需求
+
+- Node.js 22 或以上支援中的 LTS 版本
+- npm
+- VS Code
+
+### 安裝相依套件
+
+在 TaskFlow 專案根目錄執行：
+
+`npm install`
+
+### 啟動開發伺服器
+
+`npm run dev`
+
+網站網址：
+
+http://localhost:3000
+
+健康檢查 API：
+
+http://localhost:3000/api/health
+
+### 自動化測試
+
+`npm test`
+
+目前 M1 Express Smoke Tests：
+4 個測試項目通過，0 個失敗。
+
+### M1 已建立功能
+
+- Node.js 與 Express 5 開發環境
+- Express HTTP Server
+- 健康檢查 API
+- 深色系 Dashboard
+- 三欄 Kanban 看板
+- 六筆示範任務
+- 任務數量統計
+- 響應式樣式
+- Node.js 自動化測試
+
+### M1 限制
+
+目前為介面雛型。
+
+尚不支援真正的使用者登入、
+資料庫儲存、任務 CRUD、拖曳或多人同步。
 
 ## 開發方式
 

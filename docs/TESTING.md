@@ -69,3 +69,78 @@ M0 初始版本控制與 GitHub 同步驗收通過。
 仍須另行 Commit、Push 及驗證。
 
 M1 網站執行測試尚未開始。
+
+---
+
+## 2026-11-15｜M1 自動化測試紀錄
+
+### 一、測試環境
+
+- 專案：TaskFlow
+- 階段：M1
+- 工作目錄：C:\Projects\TaskFlow
+- 測試工具：Node.js node:test
+- 測試指令：npm test
+
+### 二、初次執行問題
+
+初次執行 npm test 時，
+package.json 仍使用預設測試指令。
+
+錯誤訊息：
+
+Error: no test specified
+
+判定：測試設定錯誤。
+
+修正後重新執行測試。
+
+### 三、修正後測試結果
+
+| 測試項目         | 結果 |
+| ---------------- | ---- |
+| GET /api/health  | PASS |
+| 首頁及靜態資源   | PASS |
+| API 404 回應     | PASS |
+| Express 測試群組 | PASS |
+
+### 四、自動化測試統計
+
+- tests：4
+- pass：4
+- fail：0
+- cancelled：0
+- skipped：0
+- todo：0
+- duration_ms：223.7354
+
+註：4 個測試計數包含
+1 個外層測試及 3 個子測試。
+
+### 五、尚待驗收
+
+| 測試項目                 | 狀態    |
+| ------------------------ | ------- |
+| npm run dev 正常啟動     | NOT RUN |
+| 瀏覽器首頁可正常顯示     | NOT RUN |
+| 六筆任務正確渲染         | NOT RUN |
+| Kanban 各欄任務數量正確  | NOT RUN |
+| Dashboard 統計為 6、2、2 | NOT RUN |
+| 響應式介面               | NOT RUN |
+| 瀏覽器 Console 錯誤檢查  | NOT RUN |
+| GitHub M1 同步驗證       | NOT RUN |
+
+### 六、驗證依據
+
+使用者提供的 PowerShell 終端機截圖。
+
+自動化測試結果：
+
+4 passed，0 failed。
+
+### 七、測試結論
+
+Express 基礎功能測試通過。
+
+尚不能據此認定整個 M1
+已完成全部功能與介面驗收。

@@ -1,0 +1,457 @@
+:root {
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  color: #e9eef9;
+  background: #0b1120;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Sidebar */
+
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 18px;
+  background: #101a2f;
+  border-right: 1px solid #28354e;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 24px;
+  font-weight: 750;
+  margin-bottom: 48px;
+}
+
+.brand-symbol {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: #7c6cf2;
+  color: white;
+  font-size: 20px;
+}
+
+.brand-dot {
+  color: #a99cff;
+}
+
+.workspace-label,
+.nav-heading {
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  color: #8495b5;
+  margin: 0 12px 14px;
+}
+
+.workspace-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1c2941;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 36px;
+}
+
+.workspace-icon {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #5263a7;
+  font-weight: bold;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px;
+  margin-bottom: 6px;
+  border-radius: 9px;
+  color: #a4b0c9;
+  font-size: 14px;
+}
+
+.nav-item.active {
+  color: #fff;
+  background: #293656;
+}
+
+.nav-item small {
+  margin-left: auto;
+  font-size: 10px;
+  color: #8292af;
+}
+
+.sidebar-note {
+  margin-top: auto;
+  padding: 16px;
+  border: 1px solid #33405c;
+  border-radius: 12px;
+  background: #17233a;
+}
+
+.sidebar-note strong {
+  font-size: 13px;
+}
+
+.sidebar-note p {
+  color: #a9b5cc;
+  font-size: 12px;
+}
+
+.sidebar-note span {
+  color: #a99cff;
+  font-size: 11px;
+}
+
+/* Main area */
+
+.workspace {
+  flex: 1;
+  min-width: 0;
+}
+
+.topbar {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 38px;
+  border-bottom: 1px solid #24314a;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  color: #a9b5cd;
+}
+
+.breadcrumb span {
+  margin: 0 10px;
+  color: #687a99;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.prototype-pill {
+  border: 1px solid #50488d;
+  background: #292449;
+  padding: 7px 11px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: #c6bcff;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: #435477;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.main-content {
+  max-width: 1500px;
+  padding: 36px 38px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  color: #a99cff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.page-heading h1 {
+  font-size: 30px;
+  margin: 8px 0 12px;
+}
+
+.page-description {
+  color: #9eacc5;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.prototype-notice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 28px 0;
+  padding: 15px 18px;
+  border: 1px solid #494575;
+  border-radius: 11px;
+  background: #211f3e;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.prototype-notice strong {
+  color: #c4baff;
+}
+
+.prototype-notice span {
+  color: #b4bed6;
+}
+
+/* Summary cards */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 38px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 22px;
+  background: #151f35;
+  border: 1px solid #2b3851;
+  border-radius: 13px;
+}
+
+.stat-label {
+  color: #a7b3c9;
+  font-size: 13px;
+}
+
+.stat-card strong {
+  font-size: 31px;
+  font-weight: 750;
+}
+
+.stat-card small {
+  color: #8292af;
+}
+
+/* Kanban */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  font-size: 19px;
+  margin: 0 0 8px;
+}
+
+.section-heading p {
+  color: #94a4be;
+  font-size: 13px;
+  margin: 0;
+}
+
+.board-label {
+  color: #abb8d0;
+  border: 1px solid #394660;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.kanban-column {
+  min-height: 430px;
+  min-width: 0;
+  padding: 17px;
+  background: #141e32;
+  border: 1px solid #2a3750;
+  border-radius: 13px;
+}
+
+.kanban-column h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 650;
+  margin: 0 0 21px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.status-dot.todo {
+  background: #8795ae;
+}
+
+.status-dot.progress {
+  background: #e8ad58;
+}
+
+.status-dot.done {
+  background: #67c98b;
+}
+
+.column-count {
+  font-size: 12px;
+  color: #a1b0ca;
+  background: #26334d;
+  border-radius: 7px;
+  padding: 3px 8px;
+}
+
+/* Task cards */
+
+.task-card {
+  padding: 16px;
+  margin-bottom: 12px;
+  background: #202c45;
+  border: 1px solid #35435e;
+  border-radius: 11px;
+}
+
+.task-category {
+  display: inline-block;
+  color: #b4acff;
+  background: #333054;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.task-card h4 {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 13px 0 7px;
+}
+
+.task-card p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #9cabc3;
+  margin: 0 0 19px;
+}
+
+.task-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.task-priority {
+  font-size: 11px;
+}
+
+.task-priority.high {
+  color: #ff8888;
+}
+
+.task-priority.medium {
+  color: #f5c679;
+}
+
+.task-priority.low {
+  color: #81dbad;
+}
+
+.task-assignee {
+  display: grid;
+  place-items: center;
+  height: 27px;
+  width: 27px;
+  border-radius: 50%;
+  background: #445577;
+  color: #fff;
+  font-size: 11px;
+}
+
+.page-footer {
+  margin-top: 35px;
+  color: #7485a4;
+  text-align: center;
+  font-size: 11px;
+}
+
+/* Responsive layout */
+
+@media (max-width: 1100px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+
+  .kanban-column {
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    display: none;
+  }
+
+  .topbar {
+    padding: 18px 20px;
+  }
+
+  .main-content {
+    padding: 24px 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-heading h1 {
+    font-size: 25px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

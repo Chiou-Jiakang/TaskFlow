@@ -1,0 +1,29 @@
+{
+  "name": "taskflow",
+  "version": "1.0.0",
+  "description": "TaskFlow 是一套以多人協作為核心的全端專案管理系統，\r 目標是提供專案建立、成員管理、任務追蹤及即時同步功能。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chiou-Jiakang/TaskFlow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Chiou-Jiakang/TaskFlow/issues"
+  },
+  "homepage": "https://github.com/Chiou-Jiakang/TaskFlow#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}

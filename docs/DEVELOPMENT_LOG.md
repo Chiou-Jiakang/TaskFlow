@@ -126,3 +126,162 @@ GitHub 遠端儲存庫及基本文件管理架構。
 
 註：本結案紀錄更新完成後，
 仍須建立文件結案 Commit 並再次 Push。
+
+### M1｜npm 測試指令初始化問題
+
+**問題現象：**
+
+首次執行 `npm test` 時，出現：
+
+`Error: no test specified`
+
+**原因：**
+
+`npm init -y` 產生的 `package.json` 仍保留預設
+test 指令，尚未設定 Node.js 自動化測試執行方式。
+
+**修正方式：**
+
+使用 `npm pkg set` 設定以下指令：
+
+- start：node server/server.js
+- dev：node --watch server/server.js
+- test：node --test
+
+**驗證狀態：**
+
+待重新執行 `npm test` 確認。
+
+---
+
+## 2026-11-15｜M1 網站骨架開發紀錄
+
+### 一、階段目標
+
+建立 TaskFlow 第一個可執行的網站雛型。
+
+本階段包含：
+
+- Node.js 開發環境
+- Express HTTP Server
+- 健康檢查 API
+- 深色系 Dashboard
+- Kanban 看板
+- 基礎自動化測試
+
+### 二、實作內容
+
+#### Backend
+
+建立 server/server.js。
+
+使用 Express 5 實作：
+
+- HTTP Server
+- GET /api/health
+- 靜態檔案服務
+- API 404 回應
+
+#### Frontend
+
+建立：
+
+- public/index.html
+- public/style.css
+- public/app.js
+
+實作：
+
+- Dashboard 介面
+- 三欄 Kanban
+- 六筆示範任務
+- 任務優先度與負責人
+- 任務統計
+- 響應式版面
+
+#### Testing
+
+建立 tests/server.test.js。
+
+採用 Node.js 內建 node:test 框架。
+
+### 三、首次 npm test 問題
+
+首次執行 npm test 時出現：
+
+Error: no test specified
+
+原因：
+
+npm init -y 產生的 package.json
+仍使用預設測試指令：
+
+echo "Error: no test specified" && exit 1
+
+此問題屬於測試執行設定未完成，
+不是 Express 程式或自動化測試案例失敗。
+
+### 四、修正方式
+
+使用 npm pkg set 設定：
+
+start：node server/server.js
+
+dev：node --watch server/server.js
+
+test：node --test
+
+並使用 npm pkg get scripts
+確認設定成功。
+
+### 五、重新執行自動化測試
+
+執行指令：
+
+npm test
+
+測試結果：
+
+- tests：4
+- pass：4
+- fail：0
+- cancelled：0
+- skipped：0
+- todo：0
+- duration_ms：223.7354
+
+通過項目：
+
+1. 健康檢查 API 正常
+2. 首頁與靜態檔案正常
+3. 不存在的 API 回傳 404
+4. M1 Express 測試群組通過
+
+### 六、技術決策
+
+- 第一版沿用原生 HTML、CSS、JavaScript。
+- 使用 Express 5。
+- 採用 server/ 統一存放後端程式。
+- 採用 tests/ 統一存放測試程式。
+- M1 暫時使用前端示範任務資料。
+- SQLite、登入、RBAC 與 WebSocket 留待後續階段。
+- 自 M1 起逐步建立自動化測試機制。
+
+### 七、目前限制
+
+目前測試僅涵蓋 Express 基礎功能。
+
+尚未完成：
+
+- 瀏覽器實際畫面驗收
+- 前端動態渲染驗證
+- 響應式介面確認
+- GitHub 本批次版本同步
+
+### 八、後續處理
+
+1. 完成瀏覽器驗收。
+2. 更新相關文件。
+3. 進行 Git Commit 與 Push。
+4. 驗證本機與遠端版本一致。
+5. 完成 M1 結案後進入 M2。
