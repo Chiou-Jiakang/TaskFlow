@@ -1,9 +1,23 @@
 # TaskFlow｜測試與驗證紀錄
 
-本文件記錄測試項目、實際結果、
-未通過項目與後續修正情況。
+本文件記錄 TaskFlow 各階段的測試項目、實際結果、未通過項目及後續修正情況。
 
-測試結果必須依據實際執行紀錄填寫。
+所有測試結果必須依據實際執行紀錄填寫，不得以預期結果取代真實測試。
+
+## 測試結果狀態定義
+
+| 狀態    | 意義                   |
+| ------- | ---------------------- |
+| PASS    | 已執行且驗證通過       |
+| FAIL    | 已執行但未通過         |
+| NOT RUN | 尚未執行或尚無充分證據 |
+| PENDING | 已規劃但尚待完成驗收   |
+
+歷史紀錄保留當時的測試狀態。
+
+最新驗證結果以文件最後的測試紀錄及總結為準。
+
+---
 
 ## 2026-11-15｜M0 初始化檢查
 
@@ -21,9 +35,9 @@
 
 ### 驗證依據
 
-依據使用者提供的 PowerShell 與 VS Code 截圖。
+依據 PowerShell 與 VS Code 截圖。
 
-### 尚未驗證
+### 當時尚未驗證
 
 - 首次 Git Commit
 - GitHub Push
@@ -57,18 +71,17 @@
 
 ### 驗證依據
 
-使用者提供的 VS Code PowerShell 終端機截圖。
+VS Code PowerShell 終端機截圖。
 
-首次 Commit：8c2a2e6
+首次 Commit：
+
+`8c2a2e6`
 
 ### 結論
 
 M0 初始版本控制與 GitHub 同步驗收通過。
 
-本紀錄追加後的文件更新，
-仍須另行 Commit、Push 及驗證。
-
-M1 網站執行測試尚未開始。
+在此階段完成時，M1 網站執行測試尚未開始。
 
 ---
 
@@ -84,14 +97,13 @@ M1 網站執行測試尚未開始。
 
 ### 二、初次執行問題
 
-初次執行 npm test 時，
-package.json 仍使用預設測試指令。
+初次執行 npm test 時，package.json 仍使用預設測試指令。
 
 錯誤訊息：
 
-Error: no test specified
+`Error: no test specified`
 
-判定：測試設定錯誤。
+判定：測試指令尚未設定。
 
 修正後重新執行測試。
 
@@ -114,40 +126,91 @@ Error: no test specified
 - todo：0
 - duration_ms：223.7354
 
-註：4 個測試計數包含
-1 個外層測試及 3 個子測試。
+註：4 個測試計數包含 1 個外層測試及 3 個子測試。
 
-### 五、尚待驗收
+### 五、初次尚待驗收項目
 
-| 測試項目                 | 狀態    |
-| ------------------------ | ------- |
-| npm run dev 正常啟動     | NOT RUN |
-| 瀏覽器首頁可正常顯示     | NOT RUN |
-| 六筆任務正確渲染         | NOT RUN |
-| Kanban 各欄任務數量正確  | NOT RUN |
-| Dashboard 統計為 6、2、2 | NOT RUN |
-| 響應式介面               | NOT RUN |
-| 瀏覽器 Console 錯誤檢查  | NOT RUN |
-| GitHub M1 同步驗證       | NOT RUN |
+| 測試項目                 | 當時狀態 |
+| ------------------------ | -------- |
+| npm run dev 正常啟動     | NOT RUN  |
+| 瀏覽器首頁可正常顯示     | NOT RUN  |
+| 六筆任務正確渲染         | NOT RUN  |
+| Kanban 各欄任務數量正確  | NOT RUN  |
+| Dashboard 統計為 6、2、2 | NOT RUN  |
+| 響應式介面               | NOT RUN  |
+| 瀏覽器 Console 錯誤檢查  | NOT RUN  |
+| GitHub M1 同步驗證       | NOT RUN  |
 
 ### 六、驗證依據
 
-使用者提供的 PowerShell 終端機截圖。
+PowerShell 終端機截圖。
 
 自動化測試結果：
 
 4 passed，0 failed。
 
-### 七、測試結論
+### 七、當時測試結論
 
 Express 基礎功能測試通過。
 
-尚不能據此認定整個 M1
-已完成全部功能與介面驗收。
+當時尚不能據此認定整個 M1 已完成全部功能與介面驗收。
 
 ---
 
-## 2026-11-15｜M2-A 測試驗收
+## 2026-11-15｜M1 網站與 GitHub 補充驗收
+
+### 一、網站驗收
+
+| 測試項目             | 結果 |
+| -------------------- | ---- |
+| npm run dev 正常啟動 | PASS |
+| Express HTTP Server  | PASS |
+| Dashboard 桌面版顯示 | PASS |
+| 六筆示範任務渲染     | PASS |
+| 三欄 Kanban 顯示     | PASS |
+| 待處理任務 2 筆      | PASS |
+| 進行中任務 2 筆      | PASS |
+| 已完成任務 2 筆      | PASS |
+| 全部任務統計為 6     | PASS |
+| 進行中統計為 2       | PASS |
+| 已完成統計為 2       | PASS |
+
+### 二、GitHub 驗收
+
+| 測試項目                 | 結果 |
+| ------------------------ | ---- |
+| M1 功能 Commit           | PASS |
+| GitHub Push              | PASS |
+| main 與 origin/main 同步 | PASS |
+
+首次 M1 功能提交：
+
+`e4322a1`
+
+後續文件提交：
+
+`2d0d710`
+
+`dceb225`
+
+### 三、尚未完成項目
+
+| 項目                        | 狀態    |
+| --------------------------- | ------- |
+| 手機寬度下的完整響應式驗收  | NOT RUN |
+| 瀏覽器 Console 完整錯誤檢查 | NOT RUN |
+
+### 四、結論
+
+M1 核心程式、桌面版看板及 GitHub 版本同步已通過驗證。
+
+部分瀏覽器相關驗收留待後續補齊。
+
+---
+
+## 2026-11-15｜M2-A SQLite 測試驗收
+
+### 一、測試項目
 
 | 測試項目                 | 結果    |
 | ------------------------ | ------- |
@@ -161,112 +224,291 @@ Express 基礎功能測試通過。
 | SQLite 檔案 Git 忽略規則 | PASS    |
 | 檔案重啟持久化測試       | NOT RUN |
 
-自動化測試：10 passed、0 failed。
+### 二、自動化測試結果
 
-本次驗證由 VS Code PowerShell 終端機截圖確認。
+- M1 Express：4
+- M2-A SQLite：6
+- tests：10
+- pass：10
+- fail：0
+- cancelled：0
+- skipped：0
+- todo：0
 
-````
+初次成功測試：
 
-### 5. `docs/PROJECT_PLAN.md` 與 `docs/ARCHITECTURE.md`
+- duration_ms：303.3564
 
-這兩份只需要簡短更新即可。
+後續重新執行：
 
-在 `PROJECT_PLAN.md` 將 M2 改為「進行中」，並於文件末尾新增：
+- duration_ms：254.6897
+- tests：10
+- pass：10
+- fail：0
 
-```markdown
-## M2 開發進度
+### 三、SQLite 初始化結果
 
-- M2-A SQLite 基礎：核心測試完成，待 GitHub 同步
-- M2-B Project CRUD API：未開始
-- M2-C 整合驗收：未開始
-````
+執行指令：
 
-在 `ARCHITECTURE.md` 末尾新增：
+`npm run db:init`
 
-```markdown
-## M2-A 實際資料庫架構
-
-- server/schema.sql：資料表及約束
-- server/db.js：SQLite 存取與初始化
-- server/init-db.js：初始化工具
-- tests/database.test.js：資料庫測試
-
-核心資料表：
+建立資料表：
 
 - users
 - projects
 - project_members
 
-使用 node:sqlite，啟用 Foreign Keys。
-檔案型資料庫採 WAL 模式。
-Project CRUD API 將在 M2-B 實作。
-```
+結果：PASS。
 
-## 四、Step 3｜提交 M2-A 到 GitHub
+再次執行初始化：
 
-六份文件修改並儲存後，在 `C:\Projects\TaskFlow` 終端機依序執行：
+結果：PASS。
 
-```powershell
-git status --short
-git add -A
-git diff --cached --check
-git diff --cached --stat
-```
+### 四、Git 忽略規則
 
-確認沒有把資料庫檔案、`node_modules` 或其他不相關內容加入暫存。
+執行：
 
-接著執行：
+`git check-ignore -v data/taskflow.db`
 
-```powershell
-git commit -m "feat: implement M2A SQLite database foundation"
-```
+結果顯示：
 
-```powershell
-git push origin main
-```
+`.gitignore:11:data/`
 
-最後檢查：
+判定：PASS。
 
-```powershell
-git status -sb
-git log -2 --oneline
-```
+SQLite 資料檔案不會被一般 git add -A 納入版本控制。
 
-若沒有錯誤，且顯示 `## main...origin/main` 並無其他變更，M2-A 就可以正式結案。
+### 五、GitHub 版本驗證
+
+- Commit：d557020
+- GitHub Push：PASS
+- Branch：main
+- 後續文件提交：113765c
+- 版本同步：PASS
+
+### 六、驗收依據
+
+VS Code PowerShell 終端機截圖。
+
+### 七、結論
+
+M2-A SQLite 資料庫核心、外鍵與基本資料約束已通過現有測試。
+
+但尚未完成檔案型資料庫重啟持久化及完整並發操作驗收。
 
 ---
 
-## 五、接下來的 M2-B 會實作什麼？
+## 2026-11-15｜M2-B Project CRUD API 驗收
 
-M2-B 將使用目前建立的 `projects` 與 `project_members` 資料表，開發以下 REST API：
+### 一、測試環境
 
-| API                        | 用途                 |
-| -------------------------- | -------------------- |
-| `POST /api/projects`       | 建立新專案           |
-| `GET /api/projects`        | 取得可存取的專案清單 |
-| `GET /api/projects/:id`    | 取得指定專案         |
-| `PATCH /api/projects/:id`  | 修改專案資料         |
-| `DELETE /api/projects/:id` | 刪除指定專案         |
+- 專案：TaskFlow
+- 階段：M2-B
+- 工作目錄：C:\Projects\TaskFlow
+- Node.js：v24.15.0
+- Backend：Express 5
+- Database：SQLite
+- 測試工具：Node.js node:test
+- 測試指令：npm test
 
-還有幾個關鍵設計會一起處理：新增專案與 Owner 成員關聯必須在同一個資料庫交易中完成；修改時要處理 `version` 版本衝突；API 必須具備輸入驗證、錯誤代碼及自動化測試。
+測試使用記憶體 SQLite 資料庫及隔離的本機 HTTP Server。
 
-由於 M3 才會正式開發登入，M2-B 會先使用**可注入測試使用者的 API 架構**測試 CRUD，不會在正式伺服器直接開放任何匿名使用者修改專案資料。
+測試使用者資料不會寫入正式的 taskflow.db。
 
-<box border radius="lg" padding={3} gap={2}>
-  <row align="center" justify="between">
-    **TaskFlow｜下一步**
-    <badge color="secondary">M2-B</badge>
-  </row>
-  <text color="secondary" size="sm">預計新增以下程式檔案：</text>
-  <box gap={2}>
-    {#each ["server/project-repository.js","server/project-routes.js","tests/projects.test.js"] as f}
-      <row align="center" gap={2}>
-        <icon name="file-code" size="sm" color="secondary"/>
-        <text size="sm">{f}</text>
-      </row>
-    {/each}
-  </box>
-  <text size="xs" color="secondary">現有 server.js 只做必要的路由整合，避免大規模改寫已通過測試的 M1 程式。</text>
-</box>
+### 二、自動化測試結果
 
-**現在最適合先完成上面的 M2-A 文件更新與一次 Git Commit／Push。** 這次不再額外安排第二輪結案文件提交。完成後就直接開始 M2-B 的程式實作，讓 TaskFlow 從空資料表正式進入可操作的專案管理系統。
+執行：
+
+`npm test`
+
+| 測試類別                 | 通過計數 |
+| ------------------------ | -------- |
+| M1 Express Smoke Tests   | 4        |
+| M2-A SQLite Schema Tests | 6        |
+| M2-B Project CRUD API    | 11       |
+| 總計                     | 21       |
+
+完整統計：
+
+- tests：21
+- suites：0
+- pass：21
+- fail：0
+- cancelled：0
+- skipped：0
+- todo：0
+- duration_ms：344.72
+
+M2-B 的 11 個計數包含 1 個外層測試群組與 10 個子測試。
+
+### 三、Project CRUD 測試項目
+
+| 測試項目                        | 結果 |
+| ------------------------------- | ---- |
+| 未登入時不可操作專案            | PASS |
+| 專案列表初始為空                | PASS |
+| 建立專案並自動建立 Owner 成員   | PASS |
+| 可讀取自己的列表與單一專案      | PASS |
+| 輸入驗證與拒絕客戶端指定 Owner  | PASS |
+| 只有成員可以讀取專案            | PASS |
+| Member 不可修改；Admin 可以修改 | PASS |
+| 舊版本更新會收到 409 衝突       | PASS |
+| 刪除僅限 Owner，且檢查 version  | PASS |
+| 刪除後為 404，畸形 JSON 為 400  | PASS |
+
+### 四、Project API 測試涵蓋功能
+
+- POST /api/projects
+- GET /api/projects
+- GET /api/projects/:id
+- PATCH /api/projects/:id
+- DELETE /api/projects/:id
+- 專案資料查詢限制
+- 角色操作限制
+- version 版本衝突
+- JSON 請求驗證
+- HTTP 錯誤回應
+- Owner 成員關聯建立
+- 專案刪除後的關聯清理
+
+### 五、正式 HTTP API 驗收
+
+#### 測試 A：未登入的專案 API
+
+執行：
+
+`curl.exe -i http://localhost:3000/api/projects`
+
+預期：
+
+HTTP 401 Unauthorized
+
+實際：
+
+HTTP 401 Unauthorized
+
+回傳 JSON：
+
+```json
+{
+  "error": "UNAUTHENTICATED",
+  "message": "請先登入。"
+}
+```
+
+結果：PASS。
+
+#### 測試 B：健康檢查 API
+
+執行：
+
+`curl.exe -i http://localhost:3000/api/health`
+
+預期：
+
+HTTP 200 OK
+
+實際：
+
+HTTP 200 OK
+
+回傳 JSON：
+
+```json
+{
+  "service": "TaskFlow",
+  "status": "ok",
+  "milestone": "M1"
+}
+```
+
+結果：PASS。
+
+註：milestone 欄位維持 M1，是為保留原有健康檢查 API 契約。
+
+### 六、Express Server 啟動
+
+執行：
+
+`npm run dev`
+
+終端機顯示：
+
+```text
+TaskFlow | M2-B
+Server: http://localhost:3000
+Health: http://localhost:3000/api/health
+Project API: authentication required (M3 pending)
+```
+
+結果：PASS。
+
+### 七、前端回歸驗收
+
+| 項目                       | 結果 |
+| -------------------------- | ---- |
+| Dashboard 正常顯示         | PASS |
+| 左側 Sidebar 正常顯示      | PASS |
+| 三欄 Kanban 正常顯示       | PASS |
+| 六筆示範任務正常顯示       | PASS |
+| 任務統計 6、2、2           | PASS |
+| 桌面版主要元素未見明顯重疊 | PASS |
+
+本階段沒有修改 M1 前端核心介面。
+
+### 八、安全限制驗收
+
+| 項目                           | 結果 |
+| ------------------------------ | ---- |
+| 正式 API 預設拒絕未登入存取    | PASS |
+| 測試身分由伺服器可信任函式提供 | PASS |
+| 非成員不可存取指定專案         | PASS |
+| Member 不可修改專案            | PASS |
+| Admin 不可刪除專案             | PASS |
+| Owner 刪除需符合版本           | PASS |
+
+以上為 M2-B 所涵蓋的基本存取控制測試，不代表正式登入及完整 RBAC 安全驗收已完成。
+
+### 九、尚未完成的驗證
+
+| 項目                         | 狀態    |
+| ---------------------------- | ------- |
+| SQLite 檔案重啟持久化測試    | NOT RUN |
+| Transaction 失敗回滾專項測試 | NOT RUN |
+| 不同連線的並發修改測試       | NOT RUN |
+| 正式使用者註冊與登入         | NOT RUN |
+| 完整端對端多人操作測試       | NOT RUN |
+| M2-B GitHub Commit／Push     | PENDING |
+
+### 十、驗收依據
+
+- VS Code npm test 終端機截圖
+- VS Code npm run dev 終端機截圖
+- 瀏覽器 Project API 回應截圖
+- curl.exe HTTP 401 與 HTTP 200 輸出截圖
+- TaskFlow 桌面版 Dashboard 截圖
+
+### 十一、測試結論
+
+M2-B Project CRUD API 的核心功能、基本存取控制、版本衝突處理及目前自動化測試全部通過。
+
+測試統計為 21 passed、0 failed。
+
+正式登入、檔案型資料庫持久化、完整併發與多人即時協作仍未完成。
+
+M2-B 的文件更新及 GitHub 同步仍待完成。
+
+---
+
+## 最新驗收總結
+
+| 階段    | 程式驗證                         | GitHub       |
+| ------- | -------------------------------- | ------------ |
+| M0      | PASS                             | 已同步       |
+| M1      | 核心測試通過，部分瀏覽器驗收待補 | 已同步       |
+| M2-A    | 10/10 PASS                       | 已同步       |
+| M2-B    | 21/21 PASS                       | 待本批次提交 |
+| M2-C    | NOT RUN                          | 尚未開始     |
+| M3～M10 | NOT RUN                          | 尚未開始     |
+
+本文件的下一次集中更新預定於 M2-C 整合驗收批次進行。

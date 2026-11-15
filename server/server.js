@@ -3,43 +3,115 @@
 const express = require("express");
 const path = require("node:path");
 
-const app = express();
+const { openDatabase, initializeSchema } = require("./db");
 
-// 避免在 HTTP 回應中揭露 Express 識別標頭
-app.disable("x-powered-by");
+const { ProjectError } = require("./project-repository");
 
-// 提供健康檢查 API
-app.get("/api/health", (req, res) => {
-  res.json({
-    service: "TaskFlow",
-    status: "ok",
-    milestone: "M1",
+const { createProjectRouter } = require("./project-routes");
+
+// 建立 Express 應用程式
+function createApp({
+  database = null,
+  getAuthenticatedUserId = () => null,
+} = {}) {
+  const app = express();
+
+  app.disable("x-powered-by");
+
+  // 解析 JSON，限制請求大小
+  app.use(express.json({ limit: "16kb" }));
+
+  // 保留 M1 健康檢查格式，避免破壞舊測試
+  app.get("/api/health", (req, res) => {
+    res.json({
+      service: "TaskFlow",
+      status: "ok",
+      milestone: "M1",
+    });
   });
-});
 
-// 提供 public 資料夾內的前端靜態檔案
-app.use(express.static(path.join(__dirname, "..", "public")));
+  // 已提供資料庫時，啟用 Project API
+  if (database) {
+    app.use(
+      "/api/projects",
+      createProjectRouter({
+        db: database,
+        getAuthenticatedUserId,
+      }),
+    );
+  }
 
-// 對不存在的 API 回傳 JSON 錯誤
-app.use("/api", (req, res) => {
-  res.status(404).json({
-    error: "API_NOT_FOUND",
-    message: "找不到指定的 API。",
+  // 提供現有 Dashboard
+  app.use(express.static(path.join(__dirname, "..", "public")));
+
+  // API 404
+  app.use("/api", (req, res) => {
+    res.status(404).json({
+      error: "API_NOT_FOUND",
+      message: "找不到指定的 API。",
+    });
   });
-});
 
-// 直接啟動時才監聽連接埠
-// 匯入至自動化測試時，不會自行啟動伺服器
+  // 統一錯誤處理
+  app.use((error, req, res, next) => {
+    if (res.headersSent) {
+      return next(error);
+    }
+
+    // 業務邏輯錯誤
+    if (error instanceof ProjectError) {
+      return res.status(error.status).json({
+        error: error.code,
+        message: error.message,
+      });
+    }
+
+    // JSON 格式錯誤
+    if (error.type === "entity.parse.failed") {
+      return res.status(400).json({
+        error: "INVALID_JSON",
+        message: "JSON 格式錯誤。",
+      });
+    }
+
+    // 請求內容超出限制
+    if (error.type === "entity.too.large") {
+      return res.status(413).json({
+        error: "PAYLOAD_TOO_LARGE",
+        message: "請求內容過大。",
+      });
+    }
+
+    console.error("TaskFlow request error:", error);
+
+    res.status(500).json({
+      error: "INTERNAL_ERROR",
+      message: "伺服器處理失敗。",
+    });
+  });
+
+  return app;
+}
+
+// 維持 M1 自動化測試的匯入方式
+const app = createApp();
+
+// 只有直接執行 server.js 時才啟動伺服器
 if (require.main === module) {
-  const PORT = Number(process.env.PORT || 3000);
+  const db = openDatabase();
+  initializeSchema(db);
 
-  app.listen(PORT, "127.0.0.1", () => {
-    console.log("==================================");
-    console.log("TaskFlow | Milestone 1");
-    console.log(`Server: http://localhost:${PORT}`);
-    console.log(`Health: http://localhost:${PORT}/api/health`);
-    console.log("==================================");
+  const port = Number(process.env.PORT || 3000);
+
+  // M3 尚未實作登入
+  // 不注入使用者身分，因此 Project API 會回傳 401
+  createApp({ database: db }).listen(port, "127.0.0.1", () => {
+    console.log("TaskFlow | M2-B");
+    console.log(`Server: http://localhost:${port}`);
+    console.log(`Health: http://localhost:${port}/api/health`);
+    console.log("Project API: authentication required (M3 pending)");
   });
 }
 
 module.exports = app;
+module.exports.createApp = createApp;

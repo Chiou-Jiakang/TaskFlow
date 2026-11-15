@@ -1,14 +1,14 @@
 # TaskFlow｜開發歷程紀錄
 
-本文件詳細記錄專案各階段的實作內容、技術決策、
-問題處理、驗證結果及後續規劃。
+本文件詳細記錄專案各階段的實作內容、技術決策、問題處理、驗證結果及後續規劃。
+
+開發紀錄採累積式管理。歷史內容反映當時的開發狀態，最新進度以文件最後的紀錄及 PROJECT_PLAN.md 為準。
 
 ## 2026-11-15｜M0：專案初始化
 
 ### 一、階段目標
 
-建立可獨立管理、具備版本控制及完整文件架構的
-TaskFlow 專案開發環境。
+建立可獨立管理、具備版本控制及完整文件架構的 TaskFlow 專案開發環境。
 
 ### 二、已完成工作
 
@@ -26,13 +26,11 @@ TaskFlow 專案開發環境。
 - C:\Projects\TaskFlow
 - C:\Taskflow
 
-其中正式 Git Repository 位於 C:\Projects\TaskFlow，
-而 docs、public、server 最初建立在 C:\Taskflow。
+其中正式 Git Repository 位於 C:\Projects\TaskFlow，而 docs、public、server 最初建立在 C:\Taskflow。
 
 ### 四、問題處理
 
-使用 PowerShell 的 Copy-Item 指令，
-將三個資料夾複製至正式專案位置。
+使用 PowerShell 的 Copy-Item 指令，將三個資料夾複製至正式專案位置。
 
 執行 Get-ChildItem 後，確認正式專案目錄包含：
 
@@ -61,7 +59,7 @@ VS Code 檔案總管亦顯示三個資料夾。
 - origin 已設定。
 - 三個基礎資料夾已建立。
 
-尚未完成網站功能測試。
+當時尚未完成網站功能測試。
 
 ### 七、後續工作
 
@@ -119,28 +117,27 @@ https://github.com/Chiou-Jiakang/TaskFlow
 
 M0 專案初始化工作已完成。
 
-專案具備獨立目錄、版本控制、
-GitHub 遠端儲存庫及基本文件管理架構。
+專案具備獨立目錄、版本控制、GitHub 遠端儲存庫及基本文件管理架構。
 
 接下來進入 M1 網站骨架與基本介面開發。
 
-註：本結案紀錄更新完成後，
-仍須建立文件結案 Commit 並再次 Push。
+當時曾規劃追加文件結案 Commit，後續開發流程已調整為以完整功能批次集中更新文件及提交版本。
 
-### M1｜npm 測試指令初始化問題
+---
 
-**問題現象：**
+## 2026-11-15｜M1 npm 測試指令初始化問題
+
+### 問題現象
 
 首次執行 `npm test` 時，出現：
 
 `Error: no test specified`
 
-**原因：**
+### 原因
 
-`npm init -y` 產生的 `package.json` 仍保留預設
-test 指令，尚未設定 Node.js 自動化測試執行方式。
+`npm init -y` 產生的 `package.json` 仍保留預設 test 指令，尚未設定 Node.js 自動化測試執行方式。
 
-**修正方式：**
+### 修正方式
 
 使用 `npm pkg set` 設定以下指令：
 
@@ -148,9 +145,11 @@ test 指令，尚未設定 Node.js 自動化測試執行方式。
 - dev：node --watch server/server.js
 - test：node --test
 
-**驗證狀態：**
+### 驗證狀態
 
-待重新執行 `npm test` 確認。
+初次記錄時，尚待重新執行 npm test。
+
+後續已成功設定測試指令，並取得 M1 自動化測試 4/4 PASS。
 
 ---
 
@@ -213,13 +212,11 @@ Error: no test specified
 
 原因：
 
-npm init -y 產生的 package.json
-仍使用預設測試指令：
+npm init -y 產生的 package.json 仍使用預設測試指令：
 
 echo "Error: no test specified" && exit 1
 
-此問題屬於測試執行設定未完成，
-不是 Express 程式或自動化測試案例失敗。
+此問題屬於測試執行設定未完成，不是 Express 程式或自動化測試案例失敗。
 
 ### 四、修正方式
 
@@ -231,8 +228,7 @@ dev：node --watch server/server.js
 
 test：node --test
 
-並使用 npm pkg get scripts
-確認設定成功。
+並使用 npm pkg get scripts 確認設定成功。
 
 ### 五、重新執行自動化測試
 
@@ -267,18 +263,18 @@ npm test
 - SQLite、登入、RBAC 與 WebSocket 留待後續階段。
 - 自 M1 起逐步建立自動化測試機制。
 
-### 七、目前限制
+### 七、當時的開發限制
 
-目前測試僅涵蓋 Express 基礎功能。
+當時測試僅涵蓋 Express 基礎功能。
 
-尚未完成：
+當時尚未完成：
 
 - 瀏覽器實際畫面驗收
 - 前端動態渲染驗證
 - 響應式介面確認
 - GitHub 本批次版本同步
 
-### 八、後續處理
+### 八、當時規劃的後續處理
 
 1. 完成瀏覽器驗收。
 2. 更新相關文件。
@@ -288,7 +284,7 @@ npm test
 
 ---
 
-## 2026-11-15｜M1 最終驗收與 GitHub 同步
+## 2026-11-15｜M1 網站驗收與 GitHub 同步
 
 ### 一、網站啟動驗收
 
@@ -315,16 +311,16 @@ npm test
 - 刪除行數：7
 - GitHub Push：成功
 
-### 四、最終驗收補充
+### 四、剩餘驗收項目
 
-- 手機響應式介面：待填寫實測結果
-- 瀏覽器 Console：待填寫實測結果
-- 文件結案 Commit：待完成
+- 手機響應式介面：待補充實際窄螢幕驗收
+- 瀏覽器 Console：待補充完整執行錯誤檢查
+
+原先的文件結案提交工作已於後續 Git Commit 處理。
 
 ### 五、後續階段
 
-M1 全部驗收通過後，
-正式進入 M2 SQLite 資料庫與專案 CRUD API。
+M1 核心介面、伺服器及基礎測試通過後，開始 M2 SQLite 資料庫與專案 CRUD API 開發。
 
 ---
 
@@ -341,24 +337,23 @@ M1 全部驗收通過後，
 
 ### 文件同步補充
 
-本次確認原結案 Commit 僅更新
-docs/DEVELOPMENT_LOG.md。
+本次確認原結案 Commit 僅更新 docs/DEVELOPMENT_LOG.md。
 
-後續需同步修正 README、CHANGELOG、
-PROJECT_PLAN 與 TESTING 的舊狀態，
-確保文件反映實際開發進度。
+後續需同步修正 README、CHANGELOG、PROJECT_PLAN 與 TESTING 的舊狀態，確保文件反映實際開發進度。
 
-### 尚待確認
+### 後續補充
 
-- 手機響應式版面測試
-- 瀏覽器 Console 檢查
-- 最終文件同步 Commit
+- 文件整理提交：dceb225。
+- 該提交已成功同步 GitHub。
+- 手機響應式版面驗收尚待補充。
+- 瀏覽器 Console 檢查尚待補充。
+- 後續文件管理改採功能批次集中更新。
 
 ---
 
 ## 2026-11-15｜M2-A SQLite 開發紀錄
 
-### 完成內容
+### 一、完成內容
 
 - 建立資料庫連線與初始化模組。
 - 建立三張核心資料表。
@@ -366,13 +361,50 @@ PROJECT_PLAN 與 TESTING 的舊狀態，
 - 加入資料庫測試與 npm 指令。
 - 確認 SQLite 檔案受到 Git 忽略規則保護。
 
-### 技術決策
+### 二、技術決策
 
 採用 Node.js 24.15.0 及 node:sqlite。
+
 測試使用記憶體資料庫，避免修改正式資料。
+
 SQLite 檔案啟用 WAL 模式。
 
-### 驗證結果
+### 三、核心資料表
+
+#### users
+
+- id
+- email
+- password_hash
+- display_name
+- created_at
+
+#### projects
+
+- id
+- name
+- description
+- owner_id
+- status
+- version
+- created_at
+- updated_at
+
+#### project_members
+
+- project_id
+- user_id
+- role
+- joined_at
+
+### 四、資料庫模組
+
+- server/schema.sql
+- server/db.js
+- server/init-db.js
+- tests/database.test.js
+
+### 五、驗證結果
 
 - npm run db:init：PASS
 - 再次初始化：PASS
@@ -381,12 +413,292 @@ SQLite 檔案啟用 WAL 模式。
 - 測試耗時：303.3564 ms
 - git check-ignore：PASS
 
-### 待處理
+後續重新測試結果：
+
+- tests：10
+- pass：10
+- fail：0
+- duration_ms：254.6897
+
+### 六、當時待處理事項
 
 - 檔案型資料庫重啟持久化驗證
 - Project CRUD API
 - M2-A GitHub 同步
 
-### 下一階段
+其中 Project CRUD 已於 M2-B 核心實作，GitHub 同步也已於後續完成。
 
-M2-B：專案 CRUD API。
+檔案型資料庫重啟持久化驗證仍保留至 M2-C。
+
+### 七、GitHub 提交
+
+功能提交：
+
+- Commit：d557020
+- Message：feat: implement M2A SQLite database foundation
+- 修改檔案：9
+- 新增行數：602
+- 刪除行數：10
+- GitHub Push：成功
+
+文件架構整理：
+
+- Commit：113765c
+- Message：docs: clean M2A records and align project status
+- GitHub Push：成功
+- main 與 origin/main：當時版本一致
+
+### 八、下一階段
+
+M2-B：Project CRUD API。
+
+---
+
+## 2026-11-15｜文件管理流程調整
+
+### 一、原本問題
+
+專案初期曾要求每完成少量程式碼修改，就立即更新多份 Markdown 文件並執行 Commit、Push。
+
+此流程雖有助於追蹤變更，但對個人開發而言，造成過高的文件管理成本。
+
+另外，部分文件曾因手動複製 ChatGPT 回覆而混入操作教學及介面標記。
+
+### 二、新的管理原則
+
+改採完整功能批次更新。
+
+每個主要開發批次依序完成：
+
+1. 程式碼實作。
+2. 自動化及必要手動測試。
+3. 問題修正。
+4. 集中更新相關文件。
+5. 一次主要 Git Commit。
+6. GitHub Push。
+7. 版本一致性確認。
+
+不需要每修改一個檔案就更新所有文件。
+
+### 三、文件管理方式
+
+- README：功能與使用方式有重大變更時更新。
+- CHANGELOG：記錄每個有實質成果的功能批次。
+- DEVELOPMENT_LOG：累積技術決策、重要錯誤與成果。
+- TESTING：記錄測試結果及尚未驗證的項目。
+- ARCHITECTURE：架構或資料表發生實質變更時更新。
+- PROJECT_PLAN：開發階段開始、完成或目標調整時更新。
+
+歷史開發紀錄保留，不因新功能完成而刪除過去發生的問題。
+
+---
+
+## 2026-11-15｜M2-B Project CRUD API 開發
+
+### 一、開發目標
+
+建立可操作 SQLite 專案資料的 REST API，讓 TaskFlow 從僅有資料表的系統，逐步成為能夠管理實際專案資料的全端應用。
+
+同時為 M3 使用者登入與 M4 RBAC 權限管理保留擴充能力。
+
+### 二、本階段新增檔案
+
+- server/project-repository.js
+- server/project-routes.js
+- tests/projects.test.js
+
+### 三、本階段修改檔案
+
+- server/server.js
+
+原本 M1 前端程式及 M2-A 資料庫核心保留，避免重複改寫已通過測試的功能。
+
+### 四、主要實作內容
+
+#### Project CRUD
+
+建立五個 REST API：
+
+1. POST /api/projects
+2. GET /api/projects
+3. GET /api/projects/:id
+4. PATCH /api/projects/:id
+5. DELETE /api/projects/:id
+
+#### Repository
+
+建立 Project Repository，處理：
+
+- SQLite 資料讀取
+- 專案建立
+- 專案更新
+- 專案刪除
+- 成員角色檢查
+- Transaction
+- version 版本衝突
+
+#### Router
+
+建立 Project Router，處理：
+
+- HTTP 路由
+- 請求資料驗證
+- 專案 ID 驗證
+- 版本編號驗證
+- JSON 回應
+- 存取控制入口
+
+#### Express 整合
+
+修改 server/server.js：
+
+- 掛載 Project Router
+- 保留 M1 健康檢查
+- 保留靜態網站服務
+- 保留 API 404
+- 加入統一錯誤處理
+
+### 五、資料一致性
+
+建立專案時，使用 Transaction 同時執行：
+
+1. 新增 projects 記錄。
+2. 新增 project_members Owner 關聯。
+
+若任一步驟失敗，執行 Rollback。
+
+專案修改使用 version 欄位檢查請求版本。
+
+當資料版本不一致時，回傳 HTTP 409 Conflict。
+
+### 六、基本角色限制
+
+- Owner：可以讀取、修改及刪除專案。
+- Admin：可以讀取及修改專案。
+- Member：僅能讀取專案。
+- 非成員：不可存取指定專案。
+
+目前是 M2-B 的基本專案操作限制，完整 RBAC 將於 M4 實作。
+
+### 七、身分驗證設計
+
+M3 尚未完成正式登入功能。
+
+因此正式啟動的 Project API 預設不提供已登入身分。
+
+未登入的專案 API 請求回傳 HTTP 401。
+
+測試環境使用可信任函式注入測試身分，不以客戶端提供的 user_id 作為認證依據。
+
+### 八、自動化測試
+
+執行：
+
+npm test
+
+測試結果：
+
+- tests：21
+- pass：21
+- fail：0
+- cancelled：0
+- skipped：0
+- todo：0
+- duration_ms：344.72
+
+測試分類：
+
+- M1 Express：4
+- M2-A SQLite：6
+- M2-B Project CRUD：11
+
+M2-B 的 11 個計數包含外層測試群組及 10 個子測試。
+
+### 九、Project CRUD 測試內容
+
+1. 未登入時不可操作專案。
+2. 專案列表初始為空。
+3. 建立專案並建立 Owner 成員。
+4. 查詢專案列表與單筆資料。
+5. 輸入驗證及拒絕客戶端指定 Owner。
+6. 只有專案成員可以讀取專案。
+7. Member 不可修改，Admin 可以修改。
+8. 舊版本更新回傳 409。
+9. 刪除僅限 Owner 且必須符合版本。
+10. 刪除後回傳 404，畸形 JSON 回傳 400。
+
+### 十、正式 HTTP API 驗收
+
+GET /api/projects
+
+- 預期：HTTP 401 Unauthorized
+- 實際：HTTP 401 Unauthorized
+- 結果：PASS
+
+GET /api/health
+
+- 預期：HTTP 200 OK
+- 實際：HTTP 200 OK
+- 結果：PASS
+
+回傳資料：
+
+- service：TaskFlow
+- status：ok
+- milestone：M1
+
+健康檢查保留 M1 的既有回傳契約，並不代表 M2-B 尚未執行。
+
+### 十一、網站顯示驗收
+
+- npm run dev：PASS
+- Express Server 啟動：PASS
+- localhost:3000：正常
+- Dashboard 桌面版：PASS
+- Kanban 三欄顯示：PASS
+- 六筆示範任務：PASS
+- 任務統計 6、2、2：PASS
+
+### 十二、技術決策
+
+- Repository 與 Router 分層。
+- 採用 SQLite 及 Prepared Statements。
+- 使用 Transaction 保護相關資料操作。
+- 使用 version 作為樂觀鎖。
+- 保留原本 M1 前端介面。
+- 暫不建立正式登入頁面。
+- 暫不開放匿名使用者修改專案。
+- 避免在同一階段加入其他大型功能。
+
+### 十三、目前限制
+
+- 正式使用者註冊與登入尚未完成。
+- Project CRUD 尚未與正式前端操作介面整合。
+- Kanban 任務仍使用前端示範資料。
+- 檔案型 SQLite 重啟持久化測試尚未完成。
+- Transaction 異常 Rollback 尚需補充專項整合測試。
+- 多連線並發操作尚需進一步驗證。
+- 真正多人即時同步尚未實作。
+
+### 十四、本階段結案前工作
+
+- 完成六份核心文件的集中更新。
+- 清理 README 與 TESTING 誤貼的教學內容。
+- 檢查 Git 暫存變更。
+- 建立 M2-B 功能與文件 Commit。
+- Push 至 GitHub。
+- 確認 main 與 origin/main 同步。
+
+### 十五、下一階段
+
+M2-C：資料持久化及整合驗收。
+
+預計驗證：
+
+1. 關閉並重新開啟 SQLite 後資料仍存在。
+2. Transaction 失敗時資料完整回滾。
+3. 版本衝突不會造成舊資料覆蓋新資料。
+4. 不同資料庫連線的併發操作。
+5. API 邊界與異常處理。
+6. 全部回歸測試。
+7. M2 正式結案。
