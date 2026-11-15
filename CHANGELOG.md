@@ -51,6 +51,31 @@
 - 本階段尚未正式結案。
 - M2 SQLite 與專案 CRUD 尚未開始。
 
+### M2-A — 2026-11-15｜SQLite 資料庫基礎
+
+#### Added
+
+- 建立 users、projects、project_members 資料表。
+- 建立 SQLite 初始化及連線模組。
+- 加入外鍵、唯一性與資料完整性約束。
+- 加入專案 version 欄位及查詢索引。
+- 新增 npm run db:init。
+- 新增資料庫自動化測試。
+
+#### Testing
+
+- SQLite 初始化：PASS
+- 重複初始化：PASS
+- SQLite Schema 測試：6/6 PASS
+- Express 回歸測試：4/4 PASS
+- 總計：10 passed、0 failed
+
+#### Status
+
+- M2-A 核心開發與測試完成。
+- GitHub 提交待完成。
+- 下一階段：M2-B Project CRUD API。
+
 ### M0 — 2026-11-15｜專案初始化
 
 #### Added

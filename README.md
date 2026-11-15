@@ -37,21 +37,22 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，
 ## 專案狀態
 
 - 已完成階段：M0 — 專案初始化
-- 目前階段：M1 — 網站骨架與基本介面（驗收中）
+- M1：網站雛型與基本測試已完成，部分瀏覽器驗收待補
+- 目前階段：M2 — SQLite 資料庫與專案 CRUD API（進行中）
+- M2-A：SQLite 資料庫基礎與自動化測試已通過
+- M2-B：Project CRUD API 尚未開始
 - 開發狀態：建置中
 - 正式版本：尚未發布
 - 預定首個正式版本：v1.0.0
 
-M0 已完成專案目錄、Git 初始化、文件建置及 GitHub 同步。
+M1 已建立 Express Server、Dashboard、
+三欄 Kanban 看板及基礎自動化測試。
 
-M1 已建立 Express Server、健康檢查 API、
-深色系 Dashboard、Kanban 看板及自動化測試。
+M2-A 已建立三張 SQLite 核心資料表，
+並通過 10 項自動化測試，0 項失敗。
 
-目前 Express 自動化測試已通過，
-瀏覽器驗收與 GitHub 同步仍待完成。
-
-此階段的任務資料為前端示範資料，
-尚未實作 SQLite 持久化、登入及多人即時同步。
+目前 M2-A 尚待完成 GitHub 提交。
+正式登入、專案 CRUD 與多人即時同步尚未實作。
 
 ## M1 本機開發說明
 
@@ -105,6 +106,93 @@ http://localhost:3000/api/health
 尚不支援真正的使用者登入、
 資料庫儲存、任務 CRUD、拖曳或多人同步。
 
+## M2-A｜SQLite 資料庫初始化
+
+本階段使用 Node.js 內建的 node:sqlite，
+建立 TaskFlow 的正式資料庫基礎。
+
+### 資料庫初始化
+
+在 TaskFlow 專案根目錄執行：
+
+`npm run db:init`
+
+### 執行自動化測試
+
+`npm test`
+
+目前 M2-A 測試結果：
+
+- 自動化測試總數：10
+- 通過：10
+- 失敗：0
+- SQLite Schema 測試：6/6 PASS
+- Express 回歸測試：4/4 PASS
+
+### 資料庫儲存位置
+
+`data/taskflow.db`
+
+資料庫檔案已由 .gitignore 排除，
+不會提交至 GitHub。
+
+### 已建立的核心資料表
+
+- users：使用者基本資料
+- projects：專案資料
+- project_members：專案成員與角色
+
+### 本階段限制
+
+M2-A 目前僅完成資料庫基礎，
+尚未提供正式的 Project CRUD API。
+
+新增、查詢、修改及刪除專案的 API，
+將於 M2-B 階段實作。
+
+```
+
+### Step 3｜確認最後的排列順序
+
+修改完畢後，你的 README 應該長這樣：
+
+<box border radius="lg" padding={3} gap={2}>
+  <row align="center" gap={2}>
+    <icon name="file-text" color="secondary"/>
+    **README.md**
+  </row>
+  <box padding={{left:4}} gap={2}>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> 專案目標</row>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> 規劃功能</row>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> 技術規劃</row>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> 專案狀態（更新）</row>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> M1 本機開發說明</row>
+    <box border={{left:{size:3,color:"#22a06b"}}} padding={{left:3,top:2,bottom:2}} gap={1}>
+      <row align="center" gap={2}>
+        <icon name="plus-circle" color="success" size="sm"/>
+        **M2-A｜SQLite 資料庫初始化**
+      </row>
+      <text color="secondary" size="xs">本次新增於 M1 說明之後</text>
+    </box>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> 開發方式</row>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> 專案文件</row>
+    <row align="center" gap={2}><icon name="hash" color="secondary" size="sm"/> 授權</row>
+  </box>
+</box>
+
+這樣 M1 和 M2-A 各自都有清楚的說明，日後進入 M2-B、M3 時，也能按照同樣的結構繼續擴充。
+
+---
+
+## 三、完成後需要做什麼？
+
+1. 按 `Ctrl + S` 儲存 `README.md`。
+2. 不要刪除 M0、M1 的其他說明。
+3. 接著再處理 `CHANGELOG.md`、`DEVELOPMENT_LOG.md`、`TESTING.md` 等本批次文件。
+
+**目前先不用 Commit 或 Push。** 我們等 M2-A 的必要文件都更新完畢，再一次提交到 GitHub，就不必像之前那樣反覆 Commit。
+
+你現在先完成 README 這兩處修改即可，接下來就可以繼續處理 M2-A 的其他文件，並正式進入 M2-B 的 Project CRUD 開發。
 ## 開發方式
 
 本專案使用 VS Code 進行開發，
@@ -130,3 +218,4 @@ http://localhost:3000/api/health
 ## 授權
 
 目前尚未選定授權條款。
+```

@@ -353,3 +353,40 @@ PROJECT_PLAN 與 TESTING 的舊狀態，
 - 手機響應式版面測試
 - 瀏覽器 Console 檢查
 - 最終文件同步 Commit
+
+---
+
+## 2026-11-15｜M2-A SQLite 開發紀錄
+
+### 完成內容
+
+- 建立資料庫連線與初始化模組。
+- 建立三張核心資料表。
+- 設定外鍵、CHECK、UNIQUE 及索引。
+- 加入資料庫測試與 npm 指令。
+- 確認 SQLite 檔案受到 Git 忽略規則保護。
+
+### 技術決策
+
+採用 Node.js 24.15.0 及 node:sqlite。
+測試使用記憶體資料庫，避免修改正式資料。
+SQLite 檔案啟用 WAL 模式。
+
+### 驗證結果
+
+- npm run db:init：PASS
+- 再次初始化：PASS
+- npm test：10/10 PASS
+- 測試失敗：0
+- 測試耗時：303.3564 ms
+- git check-ignore：PASS
+
+### 待處理
+
+- 檔案型資料庫重啟持久化驗證
+- Project CRUD API
+- M2-A GitHub 同步
+
+### 下一階段
+
+M2-B：專案 CRUD API。
