@@ -325,3 +325,31 @@ npm test
 
 M1 全部驗收通過後，
 正式進入 M2 SQLite 資料庫與專案 CRUD API。
+
+---
+
+## 2026-11-15｜M1 文件結案提交結果
+
+### GitHub 結案 Commit
+
+- Commit：2d0d710
+- Message：docs: finalize M1 dashboard verification
+- Branch：main
+- Push：成功
+- 本機及 origin/main：版本一致
+- Git 工作目錄：乾淨
+
+### 文件同步補充
+
+本次確認原結案 Commit 僅更新
+docs/DEVELOPMENT_LOG.md。
+
+後續需同步修正 README、CHANGELOG、
+PROJECT_PLAN 與 TESTING 的舊狀態，
+確保文件反映實際開發進度。
+
+### 尚待確認
+
+- 手機響應式版面測試
+- 瀏覽器 Console 檢查
+- 最終文件同步 Commit
