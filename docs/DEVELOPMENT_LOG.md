@@ -285,3 +285,43 @@ npm test
 3. 進行 Git Commit 與 Push。
 4. 驗證本機與遠端版本一致。
 5. 完成 M1 結案後進入 M2。
+
+---
+
+## 2026-11-15｜M1 最終驗收與 GitHub 同步
+
+### 一、網站啟動驗收
+
+- npm run dev：PASS
+- Express HTTP Server：PASS
+- 本機網址：http://localhost:3000
+- Dashboard 桌面版顯示：PASS
+- 六筆示範任務渲染：PASS
+- 三欄 Kanban 任務分類：PASS
+- 任務統計 6、2、2：PASS
+
+### 二、自動化測試
+
+- 測試數量：4
+- 通過數量：4
+- 失敗數量：0
+
+### 三、首次 M1 GitHub 提交
+
+- Commit：e4322a1
+- Branch：main
+- 修改檔案：13
+- 新增行數：2226
+- 刪除行數：7
+- GitHub Push：成功
+
+### 四、最終驗收補充
+
+- 手機響應式介面：待填寫實測結果
+- 瀏覽器 Console：待填寫實測結果
+- 文件結案 Commit：待完成
+
+### 五、後續階段
+
+M1 全部驗收通過後，
+正式進入 M2 SQLite 資料庫與專案 CRUD API。
