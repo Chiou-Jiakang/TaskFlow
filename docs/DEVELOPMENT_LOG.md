@@ -68,3 +68,61 @@ VS Code 檔案總管亦顯示三個資料夾。
 - 補齊所有初始文件。
 - 完成首次 Git Commit 與 Push。
 - 進入 M1：網站骨架及基本介面開發。
+
+---
+
+## 2026-11-15｜M0 結案紀錄
+
+### 一、文件初始化
+
+完成七份核心專案文件及兩個 .gitkeep 檔案。
+
+### 二、首次 Git Commit
+
+- Commit：8c2a2e6
+- Branch：main
+- 新增追蹤檔案：9 個
+- 新增內容：390 行
+
+Commit Message：
+
+chore: initialize TaskFlow project structure and documentation
+
+### 三、GitHub Push
+
+成功執行：
+
+git push -u origin main
+
+GitHub Repository：
+
+https://github.com/Chiou-Jiakang/TaskFlow
+
+遠端分支 origin/main 已建立。
+
+### 四、版本一致性
+
+執行以下指令完成檢查：
+
+- git status -sb
+- git log -1 --oneline
+- git remote -v
+
+檢查結果：
+
+- 本機分支為 main。
+- main 已追蹤 origin/main。
+- 本機與遠端追蹤分支指向相同 Commit。
+- 工作目錄沒有待提交變更。
+
+### 五、M0 結案
+
+M0 專案初始化工作已完成。
+
+專案具備獨立目錄、版本控制、
+GitHub 遠端儲存庫及基本文件管理架構。
+
+接下來進入 M1 網站骨架與基本介面開發。
+
+註：本結案紀錄更新完成後，
+仍須建立文件結案 Commit 並再次 Push。
