@@ -11,7 +11,7 @@
 | ---- | ------------------------ | ------ |
 | M0   | 專案與 Git 初始化        | 已完成 |
 | M1   | 網站骨架與基本介面       | 進行中 |
-| M2   | SQLite 與專案 CRUD API   | 未開始 |
+| M2   | SQLite 與專案 CRUD API   | 進行中 |
 | M3   | 使用者註冊與登入         | 未開始 |
 | M4   | 成員管理與 RBAC          | 未開始 |
 | M5   | 任務 CRUD 與 Kanban 看板 | 未開始 |
@@ -87,3 +87,14 @@
 
 M2 將開始建立 SQLite 資料庫、
 資料表關聯及專案 CRUD API。
+
+---
+
+## M2｜目前開發進度
+
+- M2-A：SQLite 資料庫基礎已完成。
+- M2-A 自動化測試：10/10 PASS。
+- M2-A Git Commit：d557020。
+- M2-A GitHub Push：成功。
+- M2-B：Project CRUD API 尚未開始。
+- M2-C：整合驗收尚未開始。

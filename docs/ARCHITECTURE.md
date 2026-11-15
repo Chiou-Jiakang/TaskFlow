@@ -180,3 +180,32 @@ M1：
 
 M1 僅為介面及伺服器基礎，
 不代表多人協作已經完成。
+
+---
+
+## M2-A｜SQLite 資料庫實際架構
+
+### 已建立檔案
+
+- server/schema.sql：資料表及約束
+- server/db.js：SQLite 連線與 Schema 初始化
+- server/init-db.js：資料庫初始化工具
+- tests/database.test.js：資料庫自動化測試
+
+### 核心資料表
+
+- users
+- projects
+- project_members
+
+### 資料庫設定
+
+- 使用 Node.js node:sqlite。
+- 啟用 Foreign Keys。
+- 檔案型資料庫使用 WAL 模式。
+- 使用索引與資料完整性約束。
+- 正式資料庫不提交至 GitHub。
+
+### 後續工作
+
+M2-B 將開始建立 Project CRUD API。
