@@ -909,3 +909,52 @@ M3-B：註冊、登入、登出、使用者資料 API。
 - 本次 M3-B 程式、測試與六份文件集中提交；實際提交 SHA 以 Git 記錄為準。
 - M3-C：前端登入／註冊／登出、錯誤提示、Session 狀態管理與 Project UI 串接。
 - 正式部署、完整 RBAC、Socket.IO、進階安全稽核留待後續 Milestone。
+
+## 2026-11-16｜M3-C1 前端身分驗證
+
+### 一、開發內容
+
+1. 新增 `public/auth.html`。
+2. 新增 `public/auth.css`。
+3. 新增 `public/auth.js`。
+4. 新增 `public/dashboard-auth.js`。
+5. 更新 `public/index.html`。
+6. 新增 `tests/frontend-auth.test.js`。
+7. 保留原有 Kanban 展示結構，加入真實專案資料串接。
+
+### 二、技術決策
+
+- 沿用 M3-B Authentication API，不重新設計後端。
+- Session Cookie 由瀏覽器管理。
+- 使用 CSRF Token 保護需要驗證的資料寫入。
+- 前端顯示與後端權限檢查分離。
+- 不修改正式 SQLite Schema。
+
+### 三、自動化測試
+
+- 前端 Smoke Tests：6/6 PASS。
+- 全專案回歸測試：59/59 PASS。
+- Fail：0。
+- Skipped：0。
+
+### 四、實際操作驗收
+
+- 登入與註冊表單正常呈現。
+- Dashboard 正常載入。
+- 真實專案資料可以顯示。
+- 使用者回報其餘帳號與專案操作測試通過。
+
+### 五、問題與處理
+
+- 執行第二個 npm run dev 時出現 EADDRINUSE。
+- 本機 Port 3000 已有程序監聽。
+- 使用 curl 健康檢查取得 HTTP 200。
+- 不因 Port 占用重新修改正常運作的 API。
+- 保留既有 SQLite 資料。
+
+### 六、後續工作
+
+- 完成 M3-C1 文件集中更新。
+- 執行 Git Commit 與 Push。
+- 核對本機與遠端 Commit SHA。
+- 後續進行 M3-C2 進階驗收及 M4 成員管理。

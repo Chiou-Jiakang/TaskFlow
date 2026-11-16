@@ -64,7 +64,8 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M2-C：33/33 PASS，已於 Commit 878dfec 同步 GitHub。
 - M3-A：9/9 PASS，已於 Commit 1f94ce7 同步至 GitHub。
 - M3-B：Authentication HTTP API 完成，完整回歸測試 53/53、正式 HTTP 驗收 22/22 PASS。
-- M3-C～M10：尚未開始。
+- M3-C1：前端登入與註冊、Dashboard Session 串接已完成；M3-C2 待進行。
+- M4～M10：尚未開始。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
 
@@ -569,3 +570,14 @@ https://github.com/Chiou-Jiakang/TaskFlow
 ## 授權
 
 目前尚未選定授權條款。
+
+## M3-C1｜前端身分驗證（2026-11-16）
+
+- 完成登入與註冊頁面：`public/auth.html`、`auth.css`、`auth.js`。
+- Dashboard 新增 Session 驗證與登出：`public/dashboard-auth.js`。
+- `public/index.html` 串接登入者名稱、SQLite 專案列表及建立專案 API。
+- 保留 M1 六張 Kanban 示範卡片，尚未連接正式任務資料表。
+- 自動化測試：M3-C1 6/6 PASS；全專案 59/59 PASS，0 failed。
+- 使用者回報註冊、登入、建立專案、重新整理及登出等瀏覽器流程通過。
+- 本階段 Git Commit／Push 待完成。
+- 正式 HTTPS、跨瀏覽器及 E2E 自動化仍待驗證。

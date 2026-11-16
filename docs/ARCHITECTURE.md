@@ -717,3 +717,32 @@ Project Router 在正式模式透過 Session 取得 userId，寫入時檢查 X-T
 
 M3-C 前端登入介面、完整 RBAC、任務 CRUD 與 WebSocket 尚未完成。
 歷史章節提及「登入尚未開發」或「auth_sessions 尚未整合」是該階段的紀錄；以本章為目前後端實作狀態。
+
+## M3-C1｜前端身分驗證整合（2026-11-16）
+
+### Frontend
+
+- `/auth.html` 提供註冊與登入表單。
+- `auth.js` 呼叫註冊、登入 API。
+- `dashboard-auth.js` 呼叫 `GET /api/auth/me`。
+- 登入成功後導向 Dashboard。
+- Dashboard 顯示登入者名稱、專案清單及登出功能。
+
+### Authentication
+
+- Session 由後端管理，瀏覽器使用 HttpOnly Cookie。
+- 前端不將 Session Token 儲存至 localStorage。
+- 專案寫入請求帶入 `X-TaskFlow-CSRF`。
+- 真正的身分與權限檢查由 Express 後端執行。
+
+### Database Integration
+
+- `GET /api/projects` 取得使用者專案列表。
+- `POST /api/projects` 建立正式 SQLite 專案。
+- 原 M1 Kanban 任務卡片仍使用展示資料。
+
+### Verification
+
+- M3-C1 Smoke Tests：6/6 PASS。
+- 全專案 Regression Tests：59/59 PASS。
+- 前端導頁不是授權邊界，資料安全仍由 API 驗證。

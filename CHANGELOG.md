@@ -8,6 +8,27 @@
 
 ## [Unreleased]
 
+### M3-C1 — 2026-11-16｜Authentication Frontend
+
+#### Added
+
+- 新增註冊／登入 UI、表單驗證、錯誤與成功提示。
+- 新增 Dashboard Session 檢查、登出流程及登入者名稱顯示。
+- 新增 SQLite 專案列表及建立專案的前端 API 串接。
+- 新增 `tests/frontend-auth.test.js` 前端 Smoke Tests。
+
+#### Verified
+
+- M3-C1 6/6 PASS。
+- 全部回歸 59/59 PASS，0 failed。
+- 使用者回報主要瀏覽器操作流程通過。
+
+#### Notes
+
+- M1 Kanban 仍為示範資料，正式任務 CRUD 留待 M5。
+- 尚未完成正式 HTTPS、跨瀏覽器與自動化瀏覽器 E2E 驗收。
+
+
 ### M3-B — 2026-11-16｜Authentication HTTP API
 
 #### Added
