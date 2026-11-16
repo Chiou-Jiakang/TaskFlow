@@ -770,3 +770,91 @@ Push 並驗證遠端同步。
 ### 下一階段
 
 M3：使用者註冊、登入、登出與 Session。
+
+---
+
+## 2026-11-16｜M3-A Authentication Foundation
+
+### 開發目標
+
+建立 TaskFlow 正式登入系統的資料層基礎。
+
+### 開發內容
+
+1. 建立 auth_sessions 資料表。
+2. 建立 Session 專用索引。
+3. 實作 Email 正規化與驗證。
+4. 實作安全密碼雜湊。
+5. 實作密碼驗證。
+6. 實作使用者註冊。
+7. 實作使用者身分查詢。
+8. 實作 Session 建立與撤銷。
+9. 實作 Session 過期與清理。
+10. 建立獨立自動化測試。
+
+### 新增檔案
+
+- server/auth-schema.sql
+- server/auth-foundation.js
+- tests/auth-foundation.test.js
+
+### 技術決策
+
+- 延用 Node.js 與 SQLite。
+- 使用 Node.js 內建 crypto。
+- 密碼使用非同步 scrypt。
+- 每筆密碼使用隨機 Salt。
+- Session 使用隨機 Token。
+- 資料庫只儲存 Token 的 SHA-256 雜湊。
+- 原本 M2 Repository 與 Router 暫不修改。
+- auth-schema.sql 獨立管理 Session Schema。
+
+### 問題及修正紀錄
+
+首次執行 M3-A 測試時發生 SyntaxError。
+
+錯誤位置：
+
+server/auth-foundation.js 第 1 行。
+
+原因：
+
+複製程式碼時，多出不合法的星號字元。
+
+處理方式：
+
+- 移除多餘字元。
+- 重新執行 node --check。
+- 獨立執行 M3-A 測試。
+- 重新執行完整回歸測試。
+
+### 實際驗證
+
+- M3-A 獨立測試：9/9 PASS。
+- 原有 M1～M2-C：33/33 PASS。
+- 全部測試：42/42 PASS。
+- Failed：0。
+- Skipped：0。
+
+### M2 版本銜接
+
+M2-C 已於 Commit 878dfec 完成 GitHub 同步。
+本階段沒有重新修改已結案的 M2 程式。
+
+### 尚未完成
+
+- M3-B Authentication HTTP API
+- 正式 Session Cookie
+- CSRF 防護
+- 登入限速
+- 正式資料庫初始化整合
+- 前端註冊與登入介面
+- Project API 正式登入身分整合
+
+### GitHub
+
+M3-A 文件及程式將於本批次一併提交。
+
+### 下一階段
+
+M3-B：註冊、登入、登出、使用者資料 API。

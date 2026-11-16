@@ -500,7 +500,7 @@ M2-B 的文件更新及 GitHub 同步仍待完成。
 
 ---
 
-## 最新驗收總結
+## M2-C 驗收總結（歷史紀錄）
 
 | 階段 | 測試結果 | GitHub |
 |---|---|---|
@@ -508,8 +508,8 @@ M2-B 的文件更新及 GitHub 同步仍待完成。
 | M1 | 4/4 PASS | 已同步 |
 | M2-A | 6/6 PASS | 已同步 |
 | M2-B | 11/11 PASS | a20aa36 已同步 |
-| M2-C | 12/12 PASS | 待本批次提交 |
-| 總計 | **33/33 PASS** | 待最終 Push |
+| M2-C | 12/12 PASS | 878dfec 已同步 |
+| 總計 | **33/33 PASS** | 878dfec 已同步 |
 
 ### M2-C 實際驗收
 
@@ -534,3 +534,59 @@ M2-B 的文件更新及 GitHub 同步仍待完成。
 - 完整產品端對端驗收
 
 以上 PASS 僅代表本階段已執行的測試範圍。
+
+---
+
+## M3-A 最新驗收總結
+
+### 自動化測試結果
+
+| 階段 | 測試數量 | 結果 |
+|---|---:|---|
+| M1 Express | 4 | PASS |
+| M2-A SQLite | 6 | PASS |
+| M2-B Project CRUD | 11 | PASS |
+| M2-C Integration | 12 | PASS |
+| M3-A Authentication | 9 | PASS |
+| 總計 | **42** | **42/42 PASS** |
+
+### M3-A 測試範圍
+
+- Session Schema 重複初始化
+- Email 正規化
+- 密碼雜湊與安全回傳
+- 重複 Email 拒絕
+- 不同 Salt
+- 正確與錯誤密碼驗證
+- Session Token 雜湊
+- Session 到期與清理
+- Session 撤銷
+- Session 跨資料庫重開
+- 刪除使用者後 Session 連動清除
+
+### 實際執行結果
+
+- node --check：PASS
+- M3-A：9/9 PASS
+- npm test：42/42 PASS
+- Failed：0
+- Cancelled：0
+- Skipped：0
+
+### 尚待測試
+
+- 正式註冊與登入 HTTP API
+- Session Cookie 安全屬性
+- CSRF 防護
+- 登入限速
+- 正式登入後的 Project CRUD
+- 前端使用者操作流程
+- 完整產品端對端驗收
+
+以上測試通過不代表完整 M3 已完成。
+
+### 版本狀態
+
+M2-C：Commit 878dfec，已同步。
+
+M3-A：核心測試通過，待本批次 GitHub 同步。

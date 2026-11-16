@@ -8,6 +8,45 @@
 
 ## [Unreleased]
 
+### M3-A — 2026-11-16｜Authentication Foundation
+
+#### Added
+
+- 新增 auth_sessions 資料表及索引。
+- 新增 Auth Repository。
+- 新增帳號註冊與 Email 驗證。
+- 新增 scrypt 密碼雜湊與驗證。
+- 新增 Session 建立、查詢及撤銷功能。
+- 新增 Session 過期清理。
+- 新增 M3-A 自動化測試。
+
+#### Security
+
+- 使用隨機 Salt 與 scrypt。
+- 不儲存明文密碼。
+- Session Token 只儲存 SHA-256 雜湊。
+- 回傳使用者資料不包含 password_hash。
+- 保留外鍵及 Session 到期約束。
+
+#### Testing
+
+- M3-A：9/9 PASS。
+- 完整回歸測試：42/42 PASS。
+- Failed：0。
+- Skipped：0。
+
+#### Fixed
+
+- 修正 auth-foundation.js 首行多餘字元
+  引發的 JavaScript SyntaxError。
+- 修正後重新執行語法檢查與完整測試。
+
+#### Status
+
+- M3-A 核心實作及測試完成。
+- 文件與 GitHub 同步待本批次提交。
+- 下一階段為 M3-B Authentication API。
+
 ### M2-C — 2026-11-16｜最終整合驗收
 
 #### Added
@@ -28,7 +67,7 @@
 #### Status
 
 - M2-C 核心測試已完成。
-- 文件與 GitHub 同步待本批次提交。
+- M2-C 已於 Commit 878dfec 完成 GitHub 同步。
 - 下一階段為 M3 Authentication。
 
 ### M2-B — 2026-11-15｜Project CRUD API

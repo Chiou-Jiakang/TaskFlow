@@ -61,8 +61,9 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M2-B：21/21 自動化測試通過。
 - M2-B：HTTP 401 與 200 驗收通過。
 - M2-B：已於 Commit a20aa36 同步 GitHub。
-- M2-C：完成 33/33 回歸測試，待本批次 GitHub 同步。
-- M3～M10：尚未開始。
+- M2-C：33/33 PASS，已於 Commit 878dfec 同步 GitHub。
+- M3-A：Authentication Foundation 核心測試 9/9 PASS，待本批次 GitHub 同步。
+- M3-B～M10：尚未開始。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
 
@@ -423,7 +424,57 @@ M2-C 已完成 SQLite 與 HTTP 整合測試。
 尚未完成正式使用者登入、完整 RBAC、
 任務 CRUD、Socket.IO 與公開部署。
 
-M2-C 核心測試完成，待本批次 GitHub 同步。
+M2-C 已於 Commit 878dfec 同步 GitHub，M2 正式結案。
+
+## M3-A｜Authentication Foundation
+
+M3-A 已完成使用者身分驗證資料層的核心實作。
+
+### 新增模組
+
+- server/auth-schema.sql
+- server/auth-foundation.js
+- tests/auth-foundation.test.js
+
+### 已實作功能
+
+- Email 格式驗證與正規化
+- 帳號註冊資料存取
+- 重複 Email 防護
+- scrypt 密碼雜湊與隨機 Salt
+- 密碼比對與安全使用者資料回傳
+- Session Token 產生與 SHA-256 雜湊儲存
+- Session 到期與撤銷
+- 過期 Session 清理
+- 使用者刪除後 Session 連動清除
+- SQLite Session 持久化
+
+### 資料庫
+
+M3-A 新增 auth_sessions 資料表。
+
+目前透過獨立的 auth-schema.sql 初始化。
+尚未整合至正式網站資料庫初始化流程。
+
+### 測試結果
+
+- M3-A：9/9 PASS
+- M1～M2-C：33/33 PASS
+- 完整回歸測試：42/42 PASS
+- Fail：0
+- Skipped：0
+
+### 目前限制
+
+- 尚未建立正式註冊及登入 HTTP API
+- 尚未整合 Session Cookie
+- 尚未將 Project API 接到正式登入身分
+- 尚未建立前端登入與註冊頁面
+
+以上功能將在後續 M3-B、M3-C 完成。
+
+M3-A 核心程式及測試完成，
+文件與 GitHub 同步待本批次提交。
 
 ## 開發方式與版本管理
 

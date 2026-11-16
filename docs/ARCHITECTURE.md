@@ -608,3 +608,76 @@ M3 導入正式 Authentication。
 M4 完成 RBAC。
 
 M5～M7 擴充 Task CRUD、Kanban 及 WebSocket。
+
+---
+
+## 十五、M3-A Authentication Foundation
+
+### 模組
+
+server/auth-schema.sql
+
+- auth_sessions 資料表
+- 使用者外鍵
+- Token Hash 主鍵
+- Session 到期時間
+- 查詢索引
+
+server/auth-foundation.js
+
+- AuthError
+- initializeAuthSchema
+- hashPassword
+- verifyPassword
+- createAuthRepository
+
+tests/auth-foundation.test.js
+
+- 帳號與密碼驗證
+- Session 生命週期
+- SQLite 持久化
+- 資料完整性
+
+### 密碼儲存
+
+使用 scrypt 與隨機 Salt。
+
+密碼不以明文形式儲存。
+
+使用 timingSafeEqual 比對衍生金鑰。
+
+### Session 資料
+
+auth_sessions：
+
+- token_hash：TEXT，Primary Key
+- user_id：INTEGER，Foreign Key
+- created_at：INTEGER
+- expires_at：INTEGER
+
+User 與 Session 為一對多關係。
+
+刪除 User 時會連動清除相關 Session。
+
+### Session 流程
+
+1. 伺服器產生安全隨機 Token。
+2. 計算 Token 的 SHA-256 雜湊。
+3. 資料庫只保存雜湊。
+4. 使用雜湊查詢有效 Session。
+5. 到期或登出時使 Session 失效。
+
+### M3-A 架構限制
+
+目前只有 Authentication Repository。
+
+正式 HTTP API、Cookie、CSRF 防護與
+Project API 登入身分整合尚未實作。
+
+auth_sessions 尚未加入正式 db:init 流程。
+
+### 測試
+
+M3-A：9/9 PASS。
+
+完整回歸測試：42/42 PASS。
