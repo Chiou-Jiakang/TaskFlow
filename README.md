@@ -64,12 +64,13 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M2-C：33/33 PASS，已於 Commit 878dfec 同步 GitHub。
 - M3-A：9/9 PASS，已於 Commit 1f94ce7 同步至 GitHub。
 - M3-B：Authentication HTTP API 完成，完整回歸測試 53/53、正式 HTTP 驗收 22/22 PASS。
-- M3-C1：前端登入與註冊、Dashboard Session 串接已完成；M3-C2 待進行。
+- M3-C1：前端 Authentication 已完成，Commit `32361a6` 已同步。
+- M3-C2：Edge E2E 8/8 PASS；既有回歸測試 59/59 PASS。
 - M4～M10：尚未開始。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
 
-目前仍屬開發階段：後端註冊／登入／登出 API 已完成，前端登入介面、真正的多人協作與即時同步尚未完成。
+目前仍屬開發階段：帳號驗證、前端登入及 SQLite 專案建立已完成；完整 RBAC、任務管理與多人同步仍待實作。
 
 ## 專案目錄（基礎結構示意）
 
@@ -579,5 +580,16 @@ https://github.com/Chiou-Jiakang/TaskFlow
 - 保留 M1 六張 Kanban 示範卡片，尚未連接正式任務資料表。
 - 自動化測試：M3-C1 6/6 PASS；全專案 59/59 PASS，0 failed。
 - 使用者回報註冊、登入、建立專案、重新整理及登出等瀏覽器流程通過。
-- 本階段 Git Commit／Push 待完成。
-- 正式 HTTPS、跨瀏覽器及 E2E 自動化仍待驗證。
+- M3-C1 已於 Commit `32361a6` 完成 GitHub 同步。
+- M3-C2 已通過 Edge E2E；正式 HTTPS、其他瀏覽器與部署安全仍待驗證。
+
+## M3-C2｜Edge 瀏覽器端對端驗收（2026-11-16）
+
+- 使用 `playwright-core` 操作已安裝的 Microsoft Edge。
+- `npm run test:e2e`：8/8 PASS（七個子測試及一個父測試）。
+- `npm test`：59/59 PASS，0 failed。
+- E2E 涵蓋匿名跳轉、註冊、登入、Cookie、Session 隔離、專案建立、重新整理及登出。
+- 測試使用獨立記憶體 SQLite 與隨機 Port。
+- 不會清除正式 `data/taskflow.db`。
+- 正式 HTTPS、其他瀏覽器及部署級安全驗收仍待完成。
+- M3-C2 GitHub 提交狀態以 Git 實際紀錄為準。

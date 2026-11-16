@@ -958,3 +958,31 @@ M3-B：註冊、登入、登出、使用者資料 API。
 - 執行 Git Commit 與 Push。
 - 核對本機與遠端 Commit SHA。
 - 後續進行 M3-C2 進階驗收及 M4 成員管理。
+
+## 2026-11-16｜M3-C2 真實瀏覽器端對端驗收
+
+### 一、開發內容
+1. 安裝 Playwright Core。
+2. 設定 `test:e2e` npm script。
+3. 新增 `e2e/auth-flow.e2e.js`。
+4. 建立 Edge 自動化瀏覽器測試。
+5. 採用隔離 SQLite、隨機 Port 與 BrowserContext。
+
+### 二、測試結果
+- Edge E2E：8/8 PASS。
+- Node.js Regression：59/59 PASS。
+- Failed：0。
+- Skipped：0。
+
+### 三、問題紀錄
+- 曾發生 Port 3000 重複占用。
+- 新測試改用隨機 Port，避免干擾開發 Server。
+- Git 曾顯示 LF/CRLF 警告，非測試錯誤。
+
+### 四、版本管理
+- M3-C1 已於 Commit `32361a6` 同步 GitHub。
+- 本次 M3-C2 Commit／Push 需依實際 Git 結果確認。
+
+### 五、後續工作
+- 完成 M3-C2 GitHub 同步與 SHA 驗證。
+- 進入 M4 成員管理及 RBAC 權限開發。

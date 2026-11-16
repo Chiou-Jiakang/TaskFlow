@@ -746,3 +746,24 @@ M3-C 前端登入介面、完整 RBAC、任務 CRUD 與 WebSocket 尚未完成�
 - M3-C1 Smoke Tests：6/6 PASS。
 - 全專案 Regression Tests：59/59 PASS。
 - 前端導頁不是授權邊界，資料安全仍由 API 驗證。
+
+## M3-C2｜瀏覽器 E2E 測試架構（2026-11-16）
+
+### Testing Architecture
+- Browser：Microsoft Edge，透過 Playwright Core 啟動。
+- Runner：Node.js 內建 Test Runner。
+- Entry：`e2e/auth-flow.e2e.js`。
+- Command：`npm run test:e2e`。
+
+### Isolation
+- 使用 `createApp({ database: db })` 啟動獨立 Express。
+- 使用 `openDatabase(":memory:")` 建立隔離 SQLite。
+- 使用系統分配 Port，避免占用 3000。
+- 以不同 BrowserContext 驗證 Session 隔離。
+- 測試結束後關閉 Browser、Server 與 Database。
+
+### Security Boundary
+- HttpOnly Session Cookie 由瀏覽器管理。
+- 後端負責驗證身分、CSRF 與專案權限。
+- 前端導向登入頁不等於後端授權驗證。
+- M3-C2 已通過 8/8 E2E，尚非正式部署安全稽核。

@@ -13,7 +13,7 @@
 | M0   | 專案與 Git 初始化        | 已完成                 |
 | M1   | 網站骨架與基本介面       | 核心完成，部分驗收待補 |
 | M2   | SQLite 與專案 CRUD API   | 已完成                 |
-| M3   | 使用者註冊與登入         | M3-C1 驗收完成，M3-C2 待進行 |
+| M3   | 使用者註冊與登入 | M3-C2 E2E 8/8 PASS；M4 未開始 |
 | M4   | 成員管理與 RBAC          | 未開始                 |
 | M5   | 任務 CRUD 與 Kanban 看板 | 未開始                 |
 | M6   | Drag & Drop              | 未開始                 |
@@ -544,13 +544,14 @@ M3-B 後端功能已通過 53/53 自動化與 22/22 正式 HTTP 驗收；M3-C �
 - M3-B 11/11 PASS；完整回歸測試 53/53 PASS
 - M3-B 正式本機 HTTP 驗收 22/22 PASS
 
-### 正在處理
+### 最近驗收
 
-- M3-C1：驗收通過，待文件與 GitHub 同步
+- M3-C1：已於 Commit `32361a6` 同步 GitHub。
+- M3-C2：Edge E2E 8/8、既有回歸 59/59 PASS。
 
 ### 下一階段
 
-M3-C：前端註冊、登入、登出與 Session 整合。
+M4：專案成員管理與 RBAC 權限開發。
 
 ### 最終目標
 
@@ -569,14 +570,38 @@ TaskFlow v1.0.0 多人專案管理平台。
 - 完整回歸測試：59/59 PASS。
 - 使用者回報主要瀏覽器操作驗收通過。
 
-### 尚待完成
+### M3-C1 版本管理
 
-- 本次 Git Commit、Push 與 SHA 比對。
+- GitHub Commit `32361a6` 已同步，SHA 比對一致。
+
+### 尚待完成
 - 正式任務 CRUD、完整成員權限及 WebSocket。
-- 正式 HTTPS、跨瀏覽器及瀏覽器 E2E 自動化測試。
+- 正式 HTTPS、其他瀏覽器及部署級安全驗收。
 
 ### 下一階段
 
 - M3-C2：額外介面與端對端驗收。
 - M4：專案成員管理與 RBAC。
 - M5：正式任務 CRUD。
+
+## M3-C2｜正式 E2E 驗收結果（2026-11-16）
+
+### 已完成
+- M3-C1：前端 Authentication。
+- M3-C1 GitHub Commit：`32361a6`。
+- M3-C2 Microsoft Edge E2E：8/8 PASS。
+- M1～M3-C1 Regression：59/59 PASS。
+- 真實瀏覽器登入、Session、專案建立及登出驗證。
+
+### 版本控制
+- M3-C2 將於功能驗收後集中 Commit／Push。
+- GitHub 最終狀態以同步後 SHA 檢查為準。
+
+### 下一階段：M4
+- 專案成員邀請。
+- 成員列表及角色管理。
+- Owner、Admin、Member 權限矩陣。
+- 成員管理 API 與權限自動化測試。
+
+### 後續限制
+- 正式 HTTPS、其他瀏覽器、即時同步及部署驗收尚未完成。

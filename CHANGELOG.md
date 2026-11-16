@@ -8,6 +8,24 @@
 
 ## [Unreleased]
 
+### M3-C2 — 2026-11-16｜Edge Browser E2E
+
+#### Added
+- 新增 `playwright-core` 開發相依。
+- 新增 `test:e2e` npm script。
+- 新增 `e2e/auth-flow.e2e.js`。
+- 建立 Microsoft Edge 真實瀏覽器驗收流程。
+
+#### Verified
+- E2E：8/8 PASS。
+- Node.js Regression：59/59 PASS。
+- 兩組測試皆 0 failed。
+- 測試資料庫與正式 SQLite 隔離。
+
+#### Remaining
+- 正式 HTTPS、跨瀏覽器及部署安全驗證。
+- 完整多人協作、RBAC 與任務 CRUD。
+
 ### M3-C1 — 2026-11-16｜Authentication Frontend
 
 #### Added

@@ -675,3 +675,38 @@ M3-B 後端核心功能 53/53 自動化、22/22 真實 HTTP 驗收通過；M3-C 
 M3-C1 既定自動化測試 59/59 PASS。
 主要瀏覽器操作依使用者回報通過。
 不以此推論產品所有功能及安全性均已完成。
+
+## M3-C2｜Microsoft Edge E2E（2026-11-16）
+
+### 測試結果
+- `npm run test:e2e`：8/8 PASS。
+- `npm test`：59/59 PASS。
+- Failed：0。
+- Skipped：0。
+
+### 測試範圍
+- 匿名使用者導向登入頁。
+- 註冊表單正常送出。
+- 錯誤密碼拒絕、正確密碼登入。
+- HttpOnly Cookie 驗證。
+- 不同 BrowserContext 的 Session 隔離。
+- 專案建立與重新整理後保留。
+- 登出後私人專案 API 回應 401。
+- 已測試流程無未處理 JavaScript Page Error。
+
+### 測試環境
+- Microsoft Edge headless。
+- Node.js Test Runner。
+- SQLite in-memory database。
+- 隨機 HTTP Port。
+
+### 尚未驗證
+- 正式 HTTPS。
+- Edge 以外的其他瀏覽器。
+- 完整部署安全性。
+- 多人即時同步。
+
+### 結論
+M3-C2 既定瀏覽器測試 8/8 PASS。
+既有回歸測試 59/59 PASS。
+以上結果僅代表已執行的測試範圍。
