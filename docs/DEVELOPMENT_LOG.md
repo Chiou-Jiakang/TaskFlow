@@ -858,3 +858,54 @@ M3-A 文件及程式將於本批次一併提交。
 ### 下一階段
 
 M3-B：註冊、登入、登出、使用者資料 API。
+
+---
+
+## 2026-11-16｜M3-B Authentication HTTP API
+
+### 開發範圍
+
+1. 建立 `server/auth-routes.js`，提供四個正式身分驗證 API。
+2. 調整 `server/server.js`，將正式 Project CRUD 與 Session 身分串接。
+3. 調整 `server/init-db.js`，初始化第四張 auth_sessions 資料表。
+4. 建立 `tests/auth-api.test.js`，在隔離的 SQLite 中驗證 API 與安全邊界。
+5. 建立 `scripts/accept-m3b.js`，連線正式本機 Server 驗收完整流程。
+
+### 重要技術設計
+
+- 延用 M3-A 帳號與 Session Repository，不重寫密碼雜湊與 Token 實作。
+- 使用 HttpOnly、SameSite=Strict 的 Session Cookie；正式 HTTPS 情境加上 Secure。
+- 寫入專案與登出時檢查 CSRF Token；註冊、登入執行來源驗證。
+- 使用者身分由後端 Session 解析，避免將客戶端 user_id 當作授權依據。
+- 延用原有 createApp 測試注入接口，保留 M2 測試相容性。
+- 以記憶體 Map 實作本機基本登入失敗限速，尚非正式多節點設計。
+
+### 實際驗收結果
+
+- M3-B 獨立自動化測試：11/11 PASS。
+- M1～M3-B 全部回歸測試：53/53 PASS，0 failed，0 skipped。
+- 正式 `npm run db:init`：四張主要 SQLite 資料表初始化成功。
+- `curl.exe -i http://127.0.0.1:3000/api/health`：HTTP 200。
+- 正式本機 HTTP 整合驗收：22/22 PASS。
+- 驗證註冊、重複 Email、登入、Cookie、CSRF、專案 CRUD、版本衝突、登出撤銷 Session。
+
+### 問題與排除過程
+
+- 驗收腳本首次執行顯示 `fetch failed`，沒有任何 PASS 檢查點。
+- 一度未查得 Port 3000 監聽狀態，PowerShell 排查命令亦混入多餘反斜線，造成 CommandNotFoundException。
+- 調整為兩個終端機：一個持續執行 `npm run dev`，另一個發送 curl 及 Node.js 驗收請求。
+- 後續健康檢查 HTTP 200、22/22 PASS，確認連線問題已排除；沒有為此重寫 Auth API。
+
+### 測試資料處理
+
+- 自動化測試使用隔離資料庫。
+- 正式 HTTP 驗收會在 data/taskflow.db 中新增隨機測試帳號。
+- 驗收成功時測試專案已刪除、Session 已撤銷；測試帳號仍存在，需視後續資料清理政策處理。
+- 不重新初始化或刪除正式 SQLite，避免造成使用者資料遺失。
+
+### 版本與後續工作
+
+- 上一階段 M3-A：Commit 1f94ce7，已同步 GitHub。
+- 本次 M3-B 程式、測試與六份文件集中提交；實際提交 SHA 以 Git 記錄為準。
+- M3-C：前端登入／註冊／登出、錯誤提示、Session 狀態管理與 Project UI 串接。
+- 正式部署、完整 RBAC、Socket.IO、進階安全稽核留待後續 Milestone。

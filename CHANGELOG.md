@@ -8,6 +8,32 @@
 
 ## [Unreleased]
 
+### M3-B — 2026-11-16｜Authentication HTTP API
+
+#### Added
+
+- 新增註冊、登入、登出及目前使用者查詢 API。
+- 新增 Session Cookie（HttpOnly、SameSite=Strict；production 使用 Secure）。
+- 新增 CSRF Token 驗證，保護受登入 Session 授權的寫入操作。
+- 新增同來源請求檢查與 JSON 請求大小限制。
+- 新增簡易的每 IP 登入失敗次數限制。
+- 正式資料庫初始化加入 auth_sessions；Project CRUD 串接正式登入身分。
+- 新增 M3-B 自動化測試及正式 HTTP 驗收腳本。
+
+#### Verified
+
+- M3-B：11/11 PASS；全專案：53/53 PASS，failed 0，skipped 0。
+- 真實本機 Express Server：22/22 HTTP 驗收通過。
+- 驗證 200、201、204、401、403、404、409 等預期狀態。
+- SQLite 初始化成功建立四張主要資料表。
+
+#### Notes
+
+- 一度發生 `fetch failed`，經確認屬於本機 Server 監聽／終端機連線排查流程，調整後 HTTP 驗收全數通過。
+- 本次 HTTP 測試留下隨機測試帳號，測試專案已刪除。
+- 尚未加入前端登入介面，亦未完成正式部署級安全稽核。
+- 程式與文件在同一批次提交；以 GitHub main Commit 作為最終版本紀錄。
+
 ### M3-A — 2026-11-16｜Authentication Foundation
 
 #### Added
@@ -44,7 +70,7 @@
 #### Status
 
 - M3-A 核心實作及測試完成。
-- 文件與 GitHub 同步待本批次提交。
+- M3-A 已於 Commit 1f94ce7 完成文件與 GitHub 同步。
 - 下一階段為 M3-B Authentication API。
 
 ### M2-C — 2026-11-16｜最終整合驗收

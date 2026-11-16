@@ -41,7 +41,7 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 | Database                | SQLite                  |
 | SQLite API              | Node.js node:sqlite     |
 | API                     | REST API                |
-| Authentication          | 後端身分驗證（M3 規劃） |
+| Authentication          | Session Cookie 與 Auth API（M3-B） |
 | Authorization           | RBAC（M4 規劃）         |
 | Real-time               | Socket.IO（M7 規劃）    |
 | Testing                 | Node.js node:test       |
@@ -62,14 +62,15 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M2-B：HTTP 401 與 200 驗收通過。
 - M2-B：已於 Commit a20aa36 同步 GitHub。
 - M2-C：33/33 PASS，已於 Commit 878dfec 同步 GitHub。
-- M3-A：Authentication Foundation 核心測試 9/9 PASS，待本批次 GitHub 同步。
-- M3-B～M10：尚未開始。
+- M3-A：9/9 PASS，已於 Commit 1f94ce7 同步至 GitHub。
+- M3-B：Authentication HTTP API 完成，完整回歸測試 53/53、正式 HTTP 驗收 22/22 PASS。
+- M3-C～M10：尚未開始。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
 
-目前仍屬開發階段，尚未完成正式使用者登入、真正的多人協作與即時同步。
+目前仍屬開發階段：後端註冊／登入／登出 API 已完成，前端登入介面、真正的多人協作與即時同步尚未完成。
 
-## 專案目錄
+## 專案目錄（基礎結構示意）
 
 ```text
 TaskFlow/
@@ -136,11 +137,12 @@ npm run db:init
 data/taskflow.db
 ```
 
-目前已建立三張核心資料表：
+目前已建立四張主要資料表：
 
 - users
 - projects
 - project_members
+- auth_sessions
 
 初始化指令可以重複執行，不會主動刪除既有資料。
 
@@ -464,7 +466,7 @@ M3-A 新增 auth_sessions 資料表。
 - Fail：0
 - Skipped：0
 
-### 目前限制
+### M3-A 當時限制
 
 - 尚未建立正式註冊及登入 HTTP API
 - 尚未整合 Session Cookie
@@ -473,8 +475,41 @@ M3-A 新增 auth_sessions 資料表。
 
 以上功能將在後續 M3-B、M3-C 完成。
 
-M3-A 核心程式及測試完成，
-文件與 GitHub 同步待本批次提交。
+M3-A 已於 Commit 1f94ce7 完成文件及 GitHub 同步。（上方限制為 M3-A 當時狀態。）
+
+## M3-B｜Authentication HTTP API
+
+### 已完成（後端）
+
+- POST /api/auth/register：註冊並檢查 Email 唯一性，註冊不自動登入。
+- POST /api/auth/login：驗證密碼、建立 Session、設定 HttpOnly Cookie。
+- GET /api/auth/me：讀取目前登入使用者與 CSRF Token。
+- POST /api/auth/logout：驗證 CSRF、撤銷 Session、清除 Cookie。
+- Project CRUD 已使用 Session 身分；修改資料要求 CSRF Token。
+- 正式 db:init 現在初始化 users、projects、project_members、auth_sessions 四張資料表。
+- 限制 JSON 請求大小、進行來源檢查、基本記憶體式登入失敗限速。
+
+### 新增檔案
+
+- server/auth-routes.js：Authentication Router、Cookie 與 CSRF 驗證。
+- tests/auth-api.test.js：M3-B 自動化測試。
+- scripts/accept-m3b.js：執行中 Server 的本機 HTTP 驗收腳本。
+
+### 操作與測試
+
+啟動：`npm run db:init`，接著 `npm run dev`。
+自動化：`npm test`（53/53 PASS，0 failed）。
+HTTP 驗收：另開終端機執行 `node .\scripts\accept-m3b.js`（22/22 PASS）。
+驗收腳本會新增隨機測試帳號，成功時刪除測試專案並撤銷 Session；帳號仍保留於本機 SQLite。
+
+### 尚未完成
+
+- M3-C 前端註冊、登入、登出畫面，以及 Dashboard 與正式 API 串接。
+- 完整 RBAC、任務管理、多人 Socket.IO 同步、正式部署稽核。
+- 目前登入失敗限速僅為單一 Node.js 程序內的記憶體紀錄，不適用於多實例正式部署。
+- 正式 HTTPS、反向代理、進階安全測試仍待執行。
+
+M3-B 的程式及既定驗收已完成；版本狀態以 GitHub main 最新提交為準。
 
 ## 開發方式與版本管理
 

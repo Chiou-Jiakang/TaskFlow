@@ -537,7 +537,7 @@ M2-B 的文件更新及 GitHub 同步仍待完成。
 
 ---
 
-## M3-A 最新驗收總結
+## M3-A 驗收總結（歷史紀錄）
 
 ### 自動化測試結果
 
@@ -589,4 +589,52 @@ M2-B 的文件更新及 GitHub 同步仍待完成。
 
 M2-C：Commit 878dfec，已同步。
 
-M3-A：核心測試通過，待本批次 GitHub 同步。
+M3-A：9/9 PASS，已於 Commit 1f94ce7 同步 GitHub。
+
+---
+
+## M3-B 最新驗收總結｜2026-11-16
+
+### 自動化測試（node:test）
+
+| 階段 | 測試數 | 結果 |
+|---|---:|---|
+| M1 Express | 4 | PASS |
+| M2-A SQLite | 6 | PASS |
+| M2-B Project CRUD | 11 | PASS |
+| M2-C SQLite/HTTP Integration | 12 | PASS |
+| M3-A Authentication Foundation | 9 | PASS |
+| M3-B Authentication HTTP API | 11 | PASS |
+| **總計** | **53** | **53/53 PASS** |
+
+- Failed：0；Skipped：0；Cancelled：0。
+- M3-B 單獨執行：11/11 PASS。
+- 上表是自動化測試數量；不要把 22 個 HTTP 驗收點加進 53，兩者為不同驗證流程。
+
+### 正式本機 HTTP 操作驗收（accept-m3b.js）
+
+- 22/22 PASS，0 failed。
+- Health：200；匿名 me / projects：401。
+- 註冊：201；重複 Email：409；錯誤密碼：401；跨來源：403。
+- 登入：200；HttpOnly / SameSite=Strict Cookie 與 CSRF Token 驗證通過。
+- 取得使用者、專案列表：200；無 CSRF 寫入：403。
+- 專案建立 201、修改 200、舊版本 409、刪除 204、刪除後 404。
+- 無 CSRF 登出 403；合法登出 204；撤銷 Session 後 me / projects 401。
+- 正式 `npm run db:init` 成功，存在 auth_sessions、users、projects、project_members 四張主要資料表。
+- `curl.exe` 正式健康檢查：HTTP 200。
+
+### 故障紀錄
+
+首次連線曾出現 fetch failed；後續維持 npm run dev 運作並從獨立終端機測試後，22/22 PASS。
+此錯誤沒有在後續實測中重現；不能據此宣稱所有部署網路問題已獲驗證。
+
+### 測試資料及安全限制
+
+- 22 項 HTTP 驗收直接使用正式本機資料庫，不是記憶體資料庫。
+- 隨機測試帳號仍保留；測試專案已刪除、Session 已撤銷。
+- 目前完成的是本機受測流程；前端登入、正式 HTTPS、反向代理、多程序限速及完整安全稽核仍未驗收。
+- M3-A GitHub 提交：1f94ce7；M3-B 版本以 GitHub main 最新提交為準。
+
+### 結論
+
+M3-B 後端核心功能 53/53 自動化、22/22 真實 HTTP 驗收通過；M3-C 前端整合尚未開始。

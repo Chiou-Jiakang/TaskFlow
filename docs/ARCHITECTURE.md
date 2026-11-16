@@ -90,6 +90,7 @@ SQLite。
 - users
 - projects
 - project_members
+- auth_sessions
 
 ### 尚未建立資料表
 
@@ -188,7 +189,7 @@ WebSocket 負責通知資料變更，不能取代資料庫交易及權限驗證�
 - version 版本檢查
 - SQLite 外鍵及資料完整性約束
 
-### 未來仍須實作
+### M2-B 時點尚未實作（歷史狀態）
 
 - 安全密碼雜湊
 - 正式使用者登入
@@ -681,3 +682,38 @@ auth_sessions 尚未加入正式 db:init 流程。
 M3-A：9/9 PASS。
 
 完整回歸測試：42/42 PASS。
+
+---
+
+## 十六、M3-B Authentication HTTP API
+
+### 模組責任
+
+- `server/auth-foundation.js`：使用者、scrypt、Session Repository。
+- `server/auth-schema.sql`：auth_sessions Schema 與索引。
+- `server/auth-routes.js`：register/login/me/logout、Cookie、CSRF、來源驗證與限速。
+- `server/server.js`：掛載 Authentication Router、Project Router、統一錯誤處理。
+- `server/init-db.js`：初始化 M2 核心表及 auth_sessions。
+- `tests/auth-api.test.js`：隔離的 HTTP 自動化測試。
+- `scripts/accept-m3b.js`：連到本機正式 Server 的驗收工具。
+
+### 正式請求流程
+
+Client → Express JSON 與來源檢查 → Auth Router → Auth Repository → SQLite。
+登入成功後以 HttpOnly、SameSite=Strict Cookie 保存 Session Token；資料庫只存雜湊。
+GET /api/auth/me 以 Session 查出安全使用者資料及 CSRF Token。
+Project Router 在正式模式透過 Session 取得 userId，寫入時檢查 X-TaskFlow-CSRF。
+既有 M2 自動化測試仍可透過 createApp 的可信任測試身分注入進行隔離驗證。
+
+### 安全邊界
+
+- 登入錯誤時回傳一致的帳號／密碼錯誤訊息。
+- 變更資料需通過 Session 與 CSRF；不接受客戶端 user_id 直接指定權限。
+- 跨來源請求拒絕、JSON 大小限制、Session 撤銷及到期。
+- 登入失敗記憶體計數僅適用單程序本機 MVP；跨程序或反向代理部署須重新設計。
+- production Cookie 啟用 Secure，但 HTTPS、反向代理設定與安全稽核尚未實際驗證。
+
+### 後續限制
+
+M3-C 前端登入介面、完整 RBAC、任務 CRUD 與 WebSocket 尚未完成。
+歷史章節提及「登入尚未開發」或「auth_sessions 尚未整合」是該階段的紀錄；以本章為目前後端實作狀態。

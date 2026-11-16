@@ -13,7 +13,7 @@
 | M0   | 專案與 Git 初始化        | 已完成                 |
 | M1   | 網站骨架與基本介面       | 核心完成，部分驗收待補 |
 | M2   | SQLite 與專案 CRUD API   | 已完成                 |
-| M3   | 使用者註冊與登入         | M3-A 核心測試完成      |
+| M3   | 使用者註冊與登入         | M3-B 後端驗收完成      |
 | M4   | 成員管理與 RBAC          | 未開始                 |
 | M5   | 任務 CRUD 與 Kanban 看板 | 未開始                 |
 | M6   | Drag & Drop              | 未開始                 |
@@ -358,17 +358,27 @@ M2-C 已於 Commit 878dfec 同步 GitHub，M2 正式結案。
 - M3-A 自動化測試 9/9 PASS
 - 完整回歸測試 42/42 PASS
 
+### M3-B 已完成（後端功能及驗收）
+
+- 正式註冊、登入、登出、目前使用者 API。
+- Session Cookie、CSRF、來源驗證與簡易登入限速。
+- Project CRUD 已整合真實登入身分。
+- 正式資料庫初始化新增 auth_sessions。
+- 自動化測試：M3-B 11/11；全專案 53/53 PASS。
+- 本機 Server 22 項正式 HTTP 操作驗收全部通過。
+- 版本提交以 GitHub main 最新 Commit 為準。
+
 ### 後續工作
 
-- M3-B：註冊、登入、登出及 me API
+- M3-C：前端註冊、登入、登出及 Session 狀態整合
 - 正式 Cookie 與 Session 整合
 - 登入安全防護與 API 測試
 - M3-C：前端登入介面及整合驗收
 
 ### 狀態
 
-M3-A 核心實作與測試完成，
-待 GitHub 提交。
+M3-A 已於 Commit 1f94ce7 同步 GitHub。
+M3-B 後端功能已通過 53/53 自動化與 22/22 正式 HTTP 驗收；M3-C 尚未開始。
 
 
 ---
@@ -530,16 +540,17 @@ M3-A 核心實作與測試完成，
 - M2-A SQLite Schema
 - M2-B Project CRUD API
 - M2-C 自動化測試 33/33 PASS，已同步 GitHub
-- M3-A 核心程式與測試 9/9 PASS
-- 完整回歸測試 42/42 PASS
+- M3-A 9/9 PASS，Commit 1f94ce7 已同步
+- M3-B 11/11 PASS；完整回歸測試 53/53 PASS
+- M3-B 正式本機 HTTP 驗收 22/22 PASS
 
 ### 正在處理
 
-- M3-A 文件更新及 GitHub 同步
+- M3-B 文件與程式集中版本管理；依 GitHub main 最新提交核對
 
 ### 下一階段
 
-M3-B：Authentication HTTP API 與 Session 整合。
+M3-C：前端註冊、登入、登出與 Session 整合。
 
 ### 最終目標
 
