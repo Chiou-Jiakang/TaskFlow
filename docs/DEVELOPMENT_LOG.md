@@ -702,3 +702,71 @@ M2-C：資料持久化及整合驗收。
 5. API 邊界與異常處理。
 6. 全部回歸測試。
 7. M2 正式結案。
+
+---
+
+## 2026-11-16｜M2-C 最終整合驗收
+
+### 開發目標
+
+驗證 SQLite 資料持久化、交易一致性、
+Project CRUD API 與並發版本衝突處理。
+
+### 新增測試檔案
+
+- tests/integration.test.js
+- tests/final-acceptance.test.js
+
+### 主要驗證內容
+
+1. SQLite 資料庫重新開啟後資料保留。
+2. Transaction 失敗後完整回滾。
+3. 外鍵、唯一性及狀態約束持續有效。
+4. WAL 與資料庫完整性檢查。
+5. HTTP 建立、修改及重啟持久化。
+6. HTTP 刪除及重啟後資料一致性。
+7. HTTP 無效輸入與錯誤回應。
+8. 未登入使用者無法冒用 Owner。
+9. 兩個 Worker 並發更新相同 version。
+
+### 自動化測試
+
+- M1 Express：4/4 PASS
+- M2-A SQLite：6/6 PASS
+- M2-B Project CRUD：11/11 PASS
+- M2-C Integration：12/12 PASS
+- 全部測試：33/33 PASS
+- Fail：0
+
+### 資料安全
+
+測試使用系統暫存 SQLite。
+沒有修改正式 data/taskflow.db。
+
+### 技術決策
+
+- 保留現有 Repository 與 Router。
+- 不重寫已通過驗證的資料庫模組。
+- 使用獨立 Worker Threads 驗證競爭更新。
+- 以 version 防止舊版本覆蓋新版本。
+- 避免加入超出 M2 範圍的新產品功能。
+
+### 尚未完成
+
+- 正式 Authentication
+- 完整 RBAC
+- Task CRUD
+- Drag & Drop
+- Socket.IO
+- 壓力與正式部署測試
+
+### GitHub
+
+M2-B 已完成提交：a20aa36。
+
+M2-C 測試及文件將於本批次一次 Commit、
+Push 並驗證遠端同步。
+
+### 下一階段
+
+M3：使用者註冊、登入、登出與 Session。

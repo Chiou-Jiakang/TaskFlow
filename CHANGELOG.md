@@ -8,6 +8,29 @@
 
 ## [Unreleased]
 
+### M2-C — 2026-11-16｜最終整合驗收
+
+#### Added
+
+- 新增 tests/integration.test.js。
+- 新增 tests/final-acceptance.test.js。
+- 加入 HTTP 持久化與異常輸入測試。
+- 加入未登入身分冒用測試。
+- 加入雙 Worker 並發版本衝突測試。
+
+#### Testing
+
+- M2-C：12/12 PASS。
+- M1～M2-C：33/33 PASS。
+- 測試失敗數：0。
+- 使用獨立暫存 SQLite。
+
+#### Status
+
+- M2-C 核心測試已完成。
+- 文件與 GitHub 同步待本批次提交。
+- 下一階段為 M3 Authentication。
+
 ### M2-B — 2026-11-15｜Project CRUD API
 
 #### Added
@@ -82,7 +105,7 @@
 
 - M2-B 核心程式已實作。
 - M2-B 自動化及基本 HTTP 驗收已通過。
-- 本階段文件與 GitHub 提交待完成。
+- M2-B 已於 Commit a20aa36 完成同步。
 - 尚未提供正式登入與前端 Project CRUD 操作。
 - 下一階段：M2-C 整合與持久化驗收。
 

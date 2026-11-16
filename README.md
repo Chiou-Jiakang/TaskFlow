@@ -60,8 +60,8 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M2-B：Project CRUD API 核心實作完成。
 - M2-B：21/21 自動化測試通過。
 - M2-B：HTTP 401 與 200 驗收通過。
-- M2-B：文件更新與 GitHub 提交待完成。
-- M2-C：資料持久化與整合驗收尚未開始。
+- M2-B：已於 Commit a20aa36 同步 GitHub。
+- M2-C：完成 33/33 回歸測試，待本批次 GitHub 同步。
 - M3～M10：尚未開始。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
@@ -382,28 +382,48 @@ DELETE /api/projects/1?version=2
 - GET /api/health：HTTP 200 PASS
 - 桌面版 Dashboard：PASS
 
-### M2-B 尚待完成
+### M2-B 版本紀錄
 
-- 本階段文件更新
-- Git Commit 與 GitHub Push
-- 遠端版本一致性確認
+- 核心程式、測試與文件已於 Commit a20aa36 推送至 GitHub。
 
 M2-B 尚未代表正式登入、前端 CRUD 操作或完整多人協作已經完成。
 
-## 下一階段｜M2-C 整合驗收
+## M2-C｜最終驗收（33/33）
 
-M2-C 預計驗證：
+M2-C 已完成 SQLite 與 HTTP 整合測試。
 
-1. SQLite 檔案型資料庫持久化
-2. 資料庫關閉後重新開啟的資料一致性
-3. Transaction Rollback
-4. 樂觀鎖版本衝突
-5. 不同連線的並發更新情境
-6. API 異常與邊界條件
-7. 全部自動化回歸測試
-8. M2 階段文件與 GitHub 結案
+### 已完成驗證
 
-完成 M2-C 後，才正式將整個 M2 標記為已完成。
+- SQLite 持久化及關閉後重新開啟
+- Transaction Rollback
+- 外鍵、唯一性及狀態約束
+- WAL 與資料庫完整性
+- HTTP 專案建立及修改後重新開啟
+- HTTP 刪除後資料持久化
+- HTTP 400、404、413 邊界條件
+- 未登入使用者冒用身分防護
+- 兩個獨立 Worker 競爭相同 version
+
+### 自動化測試
+
+- M1：4/4 PASS
+- M2-A：6/6 PASS
+- M2-B：11/11 PASS
+- M2-C：12/12 PASS
+- 全部測試：33/33 PASS
+- 失敗數：0
+
+### 安全性
+
+所有 M2-C 新增測試使用記憶體或
+系統暫存 SQLite，不修改正式資料庫。
+
+### 後續限制
+
+尚未完成正式使用者登入、完整 RBAC、
+任務 CRUD、Socket.IO 與公開部署。
+
+M2-C 核心測試完成，待本批次 GitHub 同步。
 
 ## 開發方式與版本管理
 

@@ -562,3 +562,49 @@ M10：Testing / Security / Release
 8. 優先維持已通過測試的舊功能。
 9. 每個主要開發批次進行自動化回歸測試。
 10. 架構與功能擴充應避免不必要的大規模重寫。
+
+---
+
+## 十四、M2-C 整合驗收架構
+
+### 測試模組
+
+tests/integration.test.js
+
+- SQLite 檔案持久化
+- Transaction Rollback
+- 外鍵與完整性約束
+- WAL
+- 兩連線版本衝突
+
+tests/final-acceptance.test.js
+
+- HTTP 持久化
+- HTTP 異常輸入
+- 未登入身分限制
+- Worker Threads 並發更新
+
+### 測試資料隔離
+
+所有新測試使用記憶體或系統暫存 SQLite。
+
+測試結束後關閉資料庫並清理暫存檔案。
+
+正式 data/taskflow.db 不作為測試目標。
+
+### 資料一致性
+
+Project Repository 使用 Transaction 保護修改。
+
+更新依賴 id 與 version 條件。
+
+兩個 Worker 使用相同舊版本競爭時，
+只允許其中一筆更新成功。
+
+### 後續架構
+
+M3 導入正式 Authentication。
+
+M4 完成 RBAC。
+
+M5～M7 擴充 Task CRUD、Kanban 及 WebSocket。
