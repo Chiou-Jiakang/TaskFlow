@@ -1,0 +1,250 @@
+/* M4-C1：延續 TaskFlow 深色介面。 */
+
+.auth-error .app-shell {
+  display: none;
+}
+
+.member-main {
+  max-width: 1120px;
+}
+
+.member-heading {
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.member-heading h1 {
+  font-size: 30px;
+  margin: 8px 0 12px;
+}
+
+.member-back,
+.member-secondary {
+  border: 1px solid #4c5b7a;
+  background: #253452;
+  padding: 10px 14px;
+  border-radius: 9px;
+  color: #e9eeff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.member-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.member-summary > div {
+  background: #1a2640;
+  border: 1px solid #354561;
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #acb9d1;
+  font-size: 13px;
+}
+
+.member-summary strong {
+  color: #f1f3ff;
+}
+
+.member-panel {
+  background: #151f35;
+  border: 1px solid #2e3b55;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 22px;
+}
+
+.member-panel h2 {
+  font-size: 19px;
+  margin: 0 0 14px;
+}
+
+.member-hint {
+  color: #a9b7d2;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.member-add-form {
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr) minmax(145px, 180px) auto;
+  gap: 10px;
+  align-items: end;
+  margin-top: 18px;
+}
+
+.member-add-form label {
+  font-size: 12px;
+  color: #d7e0f3;
+  grid-row: 1;
+}
+
+.member-add-form label[for="member-email"] {
+  grid-column: 1;
+}
+
+.member-add-form label[for="member-role"] {
+  grid-column: 2;
+}
+
+.member-add-form input,
+.member-add-form select {
+  grid-row: 2;
+  min-width: 0;
+  width: 100%;
+  background: #0d172a;
+  color: #e8eeff;
+  border: 1px solid #41516e;
+  border-radius: 9px;
+  padding: 11px;
+  font: inherit;
+}
+
+.member-add-form input {
+  grid-column: 1;
+}
+
+.member-add-form select {
+  grid-column: 2;
+}
+
+.member-add-form button {
+  grid-column: 3;
+  grid-row: 2;
+  white-space: nowrap;
+}
+
+.member-add-form button,
+.member-primary {
+  background: #7667e6;
+  color: white;
+  border: 1px solid #948afa;
+  border-radius: 9px;
+  padding: 11px 14px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.member-list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.member-message {
+  min-height: 20px;
+  color: #b4c3dd;
+  font-size: 13px;
+}
+
+.member-message[data-error="true"] {
+  color: #ffb2bb;
+}
+
+.member-list {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 15px 0 0;
+}
+
+.member-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #354561;
+  background: #202b45;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.member-person {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.member-person strong {
+  overflow-wrap: anywhere;
+}
+
+.member-person small {
+  font-size: 12px;
+  color: #acbbd5;
+  overflow-wrap: anywhere;
+}
+
+.member-role-badge {
+  font-size: 12px;
+  color: #cbbfff;
+}
+
+.member-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.member-actions select {
+  background: #0d172a;
+  border: 1px solid #52617e;
+  border-radius: 8px;
+  padding: 9px;
+  color: #f3f5ff;
+}
+
+.member-actions button {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #5e6f92;
+  background: #324164;
+  color: #fff;
+  cursor: pointer;
+}
+
+.member-actions button.danger {
+  background: #503146;
+  border-color: #8c576c;
+}
+
+.member-main button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.member-main :is(button, a, input, select):focus-visible {
+  outline: 2px solid #b0a3ff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .member-add-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .member-add-form label {
+    align-self: flex-start;
+  }
+
+  .member-panel {
+    padding: 18px;
+  }
+
+  .member-heading h1 {
+    font-size: 25px;
+  }
+}

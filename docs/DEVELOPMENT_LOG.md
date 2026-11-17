@@ -986,3 +986,130 @@ M3-B：註冊、登入、登出、使用者資料 API。
 ### 五、後續工作
 - 完成 M3-C2 GitHub 同步與 SHA 驗證。
 - 進入 M4 成員管理及 RBAC 權限開發。
+
+<!-- M4-SUMMARY-2026-11-17 -->
+## 2026-11-17｜M4 成員管理與權限控制集中結案
+
+### 一、M4-A Member Repository
+
+建立 server/member-repository.js。
+
+主要完成：
+
+- Owner / Admin / Member 權限矩陣。
+- 專案成員查詢。
+- 新增與移除成員。
+- 修改成員角色。
+- Owner 身分保護。
+- Email 與重複加入檢查。
+- Transaction 與 version 控制。
+
+測試：11/11 PASS。
+
+### 二、M4-B REST API
+
+新增 server/member-routes.js，並整合 server/server.js。
+
+實作：
+
+- GET /api/projects/:id/members
+- POST /api/projects/:id/members
+- PATCH /api/projects/:id/members/:userId
+- DELETE /api/projects/:id/members/:userId
+
+沿用既有 Authentication、CSRF、同源檢查與錯誤處理。
+
+不採信客戶端自行指定的 actorId。
+
+測試：18/18 PASS。
+
+### 三、M4-C1 成員管理前端
+
+新增：
+
+- public/members.html
+- public/members.css
+- public/members.js
+
+修改：
+
+- public/dashboard-auth.js
+- public/auth.css
+
+完成：
+
+- Dashboard 成員管理入口。
+- 成員列表。
+- 依 Email 新增成員。
+- 修改角色。
+- 移除與退出。
+- 版本衝突提示。
+- 安全文字顯示。
+
+測試：6/6 PASS。
+
+當時完整回歸：94/94 PASS。
+
+### 四、M4-C2 Edge 多帳號 E2E
+
+新增 e2e/member-flow.e2e.js。
+
+使用：
+
+- Microsoft Edge
+- Playwright Core
+- 四個獨立 BrowserContext
+- 五個測試帳號
+- SQLite 記憶體資料庫
+- 動態 Port
+
+驗證：
+
+- 登入與 Session 隔離。
+- Owner 新增 Admin、Member。
+- Admin 與 Member 權限差異。
+- 非成員資料拒絕。
+- 角色升級與降級。
+- 版本衝突及重新操作。
+- 移除與自行退出。
+- Session 撤銷。
+- 未處理 JavaScript 錯誤檢查。
+
+M4-C2：15/15 PASS。
+
+合併 Edge E2E：23/23 PASS。
+
+Node.js 完整回歸：94/94 PASS。
+
+Failed：0。
+
+### 五、開發流程與技術決策
+
+本階段沿用集中結案制度：
+
+1. 完成核心程式。
+2. 執行必要測試。
+3. 修正問題。
+4. 完成跨模組驗收。
+5. 集中更新六份文件。
+6. Git Commit／Push。
+7. 驗證 Git 版本一致性。
+
+程式沒有重新初始化正式 SQLite 資料庫。
+
+瀏覽器 E2E 使用獨立記憶體資料庫。
+
+Git 的 LF/CRLF 提示屬換行格式警告，不代表測試失敗。
+
+### 六、尚未完成
+
+- 完整邀請確認流程。
+- 正式任務管理。
+- 多人即時推播。
+- 正式部署與完整安全稽核。
+
+### 七、後續工作
+
+進入 M5：Task Schema、Task Repository、Task API 與正式 Kanban 整合。
+
+本階段 GitHub 同步結果及 SHA 以實際提交紀錄為準。

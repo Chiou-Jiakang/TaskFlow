@@ -42,7 +42,7 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 | SQLite API              | Node.js node:sqlite     |
 | API                     | REST API                |
 | Authentication          | Session Cookie 與 Auth API（M3-B） |
-| Authorization           | RBAC（M4 規劃）         |
+| Authorization           | RBAC（M4 核心已實作）         |
 | Real-time               | Socket.IO（M7 規劃）    |
 | Testing                 | Node.js node:test       |
 | Version Control         | Git、GitHub             |
@@ -66,11 +66,12 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M3-B：Authentication HTTP API 完成，完整回歸測試 53/53、正式 HTTP 驗收 22/22 PASS。
 - M3-C1：前端 Authentication 已完成，Commit `32361a6` 已同步。
 - M3-C2：Edge E2E 8/8 PASS；既有回歸測試 59/59 PASS。
-- M4～M10：尚未開始。
+- M4：成員管理與 RBAC 已通過既定驗收（Node.js 94/94、Edge E2E 23/23 PASS）。
+- M5～M10：尚未開始。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
 
-目前仍屬開發階段：帳號驗證、前端登入及 SQLite 專案建立已完成；完整 RBAC、任務管理與多人同步仍待實作。
+目前仍屬開發階段：帳號驗證、專案與成員管理、RBAC 核心功能已完成既定測試；正式邀請核准、任務管理與多人即時同步仍待實作。
 
 ## 專案目錄（基礎結構示意）
 
@@ -593,3 +594,42 @@ https://github.com/Chiou-Jiakang/TaskFlow
 - 不會清除正式 `data/taskflow.db`。
 - 正式 HTTPS、其他瀏覽器及部署級安全驗收仍待完成。
 - M3-C2 GitHub 提交狀態以 Git 實際紀錄為準。
+
+<!-- M4-SUMMARY-2026-11-17 -->
+## M4｜成員管理與 RBAC 驗收總結（2026-11-17）
+
+### 階段成果
+
+- M4-A：Member Repository、Owner / Admin / Member 權限矩陣，11/11 PASS。
+- M4-B：成員 REST API，18/18 PASS。
+- M4-C1：成員管理頁面、Dashboard 入口，6/6 PASS。
+- M4-C2：四組獨立 Edge BrowserContext、五個測試帳號，15/15 PASS。
+- 最新 npm test：94/94 PASS。
+- 最新 npm run test:e2e:all：23/23 PASS。
+- 以上測試均為 0 failed。
+
+### 已實作功能
+
+- 查看專案成員清單。
+- 依 Email 新增已註冊成員。
+- 修改 Admin、Member 角色。
+- 依照權限移除成員。
+- Admin、Member 自行退出專案。
+- Owner 身分保護。
+- Session、CSRF、同源及角色權限檢查。
+- 專案 version 版本衝突偵測。
+- 跨帳號資料隔離。
+- 前端安全文字渲染。
+
+### 本機驗證指令
+
+    npm test
+    npm run test:e2e:members
+    npm run test:e2e:all
+
+### M4 範圍限制
+
+- 目前是依 Email 直接加入已註冊帳號，不是完整邀請確認流程。
+- Kanban 六張卡片仍為示範資料；正式 Task CRUD 排定於 M5。
+- Socket.IO 即時同步、正式 HTTPS、跨瀏覽器及部署級安全測試尚未完成。
+- 驗收結果只代表既定測試範圍通過，不代表產品不存在其他潛在問題。

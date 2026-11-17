@@ -11,7 +11,9 @@
     "start": "node server/server.js",
     "dev": "node --watch server/server.js",
     "db:init": "node server/init-db.js",
-    "test:e2e": "node --test e2e/auth-flow.e2e.js"
+    "test:e2e": "node --test e2e/auth-flow.e2e.js",
+    "test:e2e:members": "node --test e2e/member-flow.e2e.js",
+    "test:e2e:all": "node --test e2e/auth-flow.e2e.js e2e/member-flow.e2e.js"
   },
   "repository": {
     "type": "git",

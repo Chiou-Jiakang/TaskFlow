@@ -47,7 +47,7 @@ TaskFlow 採用前後端責任分離的全端架構。
 
 前端任務看板仍使用 JavaScript 示範資料。
 
-Project CRUD API 雖然已於後端建立，但尚未串接正式的前端專案管理介面。
+Project CRUD 已與前端專案清單整合，M4 亦新增成員管理頁及權限 API；正式任務看板仍使用示範資料。
 
 ## 三、Backend
 
@@ -144,7 +144,7 @@ data/taskflow.db
 
 ### 後續規劃
 
-M4 將建立完整的權限矩陣、成員管理及角色變更機制。
+M4 已建立成員管理、角色矩陣與版本驗證；具邀請接受／拒絕的完整流程尚未實作。
 
 所有受保護操作必須由後端確認權限，不可只依靠前端隱藏按鈕。
 
@@ -514,7 +514,7 @@ M3 正式登入尚未完成。
 - GET /api/projects：HTTP 401 PASS
 - GET /api/health：HTTP 200 PASS
 
-## 十二、目前架構限制與後續擴充
+## 十二、M2 時點架構限制與後續擴充（歷史紀錄）
 
 ### 尚未完成
 
@@ -767,3 +767,73 @@ M3-C 前端登入介面、完整 RBAC、任務 CRUD 與 WebSocket 尚未完成�
 - 後端負責驗證身分、CSRF 與專案權限。
 - 前端導向登入頁不等於後端授權驗證。
 - M3-C2 已通過 8/8 E2E，尚非正式部署安全稽核。
+
+<!-- M4-SUMMARY-2026-11-17 -->
+## M4｜Member Management 與 RBAC 實際架構（2026-11-17）
+
+### Frontend
+
+- public/dashboard-auth.js：提供成員管理入口。
+- public/members.html：成員管理頁面結構。
+- public/members.css：成員管理介面樣式。
+- public/members.js：操作事件、API 請求與資料顯示。
+
+### Backend
+
+- server/server.js：掛載成員 Router，沿用 Authentication Middleware。
+- server/member-routes.js：請求驗證與 HTTP 回應。
+- server/member-repository.js：成員資料操作、角色權限及交易控制。
+
+### 資料庫
+
+使用既有核心資料表：
+
+- users
+- projects
+- project_members
+- auth_sessions
+
+M4 並未新增 tasks 資料表。正式任務管理留待 M5。
+
+### 成員管理 API
+
+| 方法 | 路徑 | 功能 |
+| --- | --- | --- |
+| GET | /api/projects/:id/members | 查詢成員 |
+| POST | /api/projects/:id/members | 新增成員 |
+| PATCH | /api/projects/:id/members/:userId | 修改角色 |
+| DELETE | /api/projects/:id/members/:userId?version=N | 移除或退出 |
+
+### 權限控制
+
+- Owner 可以管理成員與角色。
+- Admin 可以依權限矩陣管理 Member。
+- Member 只能查看成員及自行退出。
+- 非成員不能取得指定專案的私人資料。
+- Owner 不能透過一般成員管理 API 自行退出。
+- 所有權限限制均由後端重新檢查。
+
+### 資料一致性
+
+- 新增、修改及移除成員使用 SQLite Transaction。
+- projects.version 用於樂觀並發控制。
+- 過期版本操作回傳 HTTP 409。
+- 前端取得版本衝突後重新載入資料。
+- 不採信客戶端提供的使用者身分欄位。
+
+### 安全設計
+
+- Session Cookie
+- CSRF Token
+- 同源要求
+- 後端 RBAC 驗證
+- 非成員資料隔離
+- textContent 安全文字渲染
+
+### 尚未實作
+
+- 完整邀請接受、拒絕與到期流程。
+- 正式 Task CRUD。
+- Kanban 任務資料持久化。
+- Socket.IO 即時同步。
+- 完整正式部署安全稽核。

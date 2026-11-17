@@ -348,3 +348,27 @@
     max-width: 90px;
   }
 }
+
+/* M4-C1：Dashboard 專案清單的成員管理入口。 */
+.project-list .member-entry-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 13px;
+  border-radius: 8px;
+  border: 1px solid #6d65c9;
+  background: #39366c;
+  color: #edeaff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.project-list .member-entry-link:hover {
+  background: #50498d;
+}
+
+.project-list .member-entry-link:focus-visible {
+  outline: 2px solid #b0a3ff;
+  outline-offset: 2px;
+}

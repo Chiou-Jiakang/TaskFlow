@@ -710,3 +710,95 @@ M3-C1 既定自動化測試 59/59 PASS。
 M3-C2 既定瀏覽器測試 8/8 PASS。
 既有回歸測試 59/59 PASS。
 以上結果僅代表已執行的測試範圍。
+
+<!-- M4-SUMMARY-2026-11-17 -->
+## 2026-11-17｜M4 集中驗收紀錄
+
+本節依據本機終端機實際執行截圖。
+
+| 測試範圍 | 測試結果 |
+| --- | --- |
+| M4-A Member Repository | 11/11 PASS |
+| M4-B Member API | 18/18 PASS |
+| M4-C1 Frontend Smoke Tests | 6/6 PASS |
+| M4-C2 Edge E2E | 15/15 PASS |
+| npm test | 94/94 PASS |
+| npm run test:e2e:all | 23/23 PASS |
+
+上述單階段測試已包含在完整回歸或合併 E2E 之中，
+不能把表格中所有測試數字相加作為獨立案例數量。
+
+### M4-A 驗收
+
+- 角色權限矩陣。
+- Owner 身分保護。
+- 成員新增及移除。
+- Email 驗證及重複加入限制。
+- Transaction、版本衝突處理。
+
+結果：11/11 PASS。
+
+### M4-B 驗收
+
+- 成員 GET、POST、PATCH、DELETE。
+- Session 驗證。
+- CSRF 與跨來源拒絕。
+- 非成員資料隔離。
+- 權限限制。
+- HTTP 409 版本衝突。
+
+結果：18/18 PASS。
+
+### M4-C1 驗收
+
+- Dashboard 成員管理入口。
+- 成員管理靜態資源。
+- 前端 API 串接。
+- CSRF 與 Session。
+- 未登入存取限制。
+
+結果：6/6 PASS。
+
+### M4-C2 驗收
+
+- Microsoft Edge 真實瀏覽器操作。
+- 五個測試帳號。
+- 四個獨立 BrowserContext。
+- Owner、Admin、Member 權限。
+- 角色升降級。
+- 版本衝突及重新整理。
+- 成員移除與自行退出。
+- Session 撤銷。
+- 非成員存取拒絕。
+- JavaScript 頁面錯誤檢查。
+
+結果：15/15 PASS。
+
+### 最新完整測試
+
+- npm test：94/94 PASS。
+- npm run test:e2e:all：23/23 PASS。
+- 兩個測試程序合計：117 次通過。
+- Failed：0。
+- Skipped：0。
+
+### 測試資料隔離
+
+Edge E2E 使用 SQLite :memory:、動態 Port 與獨立 Session。
+
+不修改正式 data/taskflow.db。
+
+### 尚未驗證
+
+- 完整邀請同意／拒絕流程。
+- 正式 Task CRUD。
+- 即時多人同步。
+- HTTPS 正式部署。
+- 其他瀏覽器相容性。
+- 完整安全及長期壓力測試。
+
+### 結論
+
+M4-A 至 M4-C2 的既定功能與自動化測試通過。
+
+測試通過不代表產品不存在其他潛在問題。

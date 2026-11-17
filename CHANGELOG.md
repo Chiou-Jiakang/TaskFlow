@@ -8,6 +8,44 @@
 
 ## [Unreleased]
 
+<!-- M4-SUMMARY-2026-11-17 -->
+### M4 — 2026-11-17｜Member Management / RBAC
+
+#### Added
+
+- M4-A：Member Repository 與角色權限矩陣。
+- M4-B：GET、POST、PATCH、DELETE 成員管理 API。
+- M4-C1：成員管理介面與 Dashboard 入口。
+- M4-C2：Microsoft Edge 多帳號瀏覽器端對端驗收。
+- 新增 test:e2e:members、test:e2e:all 指令。
+
+#### Verified
+
+- M4-A：11/11 PASS。
+- M4-B：18/18 PASS。
+- M4-C1：6/6 PASS。
+- M4-C2：15/15 PASS。
+- 完整 Node.js 回歸：94/94 PASS。
+- 合併 Edge E2E：23/23 PASS。
+- Failed：0。
+
+#### Security and Integrity
+
+- 非專案成員資料隔離。
+- Session Cookie 與 CSRF 保護。
+- Owner 身分與權限限制。
+- 舊版資料操作回傳 HTTP 409。
+- SQLite Transaction 與資料一致性驗證。
+- E2E 測試資料與正式 SQLite 隔離。
+
+#### Remaining
+
+- 完整邀請確認與到期機制。
+- 正式任務 CRUD 與 Kanban 資料整合。
+- WebSocket 即時同步。
+- 正式部署安全與跨瀏覽器驗收。
+
+
 ### M3-C2 — 2026-11-16｜Edge Browser E2E
 
 #### Added
