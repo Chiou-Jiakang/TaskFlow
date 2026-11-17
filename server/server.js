@@ -4,21 +4,30 @@ const express = require("express");
 const path = require("node:path");
 
 const { openDatabase, initializeSchema } = require("./db");
+
 const { ProjectError } = require("./project-repository");
 const { createProjectRouter } = require("./project-routes");
+
 const { createMemberRouter } = require("./member-routes");
+
+const { createTaskRouter } = require("./task-routes");
+const { initializeTaskSchema } = require("./task-repository");
+
 const { AuthError } = require("./auth-foundation");
 const { createAuthContext, sameOriginOnly } = require("./auth-routes");
 
 // 建立 Express 應用程式
 function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
   const app = express();
+
   app.disable("x-powered-by");
 
   // 限制 JSON 請求大小
   app.use(express.json({ limit: "16kb" }));
 
+  // ========================================
   // M1 健康檢查
+  // ========================================
   app.get("/api/health", (_req, res) => {
     res.json({
       service: "TaskFlow",
@@ -27,36 +36,53 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     });
   });
 
-  // 有資料庫時啟用正式 API
+  // ========================================
+  // 正式資料庫 API
+  // ========================================
   if (database) {
-    // 僅相容既有自動化測試中的可信任身分注入
+    // M5 增量初始化。
+    // 既有 M2 測試可能只建立三張核心表，
+    // 因此要在建立 Task Repository 前初始化。
+    // CREATE IF NOT EXISTS 不會清空現有任務。
+    initializeTaskSchema(database);
+
+    // 只相容既有測試中的受信任身分注入。
     const injected = typeof getAuthenticatedUserId === "function";
+
     const auth = injected ? null : createAuthContext(database);
 
     if (auth) {
-      // 正式註冊、登入、登出、目前使用者 API
+      // ========================================
+      // M3 Authentication API
+      // ========================================
       app.use("/api/auth", sameOriginOnly, auth.router);
 
-      // 所有 /api/projects 寫入（含 /members）共用同源與 CSRF 防護
+      // ========================================
+      // Project / Member / Task 共用防護
+      // ========================================
       app.use("/api/projects", (req, res, next) => {
         if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
           return next();
         }
 
-        // 未登入時由路由回傳 401
+        // 未登入者由對應路由回傳 401
         if (!auth.actorId(req)) {
           return next();
         }
 
+        // 同源檢查 + CSRF
         sameOriginOnly(req, res, () => auth.requireCsrf(req, res, next));
       });
     }
 
+    // 取得已驗證的使用者身分
     const actorId = injected
       ? getAuthenticatedUserId
       : (req) => auth.actorId(req);
 
-    // M4-B 成員管理路由（與 Project CRUD 共用安全 Middleware）
+    // ========================================
+    // M4 Member Management API
+    // ========================================
     app.use(
       "/api/projects",
       createMemberRouter({
@@ -65,7 +91,20 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
       }),
     );
 
-    // 原本 M2-B Project CRUD，原有行為不變
+    // ========================================
+    // M5-B Task REST API
+    // ========================================
+    app.use(
+      "/api/projects",
+      createTaskRouter({
+        db: database,
+        getAuthenticatedUserId: actorId,
+      }),
+    );
+
+    // ========================================
+    // M2 Project CRUD API
+    // ========================================
     app.use(
       "/api/projects",
       createProjectRouter({
@@ -75,10 +114,14 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     );
   }
 
-  // 前端 Dashboard
+  // ========================================
+  // 前端 Dashboard 與 Authentication
+  // ========================================
   app.use(express.static(path.join(__dirname, "..", "public")));
 
+  // ========================================
   // 不存在的 API
+  // ========================================
   app.use("/api", (_req, res) => {
     res.status(404).json({
       error: "API_NOT_FOUND",
@@ -86,7 +129,9 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     });
   });
 
+  // ========================================
   // 統一錯誤處理
+  // ========================================
   app.use((err, _req, res, next) => {
     if (res.headersSent) {
       return next(err);
@@ -114,6 +159,7 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     }
 
     console.error("TaskFlow request error:", err);
+
     return res.status(500).json({
       error: "INTERNAL_ERROR",
       message: "伺服器處理失敗。",
@@ -123,26 +169,40 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
   return app;
 }
 
-// 保留 M1 測試匯入方式
+// 保留 M1 測試原本的匯入方式
 const app = createApp();
 
+// ========================================
+// 正式啟動伺服器
+// ========================================
 if (require.main === module) {
   const db = openDatabase();
+
   initializeSchema(db);
 
   const port = Number(process.env.PORT || 3000);
 
-  const server = createApp({ database: db }).listen(port, "127.0.0.1", () => {
-    console.log("TaskFlow | M4-B Member API");
+  const server = createApp({
+    database: db,
+  }).listen(port, "127.0.0.1", () => {
+    console.log("TaskFlow | M5-B Task API");
+
     console.log(`Server: http://localhost:${port}`);
+
     console.log(`Health: http://localhost:${port}/api/health`);
+
     console.log("Auth API: /api/auth/register, /login, /me, /logout");
+
     console.log("Member API: /api/projects/:id/members");
+
+    console.log("Task API: /api/projects/:id/tasks");
   });
 
   server.on("error", (err) => {
     console.error("Server startup error:", err.message);
+
     db.close();
+
     process.exitCode = 1;
   });
 }

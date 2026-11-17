@@ -1,5 +1,20 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- M5-CURRENT-STATUS-2026-11-17 -->
+## 最新開發狀態｜M5 核心驗收通過（2026-11-17）
+
+> 本節是目前狀態快照；下方 M0～M4 的既有文字保留其歷史時點，不應將早期「尚未實作」誤認為最新進度。
+
+- **已完成核心驗收：** M0～M4；M5-A（Task Schema / Repository）、M5-B（Task REST API）、M5-C1（正式 Kanban 前端）、M5-C2（多人 Edge E2E）。
+- **本次實測：** `npm test` 為 137/137 PASS；`npm run test:e2e:all` 為 37/37 PASS；失敗、跳過均為 0。這是兩組測試執行次數，不是 174 個獨立產品需求。
+- **手動操作：** 已確認任務建立、看板呈現、狀態切換、重新整理後持久化、編輯和刪除。
+- **正式資料：** 任務使用 SQLite `tasks`，看板不再以六張示範卡片作為正式任務資料。
+- **版本狀態：** M5 文件與程式碼仍待 Git 檢查、Commit／Push；**尚未發布 TaskFlow v1.0.0**。
+- **後續：** M6 Drag & Drop、M7 WebSocket 即時同步、M8 留言通知、M9 分析搜尋、M10 部署與發布驗收仍待開發。
+- **整體進度：約 65%**，僅是依規劃範圍的粗略估計，不是精確的工程量度。
+<!-- /M5-CURRENT-STATUS-2026-11-17 -->
+
+
 TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標是提供專案建立、成員管理、任務追蹤及即時同步功能。
 
 本專案採取循序開發方式，從單機網站雛型開始，逐步建立資料持久化、使用者驗證、角色權限及多人協作功能。
@@ -67,11 +82,11 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M3-C1：前端 Authentication 已完成，Commit `32361a6` 已同步。
 - M3-C2：Edge E2E 8/8 PASS；既有回歸測試 59/59 PASS。
 - M4：成員管理與 RBAC 已通過既定驗收（Node.js 94/94、Edge E2E 23/23 PASS）。
-- M5～M10：尚未開始。
+- M5：核心功能與測試已通過，待 Git 結案；M6～M10：尚未開始。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
 
-目前仍屬開發階段：帳號驗證、專案與成員管理、RBAC 核心功能已完成既定測試；正式邀請核准、任務管理與多人即時同步仍待實作。
+目前仍屬開發階段：帳號驗證、專案與成員管理、RBAC 核心功能已完成既定測試；正式邀請核准、拖曳操作與多人即時同步仍待實作；正式任務管理已於 M5 核心驗收通過。
 
 ## 專案目錄（基礎結構示意）
 
@@ -630,6 +645,50 @@ https://github.com/Chiou-Jiakang/TaskFlow
 ### M4 範圍限制
 
 - 目前是依 Email 直接加入已註冊帳號，不是完整邀請確認流程。
-- Kanban 六張卡片仍為示範資料；正式 Task CRUD 排定於 M5。
+- M4 當時的 Kanban 六張卡片為示範資料；正式 Task CRUD 已於 M5 實作。
 - Socket.IO 即時同步、正式 HTTPS、跨瀏覽器及部署級安全測試尚未完成。
 - 驗收結果只代表既定測試範圍通過，不代表產品不存在其他潛在問題。
+
+<!-- M5-SUMMARY-2026-11-17 -->
+## M5｜正式任務管理與 Kanban（2026-11-17）
+
+### 已完成功能
+
+- **M5-A｜Task Schema / Repository：** 增量建立 `tasks` 資料表，保留 `users`、`projects`、`project_members`、`auth_sessions` 與原有專案；包含任務欄位驗證、指派限制、刪除關聯、版本控制及資料持久化。
+- **M5-B｜Task REST API：** `GET /api/projects/:id/tasks`、`POST /api/projects/:id/tasks`、`PATCH /api/projects/:id/tasks/:taskId`、`DELETE /api/projects/:id/tasks/:taskId`；沿用 Session Cookie、CSRF、同源政策、Owner/Admin/Member 權限與 409 版本衝突。
+- **M5-C1｜正式看板：** 三欄「待處理／進行中／已完成」；依專案查詢 SQLite 資料；表單提供標題、描述、狀態、優先度、負責人、截止日期、排序位置；可依授權新增、修改、刪除及更新狀態。
+- **M5-C2｜瀏覽器 E2E：** 四個獨立 Edge Session，驗證身分隔離、任務指派、Member 限權、Admin 編輯、資料持久化、409 衝突、刪除與登出失效。
+
+### 主要檔案
+
+| 範圍 | 檔案 |
+| --- | --- |
+| SQLite / Repository | `server/task-schema.sql`、`server/task-repository.js`、`server/init-db.js` |
+| REST API / Server | `server/task-routes.js`、`server/server.js` |
+| 前端 | `public/index.html`、`public/task-board.js`、`public/task-board.css`、`public/dashboard-auth.js` |
+| Node.js 測試 | `tests/task-repository.test.js`、`tests/task-api.test.js`、`tests/task-frontend.test.js` |
+| Edge E2E | `e2e/task-flow.e2e.js` |
+
+### 執行方式
+
+```powershell
+npm run db:init
+npm run dev
+```
+
+另開終端機執行測試：
+
+```powershell
+npm test
+npm run test:e2e:tasks
+npm run test:e2e:all
+```
+
+### 驗收與界線
+
+- M5-A：15/15 PASS；M5-B：20/20 PASS；M5-C1：8/8 PASS；M5-C2：14/14 PASS。
+- 完整 Node.js 回歸：**137/137 PASS、0 FAIL**；合併 Microsoft Edge E2E：**37/37 PASS、0 FAIL**。
+- 使用者已於瀏覽器手動核對任務新增、顯示、狀態變更、重新整理後持久化、編輯及刪除均正常。
+- M5 的程式和文件尚待最後一次 Git Commit／Push；完成前不寫入不存在的 Git SHA 或 Release 版本。
+- 尚未支援 Drag & Drop、WebSocket 即時推播、完整邀請確認、留言／通知、正式環境效能和安全稽核。
+<!-- /M5-SUMMARY-2026-11-17 -->

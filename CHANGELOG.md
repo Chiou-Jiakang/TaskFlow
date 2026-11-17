@@ -8,6 +8,36 @@
 
 ## [Unreleased]
 
+<!-- M5-SUMMARY-2026-11-17 -->
+### M5 — 2026-11-17｜Task CRUD / Kanban / Multi-user E2E
+
+#### Added
+
+- M5-A：新增 `tasks` Schema、Repository 與增量資料庫初始化；保留既有專案、成員及 Session 資料。
+- M5-B：新增正式 Task REST API（查詢、新增、修改、刪除），整合 Session、CSRF、RBAC 及 Version 409 衝突處理。
+- M5-C1：正式任務表單、專案選擇器與 SQLite Kanban 看板；支援狀態、優先度、負責人、截止日期及排序位置。
+- M5-C2：新增 Microsoft Edge 四身分端對端任務流程與合併 npm 測試指令。
+
+#### Fixed
+
+- 修正 `public/index.html` 意外串接兩份 HTML、舊版展示提示殘留的問題；保留正式看板 HTML，避免 DOM 重複及測試失敗。
+- 修復首次建立時 `server/task-repository.js` 為空檔造成 `initializeTaskSchema is not a function` 的問題。
+
+#### Verified
+
+- M5-A：15/15；M5-B：20/20；M5-C1：8/8；M5-C2：14/14，均 PASS。
+- `npm test`：137/137 PASS，0 FAIL；`npm run test:e2e:all`：37/37 PASS，0 FAIL。
+- 實際瀏覽器操作：新增、顯示、切換狀態、重新整理、編輯、刪除皆已確認正常。
+- E2E 使用記憶體 SQLite 與隨機埠；正式 `data/taskflow.db` 未作為測試目標。
+
+#### Remaining
+
+- 本批 Git Commit／Push 尚待最終檢查與執行；TaskFlow v1.0.0 尚未發布。
+- M6 Drag & Drop、M7 WebSocket、M8 留言通知、M9 搜尋統計、M10 部署與 Release 尚未完成。
+- 本次 PASS 只代表既定測試範圍，並非完整資安或正式部署認證。
+<!-- /M5-SUMMARY-2026-11-17 -->
+
+
 <!-- M4-SUMMARY-2026-11-17 -->
 ### M4 — 2026-11-17｜Member Management / RBAC
 

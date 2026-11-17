@@ -1,0 +1,203 @@
+/* M5-C1：沿用深色 TaskFlow 設計，並加上正式任務操作區。 */
+.tf-project-toolbar {
+  display: flex;
+  align-items: end;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 28px 0 12px;
+  padding: 20px;
+  border-radius: 13px;
+  border: 1px solid #354460;
+  background: #17223b;
+}
+.tf-project-toolbar > div:first-child {
+  flex: 1;
+  min-width: 210px;
+}
+.tf-project-toolbar label {
+  display: block;
+  margin-bottom: 8px;
+  color: #bbc9e5;
+  font-size: 13px;
+}
+.tf-project-toolbar select {
+  width: 100%;
+}
+.tf-toolbar-details {
+  display: grid;
+  gap: 5px;
+  min-width: 170px;
+}
+.tf-toolbar-details small {
+  color: #a9b8d2;
+}
+.tf-project-toolbar button,
+.tf-project-actions button,
+.tf-task-form button,
+.tf-task-actions button {
+  cursor: pointer;
+  font: inherit;
+  color: #fff;
+  border-radius: 8px;
+  border: 1px solid #897ffa;
+  padding: 10px 13px;
+  background: #6e61dc;
+}
+.tf-project-toolbar input,
+.tf-project-toolbar select,
+.tf-task-form :is(input, select, textarea),
+.tf-task-actions select {
+  min-width: 0;
+  border: 1px solid #455674;
+  border-radius: 8px;
+  padding: 10px;
+  background: #0c1527;
+  color: #f1f4ff;
+  font: inherit;
+}
+.tf-message {
+  min-height: 22px;
+  color: #c3cee7;
+  font-size: 13px;
+  margin: 12px 0 22px;
+}
+.tf-message[data-error="true"] {
+  color: #ffabb6;
+}
+.tf-create-panel {
+  margin: 22px 0 28px;
+  padding: 22px;
+  border: 1px solid #374967;
+  background: #18243d;
+  border-radius: 13px;
+}
+.tf-create-panel h2 {
+  font-size: 18px;
+  margin: 0 0 18px;
+}
+.tf-task-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.tf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.tf-field label {
+  color: #c8d4e9;
+  font-size: 12px;
+}
+.tf-field.tf-wide {
+  grid-column: 1 / -1;
+}
+.tf-task-form textarea {
+  resize: vertical;
+}
+.tf-form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tf-form-actions .tf-secondary,
+.tf-task-actions .tf-secondary {
+  background: #303f5c;
+  border-color: #536783;
+}
+.tf-readonly-note {
+  border: 1px solid #635c96;
+  background: #272440;
+  color: #d1c9fc;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+.tf-task-card h4 {
+  overflow-wrap: anywhere;
+}
+.tf-task-card > p {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.tf-task-card .tf-task-meta {
+  color: #a4b3cd;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.tf-task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+.tf-task-actions select {
+  flex: 1 1 130px;
+  font-size: 12px;
+}
+.tf-task-actions button {
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.tf-task-actions .tf-danger {
+  background: #693345;
+  border-color: #ac5d72;
+}
+.tf-priority-high {
+  color: #ffb0b9;
+}
+.tf-priority-medium {
+  color: #ffe09b;
+}
+.tf-priority-low {
+  color: #94dcb0;
+}
+.tf-project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+.tf-project-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.tf-project-actions a {
+  border: 1px solid #66759e;
+  background: #2b3854;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 13px;
+}
+#task-workspace :is(input, textarea, button, select, a):focus-visible {
+  outline: 2px solid #b9adff;
+  outline-offset: 2px;
+}
+#task-workspace button:disabled,
+#task-workspace select:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+@media (max-width: 980px) {
+  .tf-task-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .tf-task-form {
+    grid-template-columns: 1fr;
+  }
+  .tf-project-toolbar {
+    align-items: stretch;
+  }
+  .tf-project-toolbar > * {
+    width: 100%;
+  }
+  .tf-project-toolbar button {
+    width: 100%;
+  }
+}

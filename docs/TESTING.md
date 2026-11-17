@@ -1,5 +1,22 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- M5-CURRENT-STATUS-2026-11-17 -->
+## 最新驗收快照｜M5-C2（2026-11-17）
+
+| 類別 | 已執行結果 | 說明 |
+| --- | --- | --- |
+| M5-A Repository | 15/15 PASS | Schema、RBAC、Transaction、Version、重啟持久化 |
+| M5-B HTTP API | 20/20 PASS | Task CRUD、CSRF、Session、角色與版本驗證 |
+| M5-C1 前端 | 8/8 PASS | 正式看板、表單接線、安全文字渲染 |
+| M5-C2 Edge E2E | 14/14 PASS | 多身分、多 Session 的完整任務操作 |
+| `npm test` | **137/137 PASS** | 包含上述 Node.js 子群組；不可再累加 |
+| `npm run test:e2e:all` | **37/37 PASS** | 包含既有 23 與新增 14 個計數 |
+| 人工瀏覽器驗收 | 6 項操作正常 | 新增、看板、狀態、重整、編輯、刪除 |
+
+上述是**測試當次執行紀錄**，不能推論正式 HTTPS、其他瀏覽器、效能、WebSocket 或全部安全情境已驗證。
+<!-- /M5-CURRENT-STATUS-2026-11-17 -->
+
+
 本文件記錄 TaskFlow 各階段的測試項目、實際結果、未通過項目及後續修正情況。
 
 所有測試結果必須依據實際執行紀錄填寫，不得以預期結果取代真實測試。
@@ -802,3 +819,57 @@ Edge E2E 使用 SQLite :memory:、動態 Port 與獨立 Session。
 M4-A 至 M4-C2 的既定功能與自動化測試通過。
 
 測試通過不代表產品不存在其他潛在問題。
+
+<!-- M5-SUMMARY-2026-11-17 -->
+## 2026-11-17｜M5 實際驗收總結
+
+### 一、測試環境與執行結果
+
+| 分類 | 指令或方式 | 實際結果 |
+| --- | --- | --- |
+| M5-A Repository | `node --test .\tests\task-repository.test.js` | 15/15 PASS |
+| M5-B HTTP API | `node --test .\tests\task-api.test.js` | 20/20 PASS |
+| M5-C1 Frontend | `node --test .\tests\task-frontend.test.js` | 8/8 PASS |
+| M5-C2 Edge E2E | `node --test .\e2e\task-flow.e2e.js` | 14/14 PASS |
+| 全專案 Node.js | `npm test` | **137/137 PASS** |
+| 三套 Edge 合併 | `npm run test:e2e:all` | **37/37 PASS** |
+| 瀏覽器手動驗收 | Task Kanban 六項操作 | 6 項結果正常 |
+
+- 全套回歸及 Edge E2E 均為 0 failed、0 cancelled、0 skipped、0 todo。
+- **統計注意：** M5-A/B/C1 是 `npm test` 的子群組，M5-C2 是 37 項 Edge E2E 的一部分；不可把以上每一列相加當成獨立測試數量。
+- 本次兩次完整測試執行分別為 137 與 37；合計 174 次測試計數，但不代表 174 項完全不同的需求。
+
+### 二、M5-A / M5-B 範圍
+
+- 非專案成員不可讀取與改寫任務；Owner/Admin/Member 分權。
+- Member 只能更改自己受指派任務的授權狀態。
+- 新增、更新、刪除及指派、欄位格式、日期、狀態、優先度、position 驗證。
+- SQLite Foreign Key、Transaction、Rollback、資料遷移與重啟持久化。
+- `version` 樂觀鎖定：過期更新 HTTP 409，不覆蓋當前資料。
+- Session Cookie、同源、CSRF、錯誤 JSON、HTTP 400/401/403/404/409 等驗證。
+
+### 三、M5-C1 / M5-C2 範圍
+
+- 三欄正式 Kanban 與 Task API 接線，專案選擇、表單輸入、安全渲染和角色限制。
+- **手動瀏覽器操作六項：** 建立任務、顯示看板、更新狀態、F5 重整持久化、編輯、刪除；使用者已逐項確認正常。
+- **Edge 自動化：** 四身分獨立 Session、Owner 指派、Member 更改受指派任務狀態、Admin 編輯、過期版本 409、Owner 重讀與刪除、Member 登出後 Session 不可再存取，以及頁面錯誤檢查。
+- E2E 使用 SQLite `:memory:` + 隨機 Port + 獨立 BrowserContext；並未以正式 `data/taskflow.db` 作為測試資料庫。
+
+### 四、故障與處理紀錄
+
+1. `server/task-repository.js` 曾因空檔造成 `initializeTaskSchema is not a function`；重新貼入完整匯出程式後通過 15/15。
+2. `public/index.html` 曾包含兩份 HTML，使前端 smoke test 不通過，既有 Edge E2E 亦發生連帶失敗；備份原檔後保留新版 HTML，再次驗證 DOCTYPE、表單及選擇器數量，最終 8/8、137/137、23/23 全通過。
+3. 新增 M5-C2 E2E 後，最終合併瀏覽器驗收 37/37 PASS，未再發現未處理 JavaScript 頁面錯誤。
+
+### 五、尚待測試（NOT RUN／後續）
+
+- M6 Drag & Drop 真實拖曳及排序競爭。
+- M7 WebSocket 即時跨瀏覽器推播與斷線恢復。
+- 完整邀請核准、留言、通知、統計與搜尋等後續功能。
+- 正式 HTTPS、反向代理、部署環境權限、壓力／長時間穩定性、跨瀏覽器相容性、完整安全稽核。
+- M5 GitHub Commit／Push 成功與工作樹乾淨，需要在實際執行後才可登記 PASS。
+
+### 六、驗收結論
+
+M5-A～M5-C2 的**既定功能與測試**通過，可進行六份文件最後檢查與 Git 結案；上述 PASS 不保證所有可能的故障或安全問題都已排除。
+<!-- /M5-SUMMARY-2026-11-17 -->

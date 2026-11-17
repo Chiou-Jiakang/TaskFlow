@@ -1113,3 +1113,43 @@ Git 的 LF/CRLF 提示屬換行格式警告，不代表測試失敗。
 進入 M5：Task Schema、Task Repository、Task API 與正式 Kanban 整合。
 
 本階段 GitHub 同步結果及 SHA 以實際提交紀錄為準。
+
+<!-- M5-SUMMARY-2026-11-17 -->
+## 2026-11-17｜M5 正式任務管理開發與驗收紀錄
+
+### 一、M5-A｜Schema / Repository
+
+1. 新增 `server/task-schema.sql`、`server/task-repository.js`、`tests/task-repository.test.js`，擴充 `server/init-db.js`。
+2. 新增任務狀態、優先度、截止日期、排序、負責人與 version 欄位驗證；整合專案成員關係、Transaction 及 SQLite 外鍵。
+3. 開發期間首次遇到 `initializeTaskSchema is not a function`。調查發現 `server/task-repository.js` 為 **0 bytes**，故模組匯出為空；重新貼入完整程式並儲存後恢復正常。
+4. 執行 `node --check`、Repository 獨立測試 **15/15 PASS**。於正式 DB 初始化前先備份 `data/taskflow.db`，再執行 `npm run db:init`，確認包含 `tasks` 在內共五張核心資料表且不清除舊資料。
+
+### 二、M5-B｜Task REST API
+
+1. 新增 `server/task-routes.js`、`tests/task-api.test.js`，調整 `server/server.js` 串接 REST API。
+2. 實作任務查詢、新增、修改、刪除，以及 Session Cookie、CSRF、RBAC、version 409 與負責人範圍限制。
+3. 獨立 HTTP API 測試 **20/20 PASS**；當時完整 Node.js 回歸為 **129/129 PASS**，既有 Edge E2E 為 **23/23 PASS**。
+
+### 三、M5-C1｜正式 Task Kanban 前端
+
+1. 新增 `public/task-board.js`、`public/task-board.css`、`tests/task-frontend.test.js`，修改 `public/index.html` 與 `public/dashboard-auth.js`。
+2. 實作專案選擇器、建立／編輯任務表單、任務狀態及優先度、指派、截止日期、三欄 Kanban 與 SQLite 統計。
+3. 首次測試失敗：發現 `public/index.html` 具有兩個 `<!doctype html>`、兩個專案建立表單，且舊版展示提示仍存在。先備份原始檔，再移除舊的 HTML 區段；重新檢查 DOM 標記：DOCTYPE 1、`</html>` 1、專案表單 1、任務專案選擇器 1、展示提示 0。
+4. 修復後 M5-C1 專屬測試 **8/8 PASS**；完整回歸 **137/137 PASS**；既有 Edge E2E **23/23 PASS**。
+5. 使用者在瀏覽器實測新增任務、Kanban 呈現、狀態切換、重整後保留資料、編輯與刪除，六項均確認正常。
+
+### 四、M5-C2｜多人 Edge E2E
+
+1. 新增 `e2e/task-flow.e2e.js`，新增 `test:e2e:tasks` 並擴充 `test:e2e:all` npm 指令。
+2. 使用隔離的記憶體 SQLite、隨機 Port 與四個獨立 Microsoft Edge BrowserContext 驗證 Owner、Admin、Member、非成員權限。
+3. 測試涵蓋：建立專案與任務、Member 指派和狀態更新、Admin 編輯、409 樂觀鎖定、Owner 重讀／刪除、登出後存取拒絕及頁面錯誤。
+4. M5-C2 專屬測試 **14/14 PASS**；`npm test` **137/137 PASS**；`npm run test:e2e:all` **37/37 PASS**；均 0 failed、0 skipped。
+
+### 五、Git 安全確認與結案狀態
+
+- `.gitignore` 中 `data/` 規則有效，`git check-ignore -v data/taskflow.db` 已確認正式資料庫被忽略；當時 `git ls-files -- data/ .env` 未列出已追蹤的資料檔。
+- `git diff -- package.json` 顯示既有測試指令保留並新增 Task E2E；LF／CRLF 提示只是格式警告。
+- 截至本份文件更新前，M5 的程式與文件尚未完成最終 Git Commit／Push；**不填造新的 Commit SHA**。
+- 下一步：審查本次六份文件、確認暫存清單不含 SQLite／密鑰、全套回歸、再集中 Commit／Push，最後驗證 `HEAD` 與 `origin/main` 完全一致。
+- 未完成功能：M6 Drag & Drop、M7 WebSocket、M8 留言與通知、M9 Dashboard 搜尋統計、M10 部署級安全與 Release。
+<!-- /M5-SUMMARY-2026-11-17 -->

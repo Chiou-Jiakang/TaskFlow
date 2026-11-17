@@ -1,5 +1,16 @@
 # TaskFlow｜系統架構說明
 
+<!-- M5-CURRENT-STATUS-2026-11-17 -->
+## 最新架構快照｜M5（2026-11-17）
+
+> 下方早期章節包含 M1～M4 的歷史架構說明；正式任務架構以本快照及文末 M5 專章為準。
+
+目前正式路徑為：瀏覽器中的 `public/index.html`／`public/task-board.js` → Express Session／CSRF／RBAC 驗證 → `server/task-routes.js` → `server/task-repository.js` → SQLite `tasks`。任務與專案、成員和 Session 共用既有資料庫結構；M5 採增量初始化，而非清空正式資料庫。
+
+M6 Drag & Drop、M7 WebSocket、M8～M10 產品化功能尚未實作，不列入本次完成範圍。
+<!-- /M5-CURRENT-STATUS-2026-11-17 -->
+
+
 ## 一、架構概述
 
 TaskFlow 採用前後端責任分離的全端架構。
@@ -837,3 +848,53 @@ M4 並未新增 tasks 資料表。正式任務管理留待 M5。
 - Kanban 任務資料持久化。
 - Socket.IO 即時同步。
 - 完整正式部署安全稽核。
+
+<!-- M5-SUMMARY-2026-11-17 -->
+## M5｜正式任務管理架構（2026-11-17）
+
+### 一、資料流程與模組職責
+
+```text
+Microsoft Edge / Browser Session
+  └─ public/index.html + dashboard-auth.js + task-board.js + task-board.css
+       └─ /api/projects/:id/tasks  (Express / task-routes.js)
+            ├─ 伺服器端 Session 身分
+            ├─ 同源 + CSRF（寫入）
+            ├─ RBAC 與專案成員資格
+            └─ task-repository.js
+                 └─ node:sqlite → tasks / projects / project_members / users
+```
+
+- **Schema：** `server/task-schema.sql` 定義正式 `tasks` 資料表、關聯與約束。
+- **Repository：** `server/task-repository.js` 封裝任務 CRUD、欄位驗證、Transaction、角色判斷、指派一致性及樂觀鎖定。
+- **Initializer：** `server/init-db.js` 增量建立任務 Schema，已存在的正式資料與 Session 不因重新執行而清除。
+- **Router：** `server/task-routes.js` 提供 HTTP 入口並串接既有 Authentication、CSRF 和 Project/Member 權限。
+- **Frontend：** `public/task-board.js` 以 REST API 載入、更新三欄 Kanban；`public/index.html` 提供表單與專案選擇器；`public/task-board.css` 提供樣式。
+
+### 二、API 契約與安全邊界
+
+| HTTP | 路徑 | 用途 |
+| --- | --- | --- |
+| GET | `/api/projects/:id/tasks` | 取得授權專案的任務清單 |
+| POST | `/api/projects/:id/tasks` | 建立任務 |
+| PATCH | `/api/projects/:id/tasks/:taskId` | 更新任務欄位或狀態 |
+| DELETE | `/api/projects/:id/tasks/:taskId` | 刪除任務 |
+
+- 未登入請求不得讀取私人任務；非專案成員不得列出或修改專案任務。
+- Owner/Admin 可依權限管理；Member 只能對自己受指派任務執行獲授權的狀態變更，不能任意編輯、建立或刪除。
+- 寫入請求維持現有 CSRF、Same-Origin、資料格式和身分驗證；不可採信客戶端自行指定 Owner 身分。
+- 過期 `version` 更新回傳 HTTP 409，不覆蓋較新資料；前端遇衝突時重新取得資料與版本。
+- 任務負責人需為同一專案成員；使用者退出後，任務指派依 Repository 規則解除。
+- 刪除專案應由 SQLite 外鍵連動處理任務清除；正式畫面以真實 SQLite 清單與統計為準。
+
+### 三、資料與測試隔離
+
+- 本機正式 SQLite：`data/taskflow.db`，由 `.gitignore` 的 `data/` 規則排除 Git 追蹤。
+- M5-A 執行前已建立資料庫備份；`npm run db:init` 完成五張核心資料表（`users`、`projects`、`project_members`、`auth_sessions`、`tasks`）增量初始化。
+- `tests/task-repository.test.js`、`tests/task-api.test.js`、`e2e/task-flow.e2e.js` 測試在隔離 SQLite 中驗證資料，E2E 採隨機 HTTP Port 與獨立 BrowserContext。
+- M5 的多 Session E2E 不是 WebSocket 即時同步測試；即時跨瀏覽器推播屬 M7 待開發功能。
+
+### 四、尚未實作範圍
+
+Drag & Drop（M6）、WebSocket（M7）、留言／通知（M8）、分析／搜尋（M9）、正式 HTTPS／部署與完整安全測試（M10）仍列為後續工作。
+<!-- /M5-SUMMARY-2026-11-17 -->
