@@ -1,6 +1,7 @@
 "use strict";
 
-// M5-C1：正式 Task Kanban 前端。所有權限仍由 Express 再次檢查。
+// M6-C：正式 Task Kanban + 原子排序 API。
+// 延續 M5 的 CRUD、Session / CSRF / RBAC，不做樂觀寫入。
 (() => {
   const el = (id) => document.getElementById(id);
   const selector = el("task-project-select");
@@ -24,7 +25,15 @@
     editingId: null,
     busy: false,
     requestId: 0,
+    dragging: null,
   };
+
+  const dragHelp = document.createElement("p");
+  dragHelp.className = "tf-drag-instructions";
+  dragHelp.textContent =
+    "Owner / Admin：拖曳卡片到其他欄位或調整同欄順序；也可按「上移／下移」操作。";
+  dragHelp.hidden = true;
+  document.querySelector(".board-section .section-heading > div")?.append(dragHelp);
 
   function notice(text, error = false) {
     message.textContent = text;
@@ -37,6 +46,10 @@
 
   function canWrite() {
     return state.project?.status === "active";
+  }
+
+  function canMove() {
+    return Boolean(isManager() && canWrite() && !state.busy && state.csrf);
   }
 
   function taskUrl(id = "") {
@@ -82,8 +95,26 @@
     };
   }
 
+  function clearDropMarkers() {
+    for (const list of document.querySelectorAll("#task-workspace .task-list")) {
+      list.classList.remove("tf-drop-zone", "tf-drop-at-end");
+      for (const card of list.querySelectorAll(".tf-drop-before")) {
+        card.classList.remove("tf-drop-before");
+      }
+    }
+  }
+
+  function endDrag() {
+    clearDropMarkers();
+    for (const card of document.querySelectorAll(".tf-dragging")) {
+      card.classList.remove("tf-dragging");
+    }
+    state.dragging = null;
+  }
+
   function setBusy(value) {
     state.busy = value;
+    if (value) endDrag();
     for (const control of el("task-workspace").querySelectorAll(
       "button, input, select, textarea",
     )) {
@@ -91,6 +122,8 @@
     }
     if (!value) {
       el("task-submit").disabled = !isManager() || !canWrite();
+      // refresh() 在 busy 狀態會重建卡片，結束時重繪以恢復拖曳和操作。
+      render();
     }
   }
 
@@ -120,6 +153,16 @@
       : "";
   }
 
+  function sortedTasks() {
+    return [...state.tasks].sort(
+      (a, b) => (a.position ?? 0) - (b.position ?? 0) || a.id - b.id,
+    );
+  }
+
+  function columnTasks(status) {
+    return sortedTasks().filter((task) => task.status === status);
+  }
+
   function emptyBoard() {
     for (const [column] of Object.entries(columnStatus)) {
       const section = document.querySelector(
@@ -142,9 +185,59 @@
     return element;
   }
 
+  function moveTask(task, status, index) {
+    if (!canMove() || !selector.value || !state.tasks.some((x) => x.id === task.id)) {
+      return;
+    }
+    const remaining = columnTasks(status).filter((item) => item.id !== task.id);
+    if (!Number.isSafeInteger(index) || index < 0 || index > remaining.length) {
+      notice("目標排序位置不合法，請重新整理再操作。", true);
+      return;
+    }
+    if (task.status === status) {
+      const previousIndex = columnTasks(status).findIndex((x) => x.id === task.id);
+      if (previousIndex === index) {
+        notice("任務位置沒有變更。");
+        return;
+      }
+    }
+    // M6-B：只有等原子交易成功後才刷新正式資料，不先改前端 state。
+    mutate(
+      () =>
+        api(
+          `${taskUrl(task.id)}/move`,
+          writeOptions("PATCH", {
+            version: task.version,
+            status,
+            index,
+          }),
+        ),
+      "任務已移動，排序已儲存。",
+    );
+  }
+
   function makeCard(task) {
     const card = document.createElement("article");
     card.className = "task-card tf-task-card";
+    card.dataset.taskId = String(task.id);
+    card.draggable = canMove();
+    if (card.draggable) {
+      card.classList.add("tf-can-drag");
+      card.setAttribute("aria-label", `可拖曳排序：${task.title}`);
+      card.addEventListener("dragstart", (event) => {
+        if (!canMove() || !event.dataTransfer) {
+          event.preventDefault();
+          return;
+        }
+        endDrag();
+        state.dragging = { taskId: task.id, projectId: selector.value };
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", String(task.id));
+        card.classList.add("tf-dragging");
+      });
+      card.addEventListener("dragend", endDrag);
+    }
+
     const priority = document.createElement("span");
     priority.className = `task-category tf-priority-${task.priority}`;
     priority.textContent = priorityNames[task.priority] || task.priority;
@@ -157,6 +250,14 @@
     meta.className = "tf-task-meta";
     meta.textContent = `負責人：${assignee?.displayName || assignee?.email || "未指派"}　·　截止：${task.dueDate || "未設定"}　·　v${task.version}`;
     card.append(priority, title, description, meta);
+
+    if (card.draggable) {
+      const hint = document.createElement("span");
+      hint.className = "tf-drag-hint";
+      hint.textContent = "⋮⋮ 拖曳排序";
+      hint.setAttribute("aria-hidden", "true");
+      card.append(hint);
+    }
 
     if (canWrite()) {
       const actions = document.createElement("div");
@@ -173,22 +274,36 @@
         }
         status.value = task.status;
         status.addEventListener("change", () => {
-          if (status.value === task.status) return;
-          mutate(
-            () =>
-              api(
-                taskUrl(task.id),
-                writeOptions("PATCH", {
-                  version: task.version,
-                  status: status.value,
-                }),
-              ),
-            "任務狀態已更新。",
-          );
+          if (state.busy || status.value === task.status) return;
+          if (isManager()) {
+            // Manager 的狀態變更也走 M6-B，避免 position 與排序不同步。
+            moveTask(task, status.value, columnTasks(status.value).length);
+          } else {
+            // Member 保留 M5 權限：僅能修改自己受指派任務的 status。
+            mutate(
+              () =>
+                api(
+                  taskUrl(task.id),
+                  writeOptions("PATCH", {
+                    version: task.version,
+                    status: status.value,
+                  }),
+                ),
+              "任務狀態已更新。",
+            );
+          }
         });
         actions.append(status);
       }
       if (isManager()) {
+        const withinColumn = columnTasks(task.status);
+        const index = withinColumn.findIndex((item) => item.id === task.id);
+        if (index > 0) {
+          actions.append(button("上移", () => moveTask(task, task.status, index - 1)));
+        }
+        if (index !== -1 && index < withinColumn.length - 1) {
+          actions.append(button("下移", () => moveTask(task, task.status, index + 1)));
+        }
         actions.append(
           button("編輯", () => editTask(task)),
           button("刪除", () => removeTask(task), true),
@@ -200,12 +315,14 @@
   }
 
   function render() {
+    endDrag();
     emptyBoard();
     el("task-project-name").textContent = state.project?.name || "尚未選擇專案";
     el("task-my-role").textContent = state.project?.myRole || "—";
     const editAllowed = Boolean(isManager() && canWrite());
     el("task-create-panel").hidden = !editAllowed;
     el("task-readonly-note").hidden = editAllowed || !state.project;
+    dragHelp.hidden = !editAllowed;
     if (state.project) {
       el("task-readonly-note").textContent =
         state.project.status === "archived"
@@ -213,20 +330,14 @@
           : "你的角色可查看任務；僅可更改自己受指派任務的狀態。";
     }
     renderAssignees();
-    const tasks = [...state.tasks].sort(
-      (a, b) => (a.position ?? 0) - (b.position ?? 0) || a.id - b.id,
-    );
+    const tasks = sortedTasks();
     for (const [column, backendStatus] of Object.entries(columnStatus)) {
       const section = document.querySelector(
         `.kanban-column[data-status="${column}"]`,
       );
       const filtered = tasks.filter((task) => task.status === backendStatus);
-      section.querySelector(".column-count").textContent = String(
-        filtered.length,
-      );
-      section
-        .querySelector(".task-list")
-        .replaceChildren(...filtered.map(makeCard));
+      section.querySelector(".column-count").textContent = String(filtered.length);
+      section.querySelector(".task-list").replaceChildren(...filtered.map(makeCard));
     }
     el("total-count").textContent = String(tasks.length);
     el("progress-count").textContent = String(
@@ -245,7 +356,7 @@
     state.tasks = [];
     render();
     if (!currentId) {
-      notice("請先建立或選擇專案。", false);
+      notice("請先建立或選擇專案。");
       return;
     }
     notice("正在讀取 SQLite 任務資料…");
@@ -295,8 +406,8 @@
           true,
         );
       } else {
-        notice(error.message, true);
         await refresh();
+        notice(error.message, true);
       }
     } finally {
       setBusy(false);
@@ -338,6 +449,64 @@
     );
   }
 
+  // 跨欄、同欄拖曳：只更新定位標記，絕不先搬動 DOM 或 state。
+  function activeDrag(section) {
+    return Boolean(
+      state.dragging &&
+      canMove() &&
+      state.dragging.projectId === selector.value &&
+      columnStatus[section.dataset.status],
+    );
+  }
+
+  function dropIndex(section, clientY) {
+    const list = section.querySelector(".task-list");
+    const visible = [...list.querySelectorAll(".tf-task-card")].filter(
+      (card) => Number(card.dataset.taskId) !== state.dragging.taskId,
+    );
+    const index = visible.findIndex(
+      (card) => clientY < card.getBoundingClientRect().top + card.getBoundingClientRect().height / 2,
+    );
+    return index === -1 ? visible.length : index;
+  }
+
+  function markDrop(section, index) {
+    clearDropMarkers();
+    const list = section.querySelector(".task-list");
+    const visible = [...list.querySelectorAll(".tf-task-card")].filter(
+      (card) => Number(card.dataset.taskId) !== state.dragging.taskId,
+    );
+    list.classList.add("tf-drop-zone");
+    if (index === visible.length) {
+      list.classList.add("tf-drop-at-end");
+    } else {
+      visible[index]?.classList.add("tf-drop-before");
+    }
+  }
+
+  for (const section of document.querySelectorAll("#task-workspace .kanban-column")) {
+    section.addEventListener("dragover", (event) => {
+      if (!activeDrag(section)) return;
+      event.preventDefault();
+      if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+      markDrop(section, dropIndex(section, event.clientY));
+    });
+
+    section.addEventListener("dragleave", (event) => {
+      if (!section.contains(event.relatedTarget)) clearDropMarkers();
+    });
+
+    section.addEventListener("drop", (event) => {
+      if (!activeDrag(section)) return;
+      event.preventDefault();
+      const targetStatus = columnStatus[section.dataset.status];
+      const index = dropIndex(section, event.clientY);
+      const task = state.tasks.find((item) => item.id === state.dragging.taskId);
+      endDrag();
+      if (task) moveTask(task, targetStatus, index);
+    });
+  }
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (state.busy || !isManager() || !canWrite() || !form.reportValidity())
@@ -362,7 +531,6 @@
     const editing = state.tasks.find((task) => task.id === state.editingId);
     const editedPayload = {
       ...payload,
-      // 編輯時允許把原本的負責人與截止日期清空。
       assigneeId: assignee === "" ? null : Number(assignee),
       dueDate: due || null,
       version: editing?.version,
@@ -431,5 +599,5 @@
     },
   };
 
-  emptyBoard(); // 消除舊 M1 模擬任務；登入後只呈現正式資料。
+  emptyBoard();
 })();

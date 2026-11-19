@@ -1,5 +1,15 @@
 # TaskFlow｜系統架構說明
 
+<!-- M6-CURRENT-STATUS-2026-11-18 -->
+## 最新架構快照｜M6（2026-11-18）
+
+> 以下為目前有效的排序架構；本文件既有 M1～M5 篇章屬各階段歷史記錄。
+
+`public/task-board.js` 的原生 HTML Drag & Drop → `PATCH /api/projects/:id/tasks/:taskId/move` → `server/task-order-routes.js` 的 Session／CSRF／RBAC 驗證 → `server/task-order-repository.js` 的 SQLite 交易與 version 409 檢查 → `tasks` 的 `status`／`position` 持久化。
+
+Owner/Admin 可以使用拖放與排序；Member 只有既有受指派任務的狀態變更權限。衝突時重新載入後端資料。不包含 M7 WebSocket 即時推播。
+<!-- /M6-CURRENT-STATUS-2026-11-18 -->
+
 <!-- M5-CURRENT-STATUS-2026-11-17 -->
 ## 最新架構快照｜M5（2026-11-17）
 
@@ -898,3 +908,40 @@ Microsoft Edge / Browser Session
 
 Drag & Drop（M6）、WebSocket（M7）、留言／通知（M8）、分析／搜尋（M9）、正式 HTTPS／部署與完整安全測試（M10）仍列為後續工作。
 <!-- /M5-SUMMARY-2026-11-17 -->
+
+<!-- M6-SUMMARY-2026-11-18 -->
+## M6｜Kanban 排序與拖放資料流（2026-11-18）
+
+### 一、主要模組與責任
+
+| 層級 | 模組 | 職責 |
+| --- | --- | --- |
+| Browser | `public/task-board.js` | HTML Drag & Drop、目標欄位與位置計算、操作權限、衝突後重新載入 |
+| Styles | `public/task-board.css` | 拖放狀態與插入位置視覺回饋 |
+| Router | `server/task-order-routes.js` | `PATCH .../move`、Session／CSRF／同源與授權驗證 |
+| Repository | `server/task-order-repository.js` | 排序與跨欄移動交易、position 整理、版本及 RBAC 檢查 |
+| DB | SQLite `tasks` | 持久化 `status`、`position`、`version` 與任務資訊 |
+
+### 二、正式任務移動 API
+
+`PATCH /api/projects/:id/tasks/:taskId/move`
+
+- 請求以任務目前的 `version`、目標 `status` 與 `index` 表達一次移動／重排意圖。
+- Owner/Admin 可依後端權限執行拖放排序；Member 不可排序或拖放，但仍保留自己受指派任務的既有授權狀態更新能力。
+- 非成員、匿名、已登出與封存專案依原有政策拒絕寫入；後端不信任前端角色或身分宣告。
+- 過期版本回傳 HTTP 409，不應覆蓋較新任務；前端須重新取得排序和版本資料。
+- 同欄與跨欄位置依 Repository 交易進行持久化；前端不在伺服器成功前假定 SQLite 排序已提交。
+- 原有 `PATCH /api/projects/:id/tasks/:taskId` 仍用於一般任務欄位及 Member 的授權狀態修改，不能一概替換。
+
+### 三、資料一致性與測試邊界
+
+- SQLite 由已存在的 M5 `tasks` 資料表維持持久化；M6 沿用 `position` 和 version 機制，未將正式資料重新初始化。
+- API／Repository 在測試範圍內驗證交易原子性、排序連續性、跨欄移動與版本競爭。
+- `tests/task-order-repository.test.js`、`tests/task-order-api.test.js`、`tests/task-drag-frontend.test.js` 與 `e2e/kanban-drag.e2e.js` 驗證不同層級。
+- Edge E2E 採隔離測試資料庫、獨立 Session 與隨機埠；不需要以正式 SQLite 檔案作為測試資料。
+- M6 是重新取得資料後的一致性處理，**不是**多使用者 WebSocket 即時推播；後者仍屬 M7。
+
+### 四、後續限制
+
+正式 HTTPS、反向代理、多節點部署、其他瀏覽器、長時間穩定性與完整安全稽核均未因 M6 測試通過而自動驗收。
+<!-- /M6-SUMMARY-2026-11-18 -->

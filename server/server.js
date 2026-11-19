@@ -12,6 +12,7 @@ const { createMemberRouter } = require("./member-routes");
 
 const { createTaskRouter } = require("./task-routes");
 const { initializeTaskSchema } = require("./task-repository");
+const { createTaskOrderRouter } = require("./task-order-routes");
 
 const { AuthError } = require("./auth-foundation");
 const { createAuthContext, sameOriginOnly } = require("./auth-routes");
@@ -103,6 +104,17 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     );
 
     // ========================================
+    // M6-B Task Reorder REST API
+    // ========================================
+    app.use(
+      "/api/projects",
+      createTaskOrderRouter({
+        db: database,
+        getAuthenticatedUserId: actorId,
+      }),
+    );
+
+    // ========================================
     // M2 Project CRUD API
     // ========================================
     app.use(
@@ -185,7 +197,7 @@ if (require.main === module) {
   const server = createApp({
     database: db,
   }).listen(port, "127.0.0.1", () => {
-    console.log("TaskFlow | M5-B Task API");
+    console.log("TaskFlow | M6-B Task Reorder API");
 
     console.log(`Server: http://localhost:${port}`);
 
@@ -196,6 +208,8 @@ if (require.main === module) {
     console.log("Member API: /api/projects/:id/members");
 
     console.log("Task API: /api/projects/:id/tasks");
+
+    console.log("Task Move API: PATCH /api/projects/:id/tasks/:taskId/move");
   });
 
   server.on("error", (err) => {

@@ -8,6 +8,35 @@
 
 ## [Unreleased]
 
+<!-- M6-SUMMARY-2026-11-18 -->
+### M6 — 2026-11-18｜Kanban Drag & Drop / Ordering
+
+#### Added
+
+- M6-A：Task Order Repository，支援同欄排序、跨欄狀態移動、position 重新編號、樂觀鎖與交易回滾。
+- M6-B：新增 `PATCH /api/projects/:id/tasks/:taskId/move`，整合 Session Cookie、CSRF、RBAC、封存專案限制及 409 衝突處理。
+- M6-C：三欄看板拖曳、放置位置提示、角色限制與資料重載。
+- M6-D：四個獨立 Edge BrowserContext 的多人拖曳 E2E，涵蓋滑鼠拖放、持久化、跨欄、管理權限、版本競爭和封存限制。
+- 將 Kanban Drag E2E 納入 `test:e2e:all`，並保留原有測試指令。
+
+#### Fixed
+
+- 排除真實滑鼠拖曳事件已進入 `drop` 但未發送 `/move` 請求的情況；經 Drag Event Trace 與卡片位置資訊定位後修正，M6-D 回歸 15/15 PASS。
+- 修正 M5-C2 中 Owner 狀態更新 E2E 的兩處 `waitForResponse` 路徑，讓測試監聽新的 `/move` API；未放寬 HTTP 409／200 驗證。
+
+#### Verified
+
+- M6-A 11/11、M6-B 14/14、M6-C 9/9、M6-D 15/15 PASS。
+- `npm test`：**171/171 PASS**。
+- 四套 Microsoft Edge E2E 合併驗收：**52/52 PASS**，0 failed、0 skipped。
+- `git diff --check` 未顯示格式錯誤；GitHub Commit／Push 以實際 SHA 和工作樹核對結果為準。
+
+#### Remaining
+
+- M7 Socket.IO 即時同步、M8 留言通知、M9 搜尋分析、M10 正式部署與安全／相容性驗收。
+- 尚未發布正式 v1.0.0；自動化 PASS 不等於不存在任何程式缺陷。
+<!-- /M6-SUMMARY-2026-11-18 -->
+
 <!-- M5-SUMMARY-2026-11-17 -->
 ### M5 — 2026-11-17｜Task CRUD / Kanban / Multi-user E2E
 

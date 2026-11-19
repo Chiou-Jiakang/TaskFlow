@@ -334,7 +334,7 @@ test(
         waitForResponse(
           page,
           "PATCH",
-          `/api/projects/${projectId}/tasks/${taskId}`,
+          `/api/projects/${projectId}/tasks/${taskId}/move`,
         ),
         taskCard(page, "M5-C2 初始任務").locator("select").selectOption("done"),
       ]);
@@ -357,7 +357,7 @@ test(
         waitForResponse(
           page,
           "PATCH",
-          `/api/projects/${projectId}/tasks/${taskId}`,
+          `/api/projects/${projectId}/tasks/${taskId}/move`,
         ),
         taskCard(page, "M5-C2 Admin 已更新")
           .locator("select")

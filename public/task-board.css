@@ -1,4 +1,4 @@
-/* M5-C1：沿用深色 TaskFlow 設計，並加上正式任務操作區。 */
+/* M6-C：沿用既有深色 TaskFlow 視覺，擴充實際拖放排序。 */
 .tf-project-toolbar {
   display: flex;
   align-items: end;
@@ -181,6 +181,66 @@
 #task-workspace select:disabled {
   opacity: 0.6;
   cursor: wait;
+}
+
+/* M6-C：拖曳狀態與放置位置提示。 */
+.tf-drag-instructions {
+  margin-top: 8px;
+  color: #bdb6ff;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.tf-drag-instructions[hidden] {
+  display: none;
+}
+#task-workspace .tf-can-drag {
+  cursor: grab;
+  touch-action: auto;
+  transition: opacity 120ms ease, border-color 120ms ease;
+}
+#task-workspace .tf-can-drag:active {
+  cursor: grabbing;
+}
+#task-workspace .tf-dragging {
+  opacity: 0.48;
+  border-color: #a59bff;
+}
+#task-workspace .tf-drag-hint {
+  display: inline-block;
+  margin-top: 9px;
+  color: #b5aaff;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+#task-workspace .kanban-column .task-list {
+  min-height: 90px;
+  border-radius: 9px;
+}
+#task-workspace .task-list.tf-drop-zone {
+  background: rgba(122, 110, 234, 0.09);
+  outline: 1px dashed rgba(170, 160, 255, 0.7);
+  outline-offset: 3px;
+}
+#task-workspace .tf-task-card.tf-drop-before {
+  border-top: 4px solid #a79aff;
+  margin-top: 8px;
+}
+#task-workspace .task-list.tf-drop-at-end::after {
+  content: "放在這裡";
+  display: block;
+  margin-top: 10px;
+  padding: 12px;
+  border-top: 3px solid #a79aff;
+  color: #d8d3ff;
+  text-align: center;
+  font-size: 12px;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  #task-workspace .tf-can-drag {
+    transition: none;
+  }
 }
 @media (max-width: 980px) {
   .tf-task-form {

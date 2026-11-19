@@ -1,5 +1,18 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- M6-CURRENT-STATUS-2026-11-18 -->
+## 最新開發狀態｜M6 核心驗收通過（2026-11-18）
+
+> 本節是最新狀態快照。下方 M0～M5 以及舊的 M5 狀態文字保留歷史時點，若與本節不同，以本節與最新 Git 記錄為準。
+
+- **M0～M5：** 已結案；M5 Git commit `93e7741`。
+- **M6-A～M6-D：** 拖放與排序 Repository、API、前端和 Edge E2E 既定測試均通過。
+- **本次完整驗收：** `npm test` **171/171 PASS**、四套 Edge E2E **52/52 PASS**，0 失敗、0 略過。
+- **歷史相容修正：** M5-C2 的 Owner 狀態選單更新改用 M6 `/move` API，兩個 E2E 監聽條件已更新，14/14 PASS。
+- **提交狀態：** M6 Git 結案須以實際 `HEAD`、`origin/main` 與乾淨工作樹驗證，不預先宣告 Commit／Push 完成。
+- **進度估算：** TaskFlow v1.0.0 約 **75%**；M7～M10 與正式 Release 尚未完成。
+<!-- /M6-CURRENT-STATUS-2026-11-18 -->
+
 <!-- M5-CURRENT-STATUS-2026-11-17 -->
 ## 最新開發狀態｜M5 核心驗收通過（2026-11-17）
 
@@ -82,7 +95,7 @@ TaskFlow 是一套以多人協作為核心的全端專案管理系統，目標�
 - M3-C1：前端 Authentication 已完成，Commit `32361a6` 已同步。
 - M3-C2：Edge E2E 8/8 PASS；既有回歸測試 59/59 PASS。
 - M4：成員管理與 RBAC 已通過既定驗收（Node.js 94/94、Edge E2E 23/23 PASS）。
-- M5：核心功能與測試已通過，待 Git 結案；M6～M10：尚未開始。
+- M5：已於 Commit 93e7741 完成 Git 結案；M6：核心功能與測試通過；M7～M10 尚待開發。
 - 正式版本：尚未發布。
 - 預定首個正式版本：v1.0.0。
 
@@ -692,3 +705,36 @@ npm run test:e2e:all
 - M5 的程式和文件尚待最後一次 Git Commit／Push；完成前不寫入不存在的 Git SHA 或 Release 版本。
 - 尚未支援 Drag & Drop、WebSocket 即時推播、完整邀請確認、留言／通知、正式環境效能和安全稽核。
 <!-- /M5-SUMMARY-2026-11-17 -->
+
+<!-- M6-SUMMARY-2026-11-18 -->
+## M6｜Kanban 拖放與排序（2026-11-18）
+
+### 已完成
+
+- M6-A：`server/task-order-repository.js` 與排序交易，處理同欄重排、跨欄移動、position 重排與 version 樂觀鎖。
+- M6-B：`server/task-order-routes.js` 與 `PATCH /api/projects/:id/tasks/:taskId/move`；沿用 Session、CSRF、RBAC、封存限制及 HTTP 409。
+- M6-C：`public/task-board.js`、`public/task-board.css` 的 HTML Drag & Drop；Owner/Admin 可拖曳，Member 不具有排序權限。更新成功後重新取得正式資料；版本衝突時重載，避免顯示與 SQLite 不一致。
+- M6-D：`e2e/kanban-drag.e2e.js` 使用 Microsoft Edge 多身分情境測試實際滑鼠拖放、重整持久化、權限與版本衝突。
+- M5-C2 舊 E2E 的兩處 Owner 狀態修改等待路徑，已配合 M6 從原 Task PATCH 改為 `/move`；Member 的授權狀態更新仍沿用原 PATCH API。
+
+### 驗收（本機終端機截圖，2026-11-18）
+
+- M6-A：11/11；M6-B：14/14；M6-C：9/9；M6-D：15/15，均為既定專項測試通過。
+- `npm test`：**171/171 PASS**；包含上述 Node.js 專項測試，不額外累加。
+- 依序執行四套 Edge E2E：**52/52 PASS**（Auth 8、Member 15、Task 14、Kanban Drag 15），0 FAIL、0 SKIP。
+- 兩個完整程序合計為 223 次通過的測試計數，非 223 項獨立產品需求或安全保證。
+
+### 使用與驗收指令
+
+```powershell
+npm test
+npm run test:e2e:drag
+npm run test:e2e:all
+```
+
+`test:e2e:all` 應包含 `auth-flow.e2e.js`、`member-flow.e2e.js`、`task-flow.e2e.js`、`kanban-drag.e2e.js`；如環境資源造成競爭，可使用 `node --test --test-concurrency=1` 依序執行四個檔案。此說明不代表已驗證所有作業系統或瀏覽器。
+
+### 尚未完成
+
+M7 WebSocket／Socket.IO 即時推播與離線恢復；M8 協作留言及通知；M9 搜尋統計；M10 HTTPS 部署、跨瀏覽器、效能與完整安全驗收。正式 TaskFlow v1.0.0 尚未發布。M6 Git 是否結案以實際 `git status -sb`、`HEAD` 及 `origin/main` 比對為準。
+<!-- /M6-SUMMARY-2026-11-18 -->

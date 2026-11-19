@@ -1,5 +1,19 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- M6-CURRENT-STATUS-2026-11-18 -->
+## 最新驗收快照｜M6（2026-11-18）
+
+| 範圍 | 已執行結果 |
+| --- | --- |
+| M6-A Repository / M6-B API / M6-C Frontend | 11/11、14/14、9/9 PASS |
+| M6-D Edge Drag E2E | 15/15 PASS |
+| M5-C2 回歸修正 | 14/14 PASS |
+| **完整 `npm test`** | **171/171 PASS** |
+| **四套 Microsoft Edge E2E** | **52/52 PASS** |
+
+以上都是本機測試截圖的結果，均 0 fail；專項數目為完整測試的子集。正式部署、HTTPS、跨瀏覽器、效能與完整資安尚未驗收。
+<!-- /M6-CURRENT-STATUS-2026-11-18 -->
+
 <!-- M5-CURRENT-STATUS-2026-11-17 -->
 ## 最新驗收快照｜M5-C2（2026-11-17）
 
@@ -873,3 +887,49 @@ M4-A 至 M4-C2 的既定功能與自動化測試通過。
 
 M5-A～M5-C2 的**既定功能與測試**通過，可進行六份文件最後檢查與 Git 結案；上述 PASS 不保證所有可能的故障或安全問題都已排除。
 <!-- /M5-SUMMARY-2026-11-17 -->
+
+<!-- M6-SUMMARY-2026-11-18 -->
+## 2026-11-18｜M6 完整驗收與 M5 回歸修復
+
+### 一、實測結果
+
+| 測試範圍 | 測試結果 | 證據來源 |
+| --- | --- | --- |
+| M6-A Task Order Repository | 11/11 PASS | 本機 Node.js 測試截圖 |
+| M6-B Task Reorder HTTP API | 14/14 PASS | 本機 Node.js 測試截圖 |
+| M6-C Drag Frontend Smoke | 9/9 PASS | 本機 Node.js 測試截圖 |
+| M6-D Edge 真實拖放 E2E | 15/15 PASS | 本機 Edge E2E 截圖 |
+| M5-C2 修復後獨立 Edge E2E | 14/14 PASS | 本機 Edge E2E 截圖 |
+| 完整 `npm test` | **171/171 PASS** | 本機完整回歸截圖 |
+| 完整四套 Edge E2E | **52/52 PASS** | 本機合併 E2E 截圖 |
+
+- 完整 Node.js 171 和 Edge 52 兩次執行共計 223 個測試計數；表格內專項測試是其子集，**不可全部再加總**。
+- 最終兩套完整回歸均為 0 failed、0 cancelled、0 skipped、0 todo。
+- M6-D 的四個 BrowserContext 驗證不同角色下的排序、權限、狀態切換、版本衝突與重整持久化。
+
+### 二、問題追蹤與修復驗證
+
+1. 真實 Edge 拖曳初期 8/15、7 FAIL：事件追蹤有 dragover/drop，但 `MOVE REQUESTS: []`，操作被判定沒有排序變動。定位並修正後為 15/15 PASS。
+2. M6 導入 `/move` 後，M5-C2 仍監聽舊 `PATCH /tasks/:taskId`；Owner 兩項 `waitForResponse` 30 秒逾時。將兩處監聽路徑改為 `/tasks/:taskId/move`，維持 409/200 驗證，M5-C2 14/14 PASS。
+3. 全部測試再次整合驗證，`npm test` 171/171、Edge 52/52 PASS。
+
+### 三、完整驗收操作
+
+```powershell
+npm test
+node --test --test-concurrency=1 e2e/auth-flow.e2e.js e2e/member-flow.e2e.js e2e/task-flow.e2e.js e2e/kanban-drag.e2e.js
+```
+
+對應 `npm run test:e2e:all` 指令包含四套 E2E 檔案；循序執行指令可減少不同 E2E 檔案同時執行造成的資源干擾。
+
+### 四、測試邊界
+
+- E2E 使用獨立 SQLite 記憶體資料庫與隨機埠，不測試正式資料檔。
+- Microsoft Edge PASS 不代表 Chrome、Firefox、Safari 或手機瀏覽器均已驗證。
+- 未包含正式 HTTPS、反向代理、正式部署權限、安全掃描、長期壓力及 WebSocket 即時同步。
+- Git 工作樹與 origin/main 一致性需於實際 Commit／Push 後另行確認。
+
+### 結論
+
+M6-A～M6-D 的**既定功能與自動化測試**通過；最後 Git 結案、正式部署與 v1.0.0 發布仍屬其他獨立驗收項目。
+<!-- /M6-SUMMARY-2026-11-18 -->

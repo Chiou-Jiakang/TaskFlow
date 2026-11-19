@@ -1153,3 +1153,52 @@ Git 的 LF/CRLF 提示屬換行格式警告，不代表測試失敗。
 - 下一步：審查本次六份文件、確認暫存清單不含 SQLite／密鑰、全套回歸、再集中 Commit／Push，最後驗證 `HEAD` 與 `origin/main` 完全一致。
 - 未完成功能：M6 Drag & Drop、M7 WebSocket、M8 留言與通知、M9 Dashboard 搜尋統計、M10 部署級安全與 Release。
 <!-- /M5-SUMMARY-2026-11-17 -->
+
+<!-- M6-SUMMARY-2026-11-18 -->
+## 2026-11-18｜M6 Kanban 拖放與任務排序：開發及回歸紀錄
+
+### 一、M6-A｜Task Order Repository
+
+- 建立 `server/task-order-repository.js`、`tests/task-order-repository.test.js`。
+- 覆蓋同欄排序、跨欄移動、`position` 重整、版本驗證、角色限制、封存專案拒絕與 SQLite Transaction Rollback。
+- M6-A 專項測試：**11/11 PASS**。
+
+### 二、M6-B｜Task Reorder HTTP API
+
+- 建立 `server/task-order-routes.js`、`tests/task-order-api.test.js`，並在 `server/server.js` 整合 `PATCH /api/projects/:id/tasks/:taskId/move`。
+- 沿用原有 Session Cookie、CSRF、同源與 RBAC；驗證權限、非法資料、409 樂觀鎖與跨欄移動。
+- M6-B 專項測試：**14/14 PASS**。
+
+### 三、M6-C｜前端 Drag & Drop
+
+- 修改 `public/task-board.js`、`public/task-board.css`；建立 `tests/task-drag-frontend.test.js`。
+- Owner/Admin 的 active 專案啟用拖放；Member 仍可使用原本獲授權的狀態操作，但無排序權限。
+- 真實滑鼠拖曳使用 dragstart／dragover／drop／dragend；前端按照伺服器交易結果刷新資料，不自行樂觀調整永續順序。
+- M6-C 專項測試：**9/9 PASS**。
+
+### 四、M6-D｜Edge 真實拖曳 E2E 與問題定位
+
+- 新增 `e2e/kanban-drag.e2e.js`，涵蓋四組獨立 Edge Session、Owner 同欄排序及跨欄、Admin 排序、Member 拒絕拖動、封存限制、409 衝突、重整持久化及頁面錯誤。
+- 初期測試出現 15 項中的 7 項失敗，首項等待 `/move` 回應超時。事件追蹤顯示 dragover／drop 已觸發、但 `MOVE REQUESTS: []`，且畫面顯示任務位置沒有變更。
+- 根據 Drag Event Trace 和卡片位置資料修正拖曳行為，重新執行後 M6-D **15/15 PASS**，0 failed。
+- 將 `kanban-drag.e2e.js` 加入整體 E2E 指令。
+
+### 五、跨階段 M5-C2 回歸修復
+
+- 加入 M6 後，`e2e/task-flow.e2e.js` 的兩項 Owner 測試逾時：舊測試監聽 `PATCH /tasks/:taskId`，前端 Owner 狀態操作已改用 `PATCH /tasks/:taskId/move`。
+- 僅調整該兩處 `waitForResponse` 路徑，保留 409 與 200 預期、不更動 Member 的原 API 權限。
+- 單獨 M5-C2 E2E 重新驗證 **14/14 PASS**。
+
+### 六、最終完整回歸與版本管理
+
+- `npm test`：**171/171 PASS**；四套 Microsoft Edge E2E：**52/52 PASS**；均 0 fail、0 skipped。
+- `git diff --check` 未顯示錯誤。工作樹含 M6 新增／修改程式及曾產生的 `taskflow-debug.txt`；後者為除錯暫存，不應提交至 GitHub。
+- 以集中結案制度一次更新六份文件，不覆蓋 M0～M5 既有歷史段落。
+- **提交 SHA 與 Push 狀態不得預填**；以最後本機 `git status -sb`、`git rev-parse HEAD`、`git rev-parse origin/main` 的實際結果為準。
+
+### 七、下一階段
+
+- M7：Socket.IO 即時跨帳號同步、角色／專案授權的廣播範圍、重連後資料對齊及版本競爭測試。
+- M8～M10：通知留言、統計搜尋、部署級安全／效能與正式 Release。
+- M6 的既定自動化驗收通過並不等同於正式產品 v1.0.0 已發布。
+<!-- /M6-SUMMARY-2026-11-18 -->
