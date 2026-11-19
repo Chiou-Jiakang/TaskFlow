@@ -102,6 +102,10 @@ function createTaskOrderRouter({ db, getAuthenticatedUserId = () => null }) {
         index,
       });
 
+      // 無實際位置變化的排序不製造虛假通知。
+      if (result.changedTaskIds.length > 0) {
+        res.locals.taskflowRealtimeChange = { projectId, resource: "task", action: "moved", resourceId: taskId, version: result.task.version };
+      }
       res.status(200).json(result);
     },
   );

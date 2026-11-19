@@ -933,3 +933,42 @@ node --test --test-concurrency=1 e2e/auth-flow.e2e.js e2e/member-flow.e2e.js e2e
 
 M6-A～M6-D 的**既定功能與自動化測試**通過；最後 Git 結案、正式部署與 v1.0.0 發布仍屬其他獨立驗收項目。
 <!-- /M6-SUMMARY-2026-11-18 -->
+
+<!-- TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+## 2026-11-19｜M7 Socket.IO 與多使用者即時同步驗收
+
+### 已知在前一輪通過的測試
+
+| 範圍 | 截圖證據 |
+| --- | --- |
+| M7-A Socket Session／Room | 15/15 PASS |
+| M7-B REST 通知器 | 9/9 PASS |
+| M7-C 同步協調器 | 11/11 PASS |
+| 完整 Node.js（當時） | 206/206 PASS |
+| 原有 Edge E2E（當時） | 52/52 PASS |
+| M7-C 新增 Edge E2E | 6/6 PASS |
+
+上方為 M7-D 開始之前已確認的歷史執行結果，不能視為執行了本次 M7-D 測試。
+
+### M7-D 新增驗收
+
+`e2e/realtime-resilience.e2e.js`：四組獨立 Session、兩專案隔離、Owner 新增同步、Member 狀態同步、Owner/Admin 平行樂觀鎖 200/409、API 跨專案限制、原子跨欄排序持久化、成員撤權後停止接收、登出 Session 失效與頁面錯誤檢查。
+
+### 執行命令
+
+```powershell
+node --check .\e2e\realtime-resilience.e2e.js
+npm test
+npm run test:e2e:all
+node --test .\e2e\realtime-sync.e2e.js
+node --test .\e2e\realtime-resilience.e2e.js
+git diff --check
+```
+
+- 必須從本機的 M7-D 終端輸出核對實際 pass/fail；本文不預填尚未執行的結果。
+- 新增測試採 `:memory:` SQLite、隨機本機 Port 與 `example.test` 帳號，無正式資料寫入。
+- 單一瀏覽器 Edge 測試不能推導其他瀏覽器、HTTPS／反向代理、多節點部署、壓力或完整資安均已驗收。
+- Git Commit／Push 並非自動執行，須核對 `git status -sb`、`HEAD`、`origin/main`。
+
+<!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->

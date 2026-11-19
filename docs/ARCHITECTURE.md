@@ -945,3 +945,26 @@ Drag & Drop（M6）、WebSocket（M7）、留言／通知（M8）、分析／搜
 
 正式 HTTPS、反向代理、多節點部署、其他瀏覽器、長時間穩定性與完整安全稽核均未因 M6 測試通過而自動驗收。
 <!-- /M6-SUMMARY-2026-11-18 -->
+
+<!-- TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+## M7｜Socket.IO 即時事件與資料一致性（2026-11-19）
+
+### 資料流
+
+1. 瀏覽器透過 HttpOnly Session Cookie 與同源 WebSocket 建立 Socket.IO 連線。
+2. `server/realtime-hub.js` 驗證 Session、Origin 與 `project_members`，只允許訂閱有權限的 `project:<id>` Room。
+3. Task／Member／Project／Move Repository 成功完成 SQLite 寫入後，路由標註 `res.locals.taskflowRealtimeChange`。
+4. `server/realtime-notifier.js` 只在成功 HTTP finish 後呼叫 `publishProjectChanged()`；非 2xx 不通知。
+5. Hub 再查詢 Session 與成員資格；非成員離開 Room 並收到 `project:access-revoked`，有效成員只收到資源異動 metadata。
+6. `public/task-realtime.js` 協調 `public/task-board.js` 重新讀取受權限保護的 REST API，不接受 Socket 內容直接覆寫 SQLite 資料。
+
+### 故障與競爭策略
+
+- Socket.IO 通知是「重新取得資料」提示，不是可靠佇列或資料庫事務；斷線重連後重新加入 Room 並透過 REST 補抓。
+- M6 樂觀鎖 version 仍由 Repository 驗證，過期修改回傳 409；不允許 Socket.IO 越過 CSRF/RBAC 改寫資料。
+- 前端編輯／拖曳或 REST 寫入中，暫緩外部刷新，避免局部狀態被不當覆蓋。
+- Socket 發送前再次驗證成員及 Session，可降低長連線持有過期權限的風險。
+- 不包含跨程序訊息中介、耐久事件佇列、正式反向代理與多節點 Socket.IO Adapter；這些仍待部署階段評估。
+
+<!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->

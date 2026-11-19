@@ -26,6 +26,7 @@ function showProjectMessage(text, error = false) {
 }
 
 function goToLogin() {
+  window.TaskRealtime?.stop();
   currentCsrfToken = null;
   window.location.replace("/auth.html");
 }
@@ -100,6 +101,9 @@ async function loadProjects(preferredId = null) {
   renderProjects(data.projects);
   window.TaskBoard.setProjects(data.projects, preferredId);
 }
+
+// M7-C-BEGIN：成員／專案變動後重讀真正的 REST 清單，不相信 WebSocket 傳入的內容。
+window.TaskFlowDashboard = { reloadProjects: loadProjects };
 
 projectForm.addEventListener("submit", async (event) => {
   event.preventDefault();

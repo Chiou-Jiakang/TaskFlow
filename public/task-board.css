@@ -1,3 +1,13 @@
+/* M7-C-BEGIN: Socket.IO 連線狀態，純文字呈現；不帶入未經信任的 HTML。 */
+#task-realtime-status {
+  display: inline-block;
+  color: #c4d1ea;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#task-realtime-status[data-kind="success"] { color: #9be6ba; }
+#task-realtime-status[data-kind="warning"] { color: #ffce94; }
+
 /* M6-C：沿用既有深色 TaskFlow 視覺，擴充實際拖放排序。 */
 .tf-project-toolbar {
   display: flex;

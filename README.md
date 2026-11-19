@@ -738,3 +738,26 @@ npm run test:e2e:all
 
 M7 WebSocket／Socket.IO 即時推播與離線恢復；M8 協作留言及通知；M9 搜尋統計；M10 HTTPS 部署、跨瀏覽器、效能與完整安全驗收。正式 TaskFlow v1.0.0 尚未發布。M6 Git 是否結案以實際 `git status -sb`、`HEAD` 及 `origin/main` 比對為準。
 <!-- /M6-SUMMARY-2026-11-18 -->
+
+<!-- TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+## M7｜Socket.IO 多人即時協作（2026-11-19）
+
+- **M7-A**：Socket.IO Session Cookie 驗證、Origin 同源檢查、專案 Room 存取控制與撤權再驗證。
+- **M7-B**：成功完成 REST／SQLite 寫入後發佈資源異動事件；失敗回應不推播，事件不傳送私人任務內容。
+- **M7-C**：前端協調器訂閱 Room、自動重抓 REST、離線重連補抓、切換專案隔離、編輯／拖曳中延後刷新。
+- **M7-D**：新增 Microsoft Edge 多帳號整合驗收，覆蓋兩個專案事件隔離、同版本平行寫入 200／409、跨欄排序持久化、Member 權限、撤銷成員與登出後的事件隔離。
+
+### 驗收命令（M7 結案前須已實際全數通過）
+
+```powershell
+npm test
+npm run test:e2e:all
+node --test .\e2e\realtime-sync.e2e.js
+node --test .\e2e\realtime-resilience.e2e.js
+git diff --check
+```
+
+M7-D E2E 使用 `:memory:` SQLite、隨機 Loopback Port 與測試帳號，不讀寫正式 `data/taskflow.db`。以上為驗收範圍，不代表正式 HTTPS、效能、跨瀏覽器或完整安全審核已完成。M8～M10 及正式 GitHub Release 仍待後續進行。
+
+<!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->

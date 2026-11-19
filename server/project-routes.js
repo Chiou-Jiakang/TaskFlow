@@ -139,6 +139,7 @@ function createProjectRouter({ db, getAuthenticatedUserId = () => null }) {
   // 新增專案
   router.post("/", (req, res) => {
     const created = repository.create(req.actorId, parseCreate(req.body));
+    res.locals.taskflowRealtimeChange = { projectId: created.id, resource: "project", action: "created", resourceId: created.id, version: created.version };
 
     res
       .location(`/api/projects/${created.id}`)
@@ -162,6 +163,7 @@ function createProjectRouter({ db, getAuthenticatedUserId = () => null }) {
     const { version, patch } = parseUpdate(req.body);
 
     const updated = repository.update(req.actorId, id, version, patch);
+    res.locals.taskflowRealtimeChange = { projectId: id, resource: "project", action: "updated", resourceId: id, version: updated.version };
 
     res.json({ project: updated });
   });
@@ -172,6 +174,7 @@ function createProjectRouter({ db, getAuthenticatedUserId = () => null }) {
     const version = projectId(req.query.version);
 
     repository.delete(req.actorId, id, version);
+    res.locals.taskflowRealtimeChange = { projectId: id, resource: "project", action: "deleted", resourceId: id };
 
     res.status(204).end();
   });

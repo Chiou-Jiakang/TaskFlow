@@ -447,3 +447,26 @@
 - 程式碼與文件原則上共同提交至 GitHub。
 - 不為單純增加文件篇幅而重複建立 Commit。
 - 正式發布 v1.0.0 時，再建立對應版本區段及 GitHub Release。
+
+<!-- TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+### M7 — 2026-11-19｜Realtime collaboration / Socket.IO
+
+#### Added
+
+- Session 驗證及同源保護的 Socket.IO 專案 Room。
+- Task、Member、Project 與 Move REST 成功寫入後的資源異動推播。
+- 瀏覽器即時同步、斷線重訂閱與 REST 補抓；切換專案與編輯中延後刷新。
+- M7-D Edge 協作韌性 E2E：平行 409 衝突、跨專案隔離、Member 撤權及 Session 登出保護。
+
+#### Verified
+
+- M7-A、M7-B、M7-C 專項測試及完整既有回歸已依本機執行結果通過。
+- M7-D 須於正式結案前實際執行 `e2e/realtime-resilience.e2e.js`，並核對 0 failed、0 skipped。
+- GitHub push／乾淨工作樹以實際 Commit SHA 和 `origin/main` 比對為準，不在本文件預填結果。
+
+#### Remaining
+
+- M8 通知／協作互動、M9 搜尋統計、M10 部署／安全／效能、正式 Release。
+
+<!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->

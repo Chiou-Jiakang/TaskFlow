@@ -13,9 +13,11 @@ const { createMemberRouter } = require("./member-routes");
 const { createTaskRouter } = require("./task-routes");
 const { initializeTaskSchema } = require("./task-repository");
 const { createTaskOrderRouter } = require("./task-order-routes");
+const { createRealtimeNotifier } = require("./realtime-notifier");
 
 const { AuthError } = require("./auth-foundation");
 const { createAuthContext, sameOriginOnly } = require("./auth-routes");
+const { attachRealtime } = require("./realtime-hub");
 
 // 建立 Express 應用程式
 function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
@@ -80,6 +82,11 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     const actorId = injected
       ? getAuthenticatedUserId
       : (req) => auth.actorId(req);
+
+    // M7-B-BEGIN: 在所有 Project 寫入 API 前註冊成功回應的通知器。
+    app.use("/api/projects", createRealtimeNotifier(
+      () => app.locals.publishProjectChanged,
+    ));
 
     // ========================================
     // M4 Member Management API
@@ -194,9 +201,8 @@ if (require.main === module) {
 
   const port = Number(process.env.PORT || 3000);
 
-  const server = createApp({
-    database: db,
-  }).listen(port, "127.0.0.1", () => {
+  const runtimeApp = createApp({ database: db });
+  const server = runtimeApp.listen(port, "127.0.0.1", () => {
     console.log("TaskFlow | M6-B Task Reorder API");
 
     console.log(`Server: http://localhost:${port}`);
@@ -211,6 +217,9 @@ if (require.main === module) {
 
     console.log("Task Move API: PATCH /api/projects/:id/tasks/:taskId/move");
   });
+
+  const realtimeHub = attachRealtime(server, db);
+  runtimeApp.locals.publishProjectChanged = realtimeHub.publishProjectChanged;
 
   server.on("error", (err) => {
     console.error("Server startup error:", err.message);

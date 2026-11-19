@@ -94,6 +94,7 @@ function createMemberRouter({ db, getAuthenticatedUserId = () => null }) {
       role: req.body.role === undefined ? "member" : req.body.role,
     });
 
+    res.locals.taskflowRealtimeChange = { projectId, resource: "member", action: "created", resourceId: created.member.userId, version: created.version };
     res.status(201).json(created);
   });
 
@@ -112,6 +113,7 @@ function createMemberRouter({ db, getAuthenticatedUserId = () => null }) {
       req.body.role,
     );
 
+    res.locals.taskflowRealtimeChange = { projectId, resource: "member", action: "updated", resourceId: updated.member.userId, version: updated.version };
     res.json(updated);
   });
 
@@ -122,7 +124,8 @@ function createMemberRouter({ db, getAuthenticatedUserId = () => null }) {
     const userId = positiveId(req.params.userId, "userId");
     const version = positiveId(req.query.version, "version");
 
-    members.remove(req.actorId, projectId, userId, version);
+    const removed = members.remove(req.actorId, projectId, userId, version);
+    res.locals.taskflowRealtimeChange = { projectId, resource: "member", action: "deleted", resourceId: userId, version: removed.version };
     res.status(204).end();
   });
 

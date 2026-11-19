@@ -1202,3 +1202,34 @@ Git 的 LF/CRLF 提示屬換行格式警告，不代表測試失敗。
 - M8～M10：通知留言、統計搜尋、部署級安全／效能與正式 Release。
 - M6 的既定自動化驗收通過並不等同於正式產品 v1.0.0 已發布。
 <!-- /M6-SUMMARY-2026-11-18 -->
+
+<!-- TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+## 2026-11-19｜M7 即時協作開發與故障修復紀錄
+
+### M7-A
+
+- 新增 `server/realtime-hub.js` 與相關測試；採同源、Session、專案 Room 限權。Socket 不直接修改資料。
+
+### M7-B
+
+- 新增 `server/realtime-notifier.js` 與增量整合工具，將 Task、Move、Member、Project 寫入事件接到成功 HTTP 回應。
+- 初次 REST 整合測試因測試身分注入略過 `auth_sessions` 初始化，且清理 hook 註冊過晚而卡住。修正測試初始化與關閉流程後，M7-B 專項 9/9、Node.js 195/195、既有 Edge 52/52 通過。
+
+### M7-C
+
+- 新增 `public/task-realtime.js`、增量前端整合工具及 Edge 雙使用者同步測試。
+- 完成離線重連補抓、即時更新、角色限制、專案訂閱管理、編輯／拖曳保護。
+- 先前本機回歸：Node.js 206/206、既有 Edge 52/52、M7-C 新增 Edge 6/6，0 failed。
+
+### M7-D
+
+- 新增 `e2e/realtime-resilience.e2e.js`，驗證平行版本衝突、Room 隔離、原子跨欄排序、撤權清除與登出後推播拒絕。
+- 使用記憶體資料庫與四個獨立 Edge BrowserContext，避免接觸真實使用者資料。
+- 正式結案條件：M7-D、M7-C、原有全套 Node.js／Edge、Git 檢查全部通過；具體通過計數以本機測試輸出為準。
+
+### Git 歷史
+
+- 保留 M0～M6 原始紀錄；M7 Commit SHA 應於實際 commit/push 後核對，**不在產生文件時假設已完成**。
+
+<!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->

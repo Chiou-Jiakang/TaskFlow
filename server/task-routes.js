@@ -138,6 +138,8 @@ function createTaskRouter({ db, getAuthenticatedUserId = () => null }) {
     const projectId = positiveId(req.params.projectId, "projectId");
 
     const task = tasks.create(req.actorId, projectId, taskBody(req.body));
+    // M7-B: Repository 成功 COMMIT 後註記，僅於 HTTP 2xx finish 推播。
+    res.locals.taskflowRealtimeChange = { projectId, resource: "task", action: "created", resourceId: task.id, version: task.version };
 
     res
       .location(`/api/projects/${projectId}/tasks/${task.id}`)
@@ -163,6 +165,7 @@ function createTaskRouter({ db, getAuthenticatedUserId = () => null }) {
       patch,
     );
 
+    res.locals.taskflowRealtimeChange = { projectId, resource: "task", action: "updated", resourceId: updated.id, version: updated.version };
     res.json({
       task: updated,
     });
@@ -179,6 +182,7 @@ function createTaskRouter({ db, getAuthenticatedUserId = () => null }) {
     const version = positiveId(req.query.version, "version");
 
     tasks.delete(req.actorId, projectId, taskId, version);
+    res.locals.taskflowRealtimeChange = { projectId, resource: "task", action: "deleted", resourceId: taskId };
 
     res.status(204).end();
   });

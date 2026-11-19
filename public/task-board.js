@@ -23,6 +23,8 @@
     members: [],
     tasks: [],
     editingId: null,
+    // M7-C：保留進入編輯時的版本，避免背景刷新後以新版本覆寫舊表單。
+    editingVersion: null,
     busy: false,
     requestId: 0,
     dragging: null,
@@ -124,12 +126,15 @@
       el("task-submit").disabled = !isManager() || !canWrite();
       // refresh() 在 busy 狀態會重建卡片，結束時重繪以恢復拖曳和操作。
       render();
+      queueMicrotask(() => window.TaskRealtime?.flushPending());
     }
   }
 
   function resetForm() {
     state.editingId = null;
+    state.editingVersion = null;
     form.reset();
+    queueMicrotask(() => window.TaskRealtime?.flushPending());
     el("task-form-title").textContent = "新增任務";
     el("task-submit").textContent = "建立任務";
     el("task-cancel").hidden = true;
@@ -235,7 +240,10 @@
         event.dataTransfer.setData("text/plain", String(task.id));
         card.classList.add("tf-dragging");
       });
-      card.addEventListener("dragend", endDrag);
+      card.addEventListener("dragend", () => {
+        endDrag();
+        queueMicrotask(() => window.TaskRealtime?.flushPending());
+      });
     }
 
     const priority = document.createElement("span");
@@ -350,6 +358,8 @@
 
   async function refresh() {
     const currentId = selector.value;
+    // 訂閱變更由 M7-A 校驗成員資格，Socket 本身無法修改資料。
+    window.TaskRealtime?.setProject(currentId);
     const requestId = ++state.requestId;
     state.project = null;
     state.members = [];
@@ -417,6 +427,7 @@
   function editTask(task) {
     if (!isManager() || !canWrite() || state.busy) return;
     state.editingId = task.id;
+    state.editingVersion = task.version;
     el("task-title").value = task.title;
     el("task-description").value = task.description || "";
     el("task-status").value = task.status;
@@ -533,7 +544,7 @@
       ...payload,
       assigneeId: assignee === "" ? null : Number(assignee),
       dueDate: due || null,
-      version: editing?.version,
+      version: state.editingVersion ?? editing?.version,
     };
     mutate(
       () =>
@@ -581,11 +592,40 @@
     refresh();
   }
 
+  // M7-C-BEGIN: 忙碌／編輯／拖曳期間，暫不執行會重建卡片的遠端刷新。
+  function canRealtimeSync() {
+    return Boolean(state.csrf && !state.busy && !state.dragging && state.editingId === null);
+  }
+
   window.TaskBoard = {
+    realtimeSync(update) {
+      if (!canRealtimeSync() || Number(selector.value) !== update?.projectId) return false;
+      if (update.refreshProjects) {
+        if (typeof window.TaskFlowDashboard?.reloadProjects !== "function") return false;
+        void window.TaskFlowDashboard.reloadProjects().catch((error) => {
+          notice(error.message || "專案資料同步失敗，請重新整理。", true);
+        });
+      } else {
+        void refresh();
+      }
+      return true;
+    },
+    realtimeRevoked(projectId) {
+      if (Number(selector.value) !== projectId) return;
+      ++state.requestId;
+      state.project = null;
+      state.members = [];
+      state.tasks = [];
+      selector.value = "";
+      resetForm();
+      render();
+      notice("你已失去此專案的存取權，正在重新讀取專案清單。", true);
+    },
     openSession(user, csrfToken) {
       state.user = user;
       state.csrf = csrfToken;
       emptyBoard();
+      window.TaskRealtime?.start();
     },
     setProjects,
     selectProject(id) {
