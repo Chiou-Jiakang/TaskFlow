@@ -1,5 +1,33 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
+
+## 最新開發狀態｜M9-A 專案統計儀表板（2026-11-21）
+
+> 本節是目前最新進度快照；下方 M0～M8 文字保留為**歷史階段紀錄**。TaskFlow v1.0.0 尚未正式發布。
+
+- **M0～M8：** 已完成 GitHub 階段結案；M8 Git 提交 `b91c355` 並與 `origin/main` 同步（依本機終端截圖，2026-11-21）。
+- **M9-A：** 新增專案統計卡片與成員工作量摘要，透過現有 REST 所取得的任務／成員資料在前端運算，不新增 SQLite 表或更動既有 Kanban 排序 API。
+- **統計內容：** 任務完成率、逾期未完成、高優先未完成、未指派未完成與負責人成員工作量；切換專案時依當前專案資料重新計算。
+- **新增檔案：** `public/task-analytics.js`、`public/task-analytics.css`、`scripts/apply-m9a.js`、`tests/task-analytics.test.js`、`e2e/task-analytics.e2e.js`。
+- **前端接線：** `public/index.html`、`public/task-board.js`；M6 拖放與 M8 Socket.IO／留言／活動整合維持原有設計。
+- **本機已驗收（使用者提供的終端截圖）：** M9-A 專項 Node `12/12 PASS`、專項 Edge `5/5 PASS`、完整 Node `282/282 PASS`、既有 Edge `52/52 PASS`，各組均 0 失敗。專項和完整套件可能重複計數，不能當成彼此獨立的 351 項功能需求。
+- **界線：** 此階段沒有新增統計後端 API、查詢索引或權限規則；統計的可見範圍跟隨現有已授權 REST 結果。未完成 M9-B 搜尋與多條件篩選、M9-C 整合驗收及 M10 部署／Release。
+- **Git 狀態：** M9-A 文件更新與階段性 Commit／Push 尚未由本段自動宣告完成；仍須以最終 `HEAD`、`origin/main` 與暫存清單核對。
+
+### M9-A 驗證指令
+
+```powershell
+node --test .\tests\task-analytics.test.js
+node --test .\e2e\task-analytics.e2e.js
+npm test -- --test-concurrency=1
+npm run test:e2e:all
+```
+
+---
+
+<!-- /TASKFLOW-M9A-DOCS-2026-11-21 -->
+
 <!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
 
 ## 最新開發狀態｜M8 留言、活動時間軸與即時同步（2026-11-21）

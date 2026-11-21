@@ -370,6 +370,9 @@
     el("done-count").textContent = String(
       tasks.filter((x) => x.status === "done").length,
     );
+    // TASKFLOW-M9A-BEGIN：統計僅根據已驗證的目前專案 REST 清單。
+    window.TaskAnalytics?.render(state.tasks, state.members, state.project);
+    // TASKFLOW-M9A-END
   }
 
   async function refresh() {

@@ -8,6 +8,33 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
+
+### M9-A — 2026-11-21｜Dashboard Analytics
+
+#### Added
+
+- 新增 `public/task-analytics.js`：在既有專案／任務資料載入後計算完成率、逾期未完成、高優先未完成、未指派未完成與成員待辦工作量。
+- 新增 `public/task-analytics.css`；透過 `public/index.html`、`public/task-board.js` 接線，顯示當前專案的統計摘要。
+- 新增 `scripts/apply-m9a.js` 安全整合工具；提供 dry-run、原始檔備份及重複執行跳過。
+- 新增 `tests/task-analytics.test.js` 與 `e2e/task-analytics.e2e.js`，驗證統計計算、切換專案及既有看板相容性。
+
+#### Verified（依 2026-11-21 本機截圖）
+
+- M9-A 專項 Node `12/12 PASS`；M9-A Edge 專項 `5/5 PASS`。
+- 全套 Node `282/282 PASS`；原有 Edge `52/52 PASS`；以上各批均 `fail 0`。
+- 專項可能包含在全套 Node 計數內，勿將結果加總成獨立測試需求數量。
+- 整合工具首次將 `public/index.html`、`public/task-board.js` 更新，第二次 `--dry-run` 均顯示已更新、跳過；原始檔有備份。
+
+#### Scope / Remaining
+
+- Dashboard 使用既有已授權 REST 資料，未新增 SQLite migration、獨立後端統計 API 或正式部署環境。
+- M9-B 搜尋／篩選、M9-C 整體 UX 與回歸、M10 部署／安全／Release 尚待完成。
+- 本段不預先宣告 M9-A Git Commit／Push 成功；須另行核對 Git 證據。
+
+---
+
+<!-- /TASKFLOW-M9A-DOCS-2026-11-21 -->
 
 <!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
 

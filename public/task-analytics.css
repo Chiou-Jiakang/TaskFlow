@@ -1,0 +1,28 @@
+/* M9-A：與 TaskFlow 深色 Dashboard 一致。統計為唯讀，不干預 Kanban 拖放。 */
+.tf-analytics {
+  margin: 26px 0;
+  padding: 20px;
+  border: 1px solid #354460;
+  border-radius: 14px;
+  background: #17223b;
+  color: #eef3ff;
+}
+.tf-analytics h2 { margin: 0 0 6px; font-size: 20px; }
+.tf-analytics h3 { margin: 21px 0 10px; font-size: 15px; }
+.tf-analytics-scope { margin: 0 0 18px; color: #acbdd9; font-size: 13px; overflow-wrap: anywhere; }
+.tf-analytics-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.tf-analytics-metric { min-width: 0; padding: 16px; background: #0f1b31; border: 1px solid #3b4c69; border-radius: 11px; }
+.tf-analytics-metric span { display: block; color: #b5c5e2; font-size: 13px; }
+.tf-analytics-metric strong { display: block; margin: 9px 0 5px; font-size: clamp(24px, 2.7vw, 32px); line-height: 1.2; color: #f0f5ff; }
+.tf-analytics-metric small { color: #acbdd9; font-size: 12px; }
+.tf-analytics-list { padding: 0; margin: 0; list-style: none; display: grid; gap: 8px; }
+.tf-analytics-list li { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid #344561; border-radius: 8px; padding: 10px 12px; background: #0f1b31; }
+.tf-analytics-list li span { min-width: 0; overflow-wrap: anywhere; color: #dce6fa; }
+.tf-analytics-list li strong { white-space: nowrap; font-size: 13px; color: #a9e6c3; }
+.tf-analytics-remaining { margin: 8px 0 0; color: #adbfdd; font-size: 12px; }
+@media (max-width: 900px) { .tf-analytics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) {
+  .tf-analytics-grid { grid-template-columns: 1fr; }
+  .tf-analytics { padding: 14px; }
+  .tf-analytics-list li { align-items: start; flex-direction: column; gap: 4px; }
+}

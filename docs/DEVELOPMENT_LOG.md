@@ -1,5 +1,35 @@
 # TaskFlow｜開發歷程紀錄
 
+<!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
+
+## 2026-11-21｜M9-A 專案統計儀表板開發紀錄
+
+### 交付內容
+
+- 基於 M8 已結案版本 `b91c355` 開始 M9-A；沒有重新初始化正式 `data/taskflow.db`。
+- 加入 `public/task-analytics.js`、`public/task-analytics.css`，以既有 REST 任務及成員資料產生目前專案的 KPI 與工作量摘要。
+- 利用 `scripts/apply-m9a.js` 增量掛接到 `public/index.html`、`public/task-board.js`，先預覽再正式套用。執行完成後有原始檔備份，再次 dry-run 顯示已更新、跳過（idempotent）。
+- 新增 `tests/task-analytics.test.js` 與 `e2e/task-analytics.e2e.js`。
+
+### 驗證紀錄（本機終端截圖）
+
+1. 五個新增檔案 `Test-Path` 均 `True`，新增 JavaScript 的語法檢查沒有錯誤。
+2. M9-A 統計模組測試 **12/12 PASS**。
+3. M9-A Microsoft Edge 專項 **5/5 PASS**，包括跨專案統計隔離與原 Kanban 相容性。
+4. Node 全套 **282/282 PASS**，原有 Edge 全套 **52/52 PASS**，0 failed／skipped。
+5. `git diff --stat` 首次顯示 `public/index.html` 和 `public/task-board.js` 兩個已追蹤修改檔案；五份新增檔案為未追蹤，故不包含於該統計。LF/CRLF 訊息是換行提醒。
+
+### 開發決策與後續
+
+- 不因統計儀表板改動 SQLite、權限判斷或既有 Move API；先以最小侵入範圍交付。
+- 保留三份 M8 測試／診斷 TXT 在 Git 暫存範圍之外。
+- 文件、Git staged 審查與本次 M9-A Commit／Push 尚待透過實際終端驗證，不在記錄中預填結果。
+- 下一階段 M9-B 搜尋與篩選；M9-C UX／整合驗收；M10 正式部署及 Release。
+
+---
+
+<!-- /TASKFLOW-M9A-DOCS-2026-11-21 -->
+
 本文件詳細記錄專案各階段的實作內容、技術決策、問題處理、驗證結果及後續規劃。
 
 開發紀錄採累積式管理。歷史內容反映當時的開發狀態，最新進度以文件最後的紀錄及 PROJECT_PLAN.md 為準。

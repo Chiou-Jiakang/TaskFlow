@@ -1,5 +1,37 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
+
+## 最新測試快照｜M9-A Dashboard Analytics（2026-11-21）
+
+> 來源：使用者提供的本機 PowerShell 截圖。這些是 M9-A 當次驗收紀錄，與下方 M0～M8 歷史結果區分；未執行 M10 的部署／安全專項。
+
+| 測試程序 | 終端機確認 | 結果 |
+| --- | --- | --- |
+| `node --test .\tests\task-analytics.test.js` | 12 tests／12 pass | 0 fail、0 skipped |
+| `node --test .\e2e\task-analytics.e2e.js` | 5 tests／5 pass | 0 fail、0 skipped |
+| `npm test -- --test-concurrency=1` | 282 tests／282 pass | 0 fail、0 skipped |
+| `npm run test:e2e:all` | 52 tests／52 pass | 0 fail、0 skipped |
+
+- 專項測試與完整套件可重疊，不把數量簡單相加當成獨立測試案例數。
+- 檔案存在、語法檢查通過；整合腳本更新兩個已追蹤檔案，再執行 dry-run 均判定已更新、跳過。
+- Edge 專項涵蓋統計計算、切換／清除專案的資料隔離，並確認 M6 Kanban 相容性。
+- `git diff --stat` 只統計已追蹤檔案，不包含新建的 M9-A CSS／JS／測試檔。git 格式驗收應於 staged 後再檢查。
+- 本階段通過不等於正式 HTTPS、完整安全稽核、跨瀏覽器、效能及正式 Release 均通過。
+
+### M9-A 回歸指令
+
+```powershell
+node --test .\tests\task-analytics.test.js
+node --test .\e2e\task-analytics.e2e.js
+npm test -- --test-concurrency=1
+npm run test:e2e:all
+```
+
+---
+
+<!-- /TASKFLOW-M9A-DOCS-2026-11-21 -->
+
 <!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
 
 ## 最新驗收快照｜M8-A～M8-C3（2026-11-21）

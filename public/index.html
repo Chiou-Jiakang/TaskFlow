@@ -7,6 +7,7 @@
     <meta name="description" content="TaskFlow 多人專案與任務管理工作空間。" />
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/auth.css" />
+    <link rel="stylesheet" href="/task-analytics.css" />
     <link rel="stylesheet" href="/task-board.css" />
     <!-- M8-C1-BEGIN: 任務留言樣式 -->
     <link rel="stylesheet" href="/task-comments.css" />
@@ -20,6 +21,7 @@
     <script src="/task-comments.js" defer></script>
     <!-- M8-C2-BEGIN: 活動時間軸模組，使用現有專案選擇器 -->
     <script src="/task-activity.js" defer></script>
+    <script src="/task-analytics.js" defer></script>
     <script src="/task-board.js" defer></script>
     <script src="/dashboard-auth.js" defer></script>
   </head>
@@ -48,9 +50,9 @@
           <a class="nav-item" href="#task-board-heading">
             <span>☷</span><span>正式任務看板</span>
           </a>
-          <div class="nav-item">
-            <span>◫</span><span>統計總覽</span><small>規劃中</small>
-          </div>
+          <a class="nav-item" href="#m9-analytics-title">
+            <span>◫</span><span>統計總覽</span>
+          </a>
         </nav>
         <div class="sidebar-note">
           <strong>Project 04</strong>
@@ -230,6 +232,34 @@
                 <small>來自 SQLite</small>
               </article>
             </section>
+
+            <!-- TASKFLOW-M9A-BEGIN -->
+            <section id="m9-analytics" class="tf-analytics" aria-labelledby="m9-analytics-title">
+              <h2 id="m9-analytics-title">專案統計總覽</h2>
+              <p id="m9-analytics-scope" class="tf-analytics-scope" role="status" aria-live="polite">請先選擇專案。</p>
+              <div class="tf-analytics-grid">
+                <article class="tf-analytics-metric">
+                  <span>任務完成率</span><strong id="m9-rate">0%</strong>
+                  <small id="m9-rate-detail">已完成 0 / 共 0 筆</small>
+                </article>
+                <article class="tf-analytics-metric">
+                  <span>逾期未完成</span><strong id="m9-overdue">0</strong>
+                  <small id="m9-due-today">今日到期 0 筆</small>
+                </article>
+                <article class="tf-analytics-metric">
+                  <span>高優先未完成</span><strong id="m9-high">0</strong>
+                  <small>僅計算待處理／進行中</small>
+                </article>
+                <article class="tf-analytics-metric">
+                  <span>未指派未完成</span><strong id="m9-unassigned">0</strong>
+                  <small>包含已離開專案的負責人</small>
+                </article>
+              </div>
+              <h3>成員待辦工作量（未完成任務）</h3>
+              <ul id="m9-workload-list" class="tf-analytics-list" aria-label="成員未完成任務分布"></ul>
+              <p id="m9-workload-remaining" class="tf-analytics-remaining"></p>
+            </section>
+            <!-- /TASKFLOW-M9A-END -->
 
             <section class="board-section" aria-label="正式 Kanban 看板">
               <div class="section-heading">

@@ -1,5 +1,35 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
+
+## 最新架構快照｜M9-A Dashboard Analytics（2026-11-21）
+
+> 本節描述 M9-A 已實作及依終端結果驗證的前端唯讀統計。下方 M0～M8 說明保留歷史時點，不應將舊「未實作」視為目前狀態。
+
+### 資料流
+
+```text
+已授權 Session → 現有 Project / Task / Member REST API → Task Board state
+    → public/task-analytics.js（前端唯讀彙總）
+    → public/index.html 的統計區塊 + public/task-analytics.css
+```
+
+- 數據基於**目前選定專案**及既有 REST 返回的可見任務／成員資料；專案切換後重新計算、避免殘留上一專案統計。
+- 統計項目包含完成率、逾期未完成、高優先未完成、未指派未完成與各成員工作量；不直接更新 `tasks`、`task_comments` 或 `project_activity`。
+- `public/index.html` 與 `public/task-board.js` 採增量掛接，保留 M6 原生 HTML Drag & Drop、M7 即時同步、M8 留言／活動模組。
+- 讀取權限仍由原有 Session／CSRF／RBAC 設計及既有 REST 決定；不應將前端統計視為新的伺服器授權機制。
+- 本階段**未**增設資料庫 schema、migration、後端彙總端點或 Socket.IO 新事件。
+- `scripts/apply-m9a.js` 為開發期掛接工具，不應作為正式伺服器執行流程。
+
+### 仍待後續
+
+- M9-B 搜尋、狀態／負責人／優先度等多條件篩選；M9-C UX 與整體整合驗收。
+- M10 HTTPS、正式 Session／Cookie 設定、跨瀏覽器、壓測、安全稽核、部署與 GitHub Release。
+
+---
+
+<!-- /TASKFLOW-M9A-DOCS-2026-11-21 -->
+
 <!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
 
 ## 最新架構快照｜M8 留言／Activity／Socket.IO（2026-11-21）
