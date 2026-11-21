@@ -141,7 +141,7 @@ function attachRealtime(httpServer, db) {
     if (!positiveId(projectId)) throw new TypeError("projectId 不合法。");
     if (
       !change || typeof change !== "object" || Array.isArray(change) ||
-      !["task", "member", "project"].includes(change.resource) ||
+      /* M8-C3-BEGIN */ !["task", "member", "project", "comment"].includes(change.resource) ||
       !["created", "updated", "deleted", "moved"].includes(change.action) ||
       (change.resourceId !== undefined && !positiveId(change.resourceId)) ||
       (change.version !== undefined && !positiveId(change.version)) ||

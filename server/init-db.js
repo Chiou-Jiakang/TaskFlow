@@ -3,6 +3,7 @@
 const { openDatabase, initializeSchema } = require("./db");
 const { initializeAuthSchema } = require("./auth-foundation");
 const { initializeTaskSchema } = require("./task-repository");
+const { initializeCollaborationSchema } = require("./collaboration-repository");
 
 let db;
 try {
@@ -11,6 +12,7 @@ try {
   initializeSchema(db);
   initializeAuthSchema(db);
   initializeTaskSchema(db);
+  initializeCollaborationSchema(db);
 
   const tables = db
     .prepare(

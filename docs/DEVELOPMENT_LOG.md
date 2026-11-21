@@ -1233,3 +1233,44 @@ Git 的 LF/CRLF 提示屬換行格式警告，不代表測試失敗。
 - 保留 M0～M6 原始紀錄；M7 Commit SHA 應於實際 commit/push 後核對，**不在產生文件時假設已完成**。
 
 <!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+<!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
+## 2026-11-21｜M8 留言與活動協作開發結案前紀錄
+
+### M8-A｜Schema / Repository
+
+- 建立 `task_comments`、`project_activity`、專案一致性觸發器、關聯索引；留言支援版本檢查及軟刪除，活動僅保存事件 metadata。
+- 初次 Repository 驗證曾有個別測試失敗，修正後專項 **14/14 PASS**，並保留既有正式 SQLite；操作正式 Schema 前已完成備份與完整性核對。
+
+### M8-B｜REST API
+
+- 建立留言清單、單筆讀取、建立、修改、軟刪除及專案活動 GET API；沿用 Session、CSRF、RBAC 與 400／401／403／404／409 等預期錯誤語義。
+- M8-B 專項 **21/21 PASS**，測試涵蓋外專案拒絕、作者／Admin／Owner 的權限、過期版本與封存限制。
+- 開發階段完整測試曾出現一次與舊 `member-frontend.test.js` 有關的失敗；以順序執行重驗後 **241/241 PASS**。不得將歷史失敗刪除或誤寫為當次全程無錯。
+
+### M8-C1｜任務留言前端
+
+- 新增 `public/task-comments.js` 與 `.css`，局部接線至既有 Task Board；保留原本 M7/M6 的看板與 Session 行為。
+- 已依當時提供的本機結果完成專項與整體驗收；沒有完整截圖證據的細項數量不在此處臆填。
+
+### M8-C2｜專案活動時間軸
+
+- 新增 `public/task-activity.js`、`.css`，支援活動清單、分頁、刷新及切換專案隔離。這是**留言變更活動**，不是所有 Task／Member 操作的完整稽核歷史。
+- 單元與整合套件 **260/260 PASS**，M8-C2 Edge 專項 **6/6 PASS**。
+
+### M8-C3｜留言 + Activity Socket.IO 即時同步
+
+- 增量整合 `server/realtime-notifier.js`、`server/realtime-hub.js`、`server/collaboration-routes.js`、`public/task-realtime.js`、`public/task-comments.js`、`public/task-activity.js`。
+- 成功留言變更才發布 `comment` metadata，限制 Socket Room 專案權限；已開啟介面透過 REST 補抓，保護草稿、重新連線後補同步。
+- M8-C3 協議測試 **4/4 PASS**；完整 `npm test -- --test-concurrency=1` **264/264 PASS**；M8-C3 Edge 專項 **7/7 PASS**；既有 Edge 回歸 **52/52 PASS**。
+
+### M8-D｜文件、Git 與發布界線
+
+- 已完成六份累積文件的新增摘要設計：保留早期 M0～M7 歷史，不覆寫既有版本紀錄。
+- Git 安全預檢：本機 `git ls-files -- data/ .env` 無輸出；對未追蹤檔案的 `.db`／`.env`／`.txt`／`.zip`／backup／debug 篩選無輸出。此檢查是範圍性檢查，仍須核對完整暫存清單與 `.gitignore`。
+- 不在產生文件時擅自執行 Git、修改正式 SQLite 或宣告已發布 `v1.0.0`。
+- **Git 結案程序：** 依序執行本機 dry-run、正式文件更新、`git diff`／暫存安全檢查、M8 Commit／Push 與 `HEAD == origin/main` 驗證。此紀錄不臆填未執行的 Git 結果。
+- **後續：** M9 搜尋／統計與體驗、M10 正式部署／安全／效能／跨瀏覽器驗收；未完成的邀請／核准需求另列待辦。
+
+<!-- /TASKFLOW-M8-CLOSEOUT-2026-11-21 -->

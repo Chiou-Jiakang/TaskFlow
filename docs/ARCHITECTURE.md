@@ -1,5 +1,42 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
+## 最新架構快照｜M8 留言／Activity／Socket.IO（2026-11-21）
+
+> 以下描述 M8 **目前已交付且完成既定測試**的路徑。後文 M6／M7 及更早架構敘述為當時的階段紀錄；M9／M10 的產品化能力尚未完成。
+
+### 資料與 HTTP 流程
+
+1. `public/task-comments.js` 經由授權 REST API 讀取／建立／修改／軟刪除任務留言；`public/task-activity.js` 讀取專案活動時間軸（含分頁）。
+2. `server/collaboration-routes.js` 處理 `/api/projects/:projectId/tasks/:taskId/comments` 及 `/api/projects/:projectId/activity` 路徑，沿用既有登入 Session、同源／CSRF 與角色授權流程。
+3. `server/collaboration-repository.js` 使用 SQLite `task_comments` 與 `project_activity`，在同專案約束、版本驗證及交易語義下寫入留言；留言變更產生**不含正文**的活動 metadata。
+4. 留言修改與刪除採 version 樂觀鎖；過期版本回覆 409，不把失敗寫入偽裝成成功事件。
+
+### Socket.IO 事件流程（M8-C3）
+
+```text
+留言 REST 寫入成功 → res.locals 成功異動 metadata → HTTP finish 通知器
+  → 已授權 project:<id> Socket Room → comment 變更提示（不含留言正文）
+  → 已開啟的留言／Activity 介面經 REST 重新取得最新資料
+```
+
+- Room 由既有 `server/realtime-hub.js` 維持 Session、Origin、專案成員核驗；新 `comment` 類型不得越權或跨專案推送。
+- Socket 事件只是失效提示（invalidation signal），**不直接作為頁面正文或資料庫更新來源**；斷線重連後重新訂閱並使用 REST 補抓。
+- M7 既有 `task`、`member`、`project` 變更協議仍在；留言事件不應觸發不必要的整張 Kanban 重刷。
+- 目前沒有耐久事件佇列／跨程序 adapter；不得宣告具備多節點可靠交付或完整審計能力。
+
+### SQLite 結構與資料安全
+
+- `task_comments`：`project_id`、`task_id`、`author_id`、`body`、`version`、`is_deleted`、建立／更新時間；使用觸發器防止將留言掛到其他專案的 Task。
+- `project_activity`：`project_id`、`actor_id`、`task_id`、`comment_id`、`action`、建立時間；`action` 目前限 `comment_created`、`comment_updated`、`comment_deleted`。
+- Schema 初始化採 `CREATE TABLE IF NOT EXISTS` 等增量方式；M8 開發曾先備份正式 SQLite，測試使用獨立 `:memory:` 資料庫。
+- 當前驗收不涵蓋正式 HTTPS、跨網域部署、壓力／長期連線可靠性、其他瀏覽器或全面資安審核。
+
+---
+
+<!-- /TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
 <!-- M6-CURRENT-STATUS-2026-11-18 -->
 ## 最新架構快照｜M6（2026-11-18）
 

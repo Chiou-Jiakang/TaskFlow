@@ -1,5 +1,47 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
+## 最新驗收快照｜M8-A～M8-C3（2026-11-21）
+
+> 以下數字取自本機終端截圖，反映相對應階段實際執行的結果。M8-D 的 Git 文件／同步結果仍須由 Git 紀錄另行確認；正式 Release 尚未驗收。下方 M6、M7 的舊數字均為歷史當次記錄。
+
+| 測試範圍 | 已觀察結果 | 說明 |
+| --- | --- | --- |
+| M8-A `collaboration-repository.test.js` | **14/14 PASS** | SQLite、版本、授權、Trigger 與活動 metadata |
+| M8-B `collaboration-api.test.js` | **21/21 PASS** | CRUD、RBAC、Session、CSRF、衝突與封存 |
+| M8-C1 留言前端 | **既定測試通過** | 專項細項數量未由完整終端截圖核實，不臆填 |
+| M8-C2 活動模組 | **10/10 PASS** | 模組測試包含在後續 Node 全套數量內 |
+| M8-C2 `npm test` | **260/260 PASS** | 當時完整單元／整合回歸 |
+| M8-C2 `task-activity.e2e.js` | **6/6 PASS** | Edge 活動時間軸與分頁 |
+| M8-C3 `collaboration-realtime.test.js` | **4/4 PASS** | metadata 通知協議、不傳正文、Room 範圍 |
+| M8-C3 `npm test -- --test-concurrency=1` | **264/264 PASS** | 最新完整單元／整合測試，0 fail、0 skipped |
+| M8-C3 `collaboration-realtime.e2e.js` | **7/7 PASS** | Edge 雙人留言同步、活動刷新及重新連線 |
+| M8-C3 `npm run test:e2e:all` | **52/52 PASS** | 原有 Edge E2E 回歸，0 fail、0 skipped |
+
+**注意：** 單項測試通常是完整測試套件的子集，表格中的 pass 數不可直接累加。`test:e2e:all` 在此次記錄中是**既有** E2E 四組回歸，不得說成已包含新 M8 專項；M8 Edge 已獨立執行。
+
+### M8-D 再次核對指令
+
+```powershell
+node --test .\tests\collaboration-repository.test.js
+node --test .\tests\collaboration-api.test.js
+node --test .\tests\collaboration-realtime.test.js
+npm test -- --test-concurrency=1
+node --test .\e2e\task-activity.e2e.js
+node --test .\e2e\collaboration-realtime.e2e.js
+npm run test:e2e:all
+git diff --check
+```
+
+- 如程式碼已經完成測試且僅更動文件，無需反覆重跑整套 Edge；但最後若有任一 `.js`／`.sql` 變更，應重新檢驗受影響的測試與必要回歸。
+- M8-D 文件生成器不得接觸 `data/taskflow.db`；測試用 SQLite 隔離，Git 暫存前仍應審查未追蹤檔案內容與敏感資訊。
+- 本機截圖的通過紀錄**不是**正式 HTTPS、壓力測試、完整安全稽核、跨瀏覽器或 GitHub Release 的通過證明。
+
+---
+
+<!-- /TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
 <!-- M6-CURRENT-STATUS-2026-11-18 -->
 ## 最新驗收快照｜M6（2026-11-18）
 

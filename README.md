@@ -1,5 +1,32 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
+## 最新開發狀態｜M8 留言、活動時間軸與即時同步（2026-11-21）
+
+> 此節為目前最新進度快照。後文 M0～M7 的「未完成」或進度百分比敘述屬**當時**的歷史紀錄；不可直接當成現在的狀態。**TaskFlow v1.0.0 尚未正式發布**。
+
+- **M0～M7：** 先前已完成 GitHub 結案；M7 包含 Socket.IO 授權 Room、成功寫入後的事件通知、重新連線補抓與多人 Edge 驗收。
+- **M8-A：** SQLite 增量 Schema 與 Repository，包含 `task_comments`、`project_activity`、同專案外鍵／觸發器、留言版本管理及軟刪除。
+- **M8-B：** 留言 CRUD 與活動查詢 REST API，沿用 Session、CSRF、RBAC、封存限制及 409 版本衝突規則。
+- **M8-C1：** 任務留言介面；**M8-C2：** 專案活動時間軸與分頁；**M8-C3：** 經授權 Socket Room 的留言異動提示、前端 REST 重新抓取、斷線重連補抓。
+- **最新本機驗收（M8-C3）：** `npm test -- --test-concurrency=1` **264/264 PASS**；M8-C3 Edge 專項 **7/7 PASS**；既有 `npm run test:e2e:all` **52/52 PASS**，截圖所示均 `fail 0`。M8-C2 歷史驗收為 **260/260** 與 Edge **6/6**。此處的專項測試包含在對應全套計數內，**不能重複加總**。
+- **安全界線：** Socket 推播僅含資源變更識別資訊、不包含留言正文；權限以 REST 與 Socket Room 的 Session／成員資格再次核驗。測試使用獨立記憶體 SQLite，正式 `data/taskflow.db` 不列為測試目標。
+- **活動範圍限制：** 目前 `project_activity` 記錄的事件為 `comment_created`、`comment_updated`、`comment_deleted`；**尚未涵蓋所有任務／成員動作的通用事件流**。
+- **結案狀態：** M8 功能及既定測試已通過；**本節不預先宣告 Git Commit／Push 已成功**，請以實際 `HEAD`／`origin/main` 與乾淨工作樹作最終依據。正式 GitHub Release 尚未發布。
+- **後續：** M9 搜尋／統計／篩選與產品體驗，M10 部署、HTTPS、跨瀏覽器、效能、完整安全驗收與正式 Release；較完整的邀請／核准流程若仍在原需求內，須另列後續工作。
+
+### M8 主要檔案與驗收指令
+
+- 資料層：`server/collaboration-schema.sql`、`server/collaboration-repository.js`。
+- API／即時層：`server/collaboration-routes.js`、`server/realtime-notifier.js`、`server/realtime-hub.js`。
+- 前端：`public/task-comments.js`、`public/task-comments.css`、`public/task-activity.js`、`public/task-activity.css`、`public/task-realtime.js`。
+- 專項驗收：`node --test tests/collaboration-repository.test.js`、`node --test tests/collaboration-api.test.js`、`node --test tests/collaboration-realtime.test.js`、`node --test e2e/task-activity.e2e.js`、`node --test e2e/collaboration-realtime.e2e.js`。
+
+---
+
+<!-- /TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
 <!-- M6-CURRENT-STATUS-2026-11-18 -->
 ## 最新開發狀態｜M6 核心驗收通過（2026-11-18）
 

@@ -3,7 +3,7 @@
 // M7-C：只接收資料變更通知，所有內容與權限仍以 REST API 回傳為準。
 // 本檔不讀取 Cookie 或 CSRF Token，也不透過 Socket 寫入資料庫。
 (function installRealtime(root) {
-  const VALID_RESOURCES = new Set(["task", "member", "project"]);
+  const VALID_RESOURCES = /* M8-C3-BEGIN */ new Set(["task", "member", "project", "comment"]);
   const VALID_ACTIONS = new Set(["created", "updated", "deleted", "moved"]);
 
   function projectIdOf(value) {
@@ -21,11 +21,13 @@
     if (!VALID_RESOURCES.has(payload.resource) || !VALID_ACTIONS.has(payload.action)) return false;
     if (payload.resourceId !== undefined && (!Number.isSafeInteger(payload.resourceId) || payload.resourceId <= 0)) return false;
     if (payload.version !== undefined && (!Number.isSafeInteger(payload.version) || payload.version <= 0)) return false;
+    if (Object.keys(payload).some(key => !["projectId", "resource", "action", "resourceId", "version", "at"].includes(key))) return false;
     return true;
   }
 
   function createRealtimeCoordinator({ createSocket, onChange, onRevoked, onStatus,
-    onExpired = () => {}, reportError = () => {}, delay = 100,
+    onExpired = () => {}, reportError = () => {},
+    /* M8-C3-BEGIN */ onCollaborationChange = () => {}, onRoomJoined = () => {}, delay = 100,
     schedule = (fn, ms) => setTimeout(fn, ms), cancel = (id) => clearTimeout(id) }) {
     if (typeof createSocket !== "function" || typeof onChange !== "function" ||
         typeof onRevoked !== "function" || typeof onStatus !== "function") {
@@ -124,6 +126,8 @@
         }
         joinedProject = projectId;
         status("即時同步中", "success");
+        // M8-C3-BEGIN: Room 重連成功時，從 REST 補抓斷線期間的留言與活動。
+        try { onRoomJoined(projectId); } catch (error) { reportError(error); }
         // 加入 Room 前可能錯過事件；每次加入都從受權限保護的 REST 補抓。
         queueChange(projectId, everJoined);
         everJoined = true;
@@ -176,6 +180,12 @@
       });
       socket.on("project:changed", (payload) => {
         if (!validChange(payload) || joinedProject !== payload.projectId) return;
+        // M8-C3-BEGIN: 留言變更不需要重載整個 Kanban；只有已開啟的面板會重新從 REST 查詢。
+        if (payload.resource === "comment") {
+          try { onCollaborationChange({ projectId: payload.projectId, resource: "comment", action: payload.action }); }
+          catch (error) { reportError(error); }
+          return;
+        }
         queueChange(payload.projectId, payload.resource !== "task");
       });
       socket.on("project:access-revoked", (payload) => {
@@ -235,6 +245,15 @@
       });
     },
     onChange: (update) => root.TaskBoard?.realtimeSync(update) ?? false,
+    // M8-C3-BEGIN: 僅傳遞已驗證的專案 ID；留言正文一律由 REST 授權讀取。
+    onCollaborationChange: (update) => {
+      root.TaskComments?.realtimeChanged(update.projectId);
+      root.TaskActivity?.realtimeChanged(update.projectId);
+    },
+    onRoomJoined: (projectId) => {
+      root.TaskComments?.realtimeChanged(projectId);
+      root.TaskActivity?.realtimeChanged(projectId);
+    },
     onRevoked: (projectId) => {
       root.TaskBoard?.realtimeRevoked(projectId);
       Promise.resolve(root.TaskFlowDashboard?.reloadProjects?.()).catch(() => {});

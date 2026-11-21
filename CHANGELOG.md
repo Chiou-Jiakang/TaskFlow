@@ -8,6 +8,43 @@
 
 ## [Unreleased]
 
+
+<!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
+### M8 — 2026-11-21｜Collaboration Comments, Activity Timeline & Realtime
+
+#### Added
+
+- **M8-A**：增量 `task_comments`、`project_activity` SQLite Schema 與 Repository，支援留言版本、軟刪除、分頁、專案隔離與操作事件 metadata。
+- **M8-B**：任務留言 GET／POST／PATCH／DELETE 與專案活動清單 GET；保留 Session、CSRF、RBAC、409 與封存專案限制。
+- **M8-C1**：任務留言面板、文字安全呈現、角色限制、讀寫與錯誤回饋。
+- **M8-C2**：專案活動時間軸、分頁、刷新及切換專案時的內容隔離。
+- **M8-C3**：Socket.IO `comment` 資源異動通知，已開啟留言／活動介面以授權 REST 補抓，斷線重連重新訂閱後同步。
+- **M8-D**：累積更新六份文件並進行 Git 版本結案準備，保存 M0～M7 歷史記錄。
+
+#### Security / Consistency
+
+- 留言資料及 Activity 所屬專案受 Repository、Session／RBAC 與 SQLite 條件約束；不接受跨專案存取。
+- 成功 REST 寫入後才發送通知；非 2xx／409 不當成更新成功，Socket 訊息不包含留言正文。
+- Activity 目前僅記錄 `comment_created`、`comment_updated`、`comment_deleted`；非通用審計日誌。
+- Edge E2E 使用隔離的測試資料庫與 Session，不以正式 `data/taskflow.db` 作為測試資料。
+
+#### Verified（來自本機終端機截圖）
+
+- M8-A Repository **14/14 PASS**；M8-B REST API **21/21 PASS**。
+- M8-C2 時點 `npm test` **260/260 PASS**；專項活動時間軸 Edge **6/6 PASS**。
+- M8-C3 協議測試 **4/4 PASS**；M8-C3 時點完整 Node.js **264/264 PASS**；M8-C3 Edge **7/7 PASS**；既有 Edge 回歸 **52/52 PASS**，均 `fail 0`。
+- 上述專項可能已包含在完整套件中，不可將各列直接相加作為獨立測試總數。
+
+#### Remaining
+
+- M8 Git Commit／Push／同步結果須以實際 `HEAD`、`origin/main`、工作樹狀態核對；本紀錄不預填 Git 成功結果。尚未正式 GitHub Release。
+- M9 搜尋統計與 UX、M10 正式部署／跨瀏覽器／壓測與完整資安審核；邀請核准等未交付功能須另追蹤。
+
+---
+
+<!-- /TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
 <!-- M6-SUMMARY-2026-11-18 -->
 ### M6 — 2026-11-18｜Kanban Drag & Drop / Ordering
 

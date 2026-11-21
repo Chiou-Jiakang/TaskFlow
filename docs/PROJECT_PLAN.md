@@ -1,5 +1,38 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
+## 最新里程碑狀態｜M8（2026-11-21）
+
+> 本節是最新狀態。後方 M6／M7 規劃表與「尚未開始」敘述保留為**歷史快照**，不可直接用來判定目前完成度。正式 `v1.0.0` **尚未發布**。
+
+| 里程碑 | 本次確認狀態 | 證據或限制 |
+| --- | --- | --- |
+| M0～M7 | 歷史階段已結案 | M7 Socket.IO、Session／Room 權限、斷線補抓與 Edge E2E |
+| M8-A Schema / Repository | 既定測試完成 | 14/14 PASS；增量 SQLite、留言版本、活動 metadata |
+| M8-B Collaboration REST | 既定測試完成 | 21/21 PASS；授權／CSRF／RBAC／409 |
+| M8-C1 任務留言介面 | 既定驗收完成 | 留言 CRUD 前端及 Edge 驗收 |
+| M8-C2 專案活動時間軸 | 既定驗收完成 | 260/260 Node 當時回歸；Edge 6/6 |
+| M8-C3 即時留言／Activity | 既定驗收完成 | 264/264 Node；Edge 專項 7/7；既有 Edge 52/52 |
+| **M8-D 文件與 Git 結案** | **文件更新工具已提供；Git 結案以實際紀錄為準** | Commit／Push、HEAD＝origin/main 及乾淨工作樹必須個別檢查 |
+| M9 搜尋統計與 UX | 未完成 | 後續規劃 |
+| M10 部署與 Release | 未完成 | HTTPS、安全、跨瀏覽器、效能及正式 GitHub Release |
+
+### M8-D 結案查核表
+
+- [x] M8-A～C3 既定功能、相關專項與回歸測試已按終端截圖核對。
+- [x] 確認原始 `data/`、`.env` 未被既有 Git 追蹤；未追蹤危險副檔名篩選無輸出（範圍性檢查）。
+- [ ] 完成六份文件新增段落，核對 markdown、保留舊紀錄。
+- [ ] 執行 `git diff --check`、`git status --short` 和完整 staged 檔名檢查。
+- [ ] 確認不含正式 SQLite、`.env`、備份／除錯檔、測試密鑰。
+- [ ] M8 集中 Commit／Push；以 `git status -sb`、`git rev-parse HEAD` 和 `git rev-parse origin/main` 核對同步。
+
+**完成度僅能依里程碑定性估算，不是程式覆蓋率或正式產品驗收率。** 留言 Activity 目前限定三種留言事件；原規劃如包含完整邀請核准或所有專案活動審計，這些需求尚不能標記為完成。
+
+---
+
+<!-- /TASKFLOW-M8-CLOSEOUT-2026-11-21 -->
+
 <!-- M6-CURRENT-STATUS-2026-11-18 -->
 ## 最新里程碑狀態｜2026-11-18
 

@@ -2,7 +2,7 @@
 
 // M7-B：REST 在 Repository 已成功 COMMIT、HTTP 回應完成後才通知 Socket。
 // 此模組只通知資料已異動；不將私有任務內容直接透過 WebSocket 洩漏。
-const VALID_RESOURCES = new Set(["task", "member", "project"]);
+const VALID_RESOURCES = /* M8-C3-BEGIN */ new Set(["task", "member", "project", "comment"]);
 const VALID_ACTIONS = new Set(["created", "updated", "deleted", "moved"]);
 
 function positiveId(value) {

@@ -1,0 +1,52 @@
+/* M8-C1：獨立留言面板，不覆寫 M5～M7 任務看板樣式。 */
+.tf-comments-overlay[hidden], .tf-comments-form[hidden], .tf-comments-toolbar button[hidden] { display: none !important; }
+.tf-comments-overlay {
+  position: fixed; inset: 0; z-index: 1200; padding: 4vh 18px;
+  background: rgba(5, 10, 22, .84); overflow-y: auto;
+  display: flex; justify-content: center; align-items: flex-start;
+}
+.tf-comments-dialog {
+  box-sizing: border-box; width: min(100%, 680px); max-height: 92vh;
+  overflow-y: auto; padding: 22px; border-radius: 14px;
+  border: 1px solid #455676; color: #f5f7ff;
+  background: #192640; box-shadow: 0 22px 58px rgba(0, 0, 0, .44);
+}
+.tf-comments-heading, .tf-comments-toolbar, .tf-comments-item-head, .tf-comments-item-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+}
+.tf-comments-heading { justify-content: space-between; }
+.tf-comments-heading h2 { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
+.tf-comments-notice { min-height: 22px; color: #c5d1e5; font-size: 13px; }
+.tf-comments-notice[data-error="true"] { color: #ffb8bd; }
+.tf-comments-list { list-style: none; margin: 12px 0 20px; padding: 0; display: grid; gap: 12px; }
+.tf-comments-item, .tf-comments-empty { padding: 15px; border: 1px solid #3d4e70; border-radius: 9px; background: #111d34; }
+.tf-comments-item-head { justify-content: space-between; font-size: 13px; }
+.tf-comments-item-head time { color: #a5b5d0; }
+.tf-comments-body { margin: 12px 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
+.tf-comments-item-actions { margin-top: 8px; }
+.tf-comments-form { margin-top: 20px; display: grid; gap: 8px; }
+.tf-comments-form label { color: #dbe6ff; font-weight: 600; }
+.tf-comments-form textarea {
+  box-sizing: border-box; width: 100%; padding: 12px; resize: vertical;
+  border: 1px solid #7182a4; border-radius: 9px;
+  background: #0c172d; color: #f5f7ff; font: inherit;
+}
+.tf-comments-toolbar button, .tf-comments-item-actions button, .tf-comments-heading button,
+.tf-comments-form button {
+  border: 1px solid #8a84ee; border-radius: 8px; padding: 8px 12px;
+  cursor: pointer; background: #685bcf; color: #fff; font: inherit;
+}
+.tf-comments-toolbar button:disabled, .tf-comments-item-actions button:disabled { opacity: .5; cursor: not-allowed; }
+.tf-comments-toolbar .tf-comments-secondary, .tf-comments-item-actions .tf-comments-secondary,
+.tf-comments-heading .tf-comments-secondary, .tf-comments-form .tf-comments-secondary {
+  background: #283854; border-color: #60728f;
+}
+.tf-comments-item-actions .tf-comments-danger { background: #702d40; border-color: #a95872; }
+.tf-comments-overlay button:focus-visible, .tf-comments-overlay textarea:focus-visible {
+  outline: 3px solid #c9c2ff; outline-offset: 2px;
+}
+.tf-comments-trigger { margin-top: 8px; }
+@media (max-width: 540px) {
+  .tf-comments-overlay { padding: 12px 8px; }
+  .tf-comments-dialog { padding: 15px; max-height: calc(100vh - 24px); }
+}

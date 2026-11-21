@@ -12,6 +12,8 @@ const { createMemberRouter } = require("./member-routes");
 
 const { createTaskRouter } = require("./task-routes");
 const { initializeTaskSchema } = require("./task-repository");
+const { initializeCollaborationSchema } = require("./collaboration-repository");
+const { createCollaborationRouter } = require("./collaboration-routes");
 const { createTaskOrderRouter } = require("./task-order-routes");
 const { createRealtimeNotifier } = require("./realtime-notifier");
 
@@ -48,6 +50,7 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     // 因此要在建立 Task Repository 前初始化。
     // CREATE IF NOT EXISTS 不會清空現有任務。
     initializeTaskSchema(database);
+    initializeCollaborationSchema(database);
 
     // 只相容既有測試中的受信任身分注入。
     const injected = typeof getAuthenticatedUserId === "function";
@@ -121,6 +124,16 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
       }),
     );
 
+    // ========================================
+    // M8-B Task Comments / Project Activity API
+    // ========================================
+    app.use(
+      "/api/projects",
+      createCollaborationRouter({
+        db: database,
+        getAuthenticatedUserId: actorId,
+      }),
+    );
     // ========================================
     // M2 Project CRUD API
     // ========================================

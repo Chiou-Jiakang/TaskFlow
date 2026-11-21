@@ -124,6 +124,8 @@
     }
     if (!value) {
       el("task-submit").disabled = !isManager() || !canWrite();
+      // M8-C2-BEGIN: 任務操作結束後復原工具列活動按鈕。
+      if (el("task-activity-open")) el("task-activity-open").disabled = false;
       // refresh() 在 busy 狀態會重建卡片，結束時重繪以恢復拖曳和操作。
       render();
       queueMicrotask(() => window.TaskRealtime?.flushPending());
@@ -319,6 +321,20 @@
       }
       card.append(actions);
     }
+    // M8-C1-BEGIN: 專案成員均可查看留言；修改權限由伺服器再次驗證。
+    if (state.project) {
+      const comments = button("留言", () => window.TaskComments?.open({
+        projectId: Number(selector.value),
+        taskId: task.id,
+        taskTitle: task.title,
+        userId: state.user?.id,
+        role: state.project.myRole,
+        writable: canWrite(),
+        csrfToken: state.csrf,
+      }));
+      comments.classList.add("tf-comments-trigger");
+      card.append(comments);
+    }
     return card;
   }
 
@@ -358,6 +374,10 @@
 
   async function refresh() {
     const currentId = selector.value;
+    // M8-C1-BEGIN: 切換專案時關閉過時留言內容。
+    window.TaskComments?.projectChanged(currentId);
+    // M8-C2-BEGIN: 切換專案後不得殘留舊活動紀錄。
+    window.TaskActivity?.projectChanged(currentId);
     // 訂閱變更由 M7-A 校驗成員資格，Socket 本身無法修改資料。
     window.TaskRealtime?.setProject(currentId);
     const requestId = ++state.requestId;
@@ -612,6 +632,10 @@
     },
     realtimeRevoked(projectId) {
       if (Number(selector.value) !== projectId) return;
+      // M8-C1-BEGIN: 權限撤銷時立即清除留言面板。
+      window.TaskComments?.revoke(projectId);
+      // M8-C2-BEGIN: 權限撤銷時關閉活動面板。
+      window.TaskActivity?.revoke(projectId);
       ++state.requestId;
       state.project = null;
       state.members = [];

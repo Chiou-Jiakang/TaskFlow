@@ -8,10 +8,18 @@
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/auth.css" />
     <link rel="stylesheet" href="/task-board.css" />
+    <!-- M8-C1-BEGIN: 任務留言樣式 -->
+    <link rel="stylesheet" href="/task-comments.css" />
+    <!-- M8-C2-BEGIN: 專案活動時間軸 -->
+    <link rel="stylesheet" href="/task-activity.css" />
     <script src="/app.js" defer></script>
     <!-- M7-C-BEGIN: 安全的同源 Socket.IO Client 與同步協調器 -->
     <script src="/socket.io/socket.io.js" defer></script>
     <script src="/task-realtime.js" defer></script>
+    <!-- M8-C1-BEGIN: 任務留言模組，先於看板載入 -->
+    <script src="/task-comments.js" defer></script>
+    <!-- M8-C2-BEGIN: 活動時間軸模組，使用現有專案選擇器 -->
+    <script src="/task-activity.js" defer></script>
     <script src="/task-board.js" defer></script>
     <script src="/dashboard-auth.js" defer></script>
   </head>
