@@ -1,5 +1,38 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
+
+## 最新測試快照｜M9-B（驗收紀錄至 2026-11-22，文件整理 2026-11-23）
+
+> 來源：使用者提供的本機 PowerShell 與瀏覽器操作結果；本段記錄 M9-B 功能驗收，不等同 M10 正式部署、安全或壓測完成。
+
+| 測試範圍 | 結果 | 失敗／跳過 |
+| --- | --- | --- |
+| M9-B1 篩選純函式 | 10/10 PASS | 0 / 0 |
+| M9-B2 篩選與整合 Node 專項 | 14/14 PASS | 0 / 0 |
+| M9-B2 Edge E2E 專項 | 6/6 PASS | 0 / 0 |
+| M7-D 修復後單獨 Edge E2E（第 1 次、第 2 次） | 各 10/10 PASS | 各 0 / 0 |
+| `npm test` 完整 Node 回歸 | 306/306 PASS | 0 / 0 |
+| 全部 `e2e/*.e2e.js`（單檔依序執行） | 98/98 PASS | 0 / 0 |
+| 本機網站人工操作 | 使用者確認正常 | 非自動化測試 |
+
+- M9-B1、M9-B2 Node 專項已包含於完整 306 項 Node 測試；Edge 專項亦包含在 98 項完整 Edge E2E 中。完整兩套合計 404 項測試，非 404 項獨立產品功能，也非程式碼覆蓋率 100%。
+- 完整 Edge 第一次執行為 98／93 pass／5 fail（含 M7-D 父測試）；修正 `task-board.js` 的語法殘留與背景表單重設問題後，單獨 M7-D 兩次全部通過，隨後完整 Edge 98/98 PASS。
+- M9-B2 `apply` 與重跑 `--dry-run` 顯示無重複寫入；正式 `data/taskflow.db` 無須初始化。
+- Edge 測試使用隔離記憶體 SQLite／隨機 Port，並非對真實資料庫執行破壞性測試。
+
+### 重現指令（PowerShell）
+
+```powershell
+npm test
+$e2eFiles = @(Get-ChildItem .\e2e -Filter "*.e2e.js" -File | Sort-Object Name | ForEach-Object { $_.FullName })
+node --test --test-concurrency=1 $e2eFiles
+```
+
+---
+
+<!-- /TASKFLOW-M9B-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
 
 ## 最新測試快照｜M9-A Dashboard Analytics（2026-11-21）

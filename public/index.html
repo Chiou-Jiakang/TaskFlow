@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/auth.css" />
     <link rel="stylesheet" href="/task-analytics.css" />
+    <link rel="stylesheet" href="/task-filters.css" />
     <link rel="stylesheet" href="/task-board.css" />
     <!-- M8-C1-BEGIN: 任務留言樣式 -->
     <link rel="stylesheet" href="/task-comments.css" />
@@ -22,6 +23,7 @@
     <!-- M8-C2-BEGIN: 活動時間軸模組，使用現有專案選擇器 -->
     <script src="/task-activity.js" defer></script>
     <script src="/task-analytics.js" defer></script>
+    <script src="/task-filters.js" defer></script>
     <script src="/task-board.js" defer></script>
     <script src="/dashboard-auth.js" defer></script>
   </head>
@@ -272,6 +274,47 @@
                 </div>
                 <span class="board-label">TaskFlow Kanban</span>
               </div>
+              <!-- TASKFLOW-M9B2-BEGIN -->
+              <section id="task-filter-panel" class="tf-filter-panel" aria-label="任務搜尋與篩選" hidden>
+                <div class="tf-filter-grid">
+                  <div class="tf-filter-field">
+                    <label for="task-filter-keyword">搜尋任務標題／描述</label>
+                    <input type="search" id="task-filter-keyword" placeholder="輸入關鍵字" maxlength="120" autocomplete="off" />
+                  </div>
+                  <div class="tf-filter-field">
+                    <label for="task-filter-status">任務狀態</label>
+                    <select id="task-filter-status">
+                      <option value="">全部狀態</option>
+                      <option value="todo">待處理</option>
+                      <option value="in_progress">進行中</option>
+                      <option value="done">已完成</option>
+                    </select>
+                  </div>
+                  <div class="tf-filter-field">
+                    <label for="task-filter-priority">優先度</label>
+                    <select id="task-filter-priority">
+                      <option value="">全部優先度</option>
+                      <option value="high">高優先</option>
+                      <option value="medium">中優先</option>
+                      <option value="low">低優先</option>
+                    </select>
+                  </div>
+                  <div class="tf-filter-field">
+                    <label for="task-filter-assignee">負責人</label>
+                    <select id="task-filter-assignee">
+                      <option value="">所有負責人</option>
+                      <option value="unassigned">未指派</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="tf-filter-footer">
+                  <button type="button" id="task-filter-reset">清除篩選</button>
+                  <p id="task-filter-count" class="tf-filter-count" role="status" aria-live="polite">顯示 0 / 0 筆任務</p>
+                </div>
+                <p id="task-filter-hint" class="tf-filter-hint" hidden>篩選期間暫停卡片拖曳、上下移動與快速狀態切換；清除篩選即可恢復。</p>
+              </section>
+              <p id="task-filter-empty" class="tf-filter-empty" role="status" hidden>沒有符合條件的任務，請調整或清除篩選。</p>
+              <!-- /TASKFLOW-M9B2-END -->
               <div class="kanban-board">
                 <section class="kanban-column" data-status="todo">
                   <h3>

@@ -1,5 +1,31 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
+
+## 最新開發狀態｜M9-B 任務搜尋與多條件篩選（文件整理：2026-11-23）
+
+> 本節為目前最新狀態快照，下方 M0～M9-A 章節保留原始開發紀錄。TaskFlow **v1.0.0 尚未發布**。M9-B 功能與本機驗收已完成，Git 結案以實際 Commit、Push 與遠端 Hash 驗證為準。
+
+- **M9-A 已完成 GitHub 結案：** `b316c1e`（2026-11-21；本機 HEAD 與 GitHub `main` SHA 已比對一致）。
+- **M9-B：** 任務標題與描述關鍵字搜尋；狀態、優先度、負責人、未指派條件；多條件交集篩選、清除條件、結果數量、空結果提示。
+- **資料路徑：** 延用現有 Session 授權的 Project / Member / Task REST 回應；`public/task-filters.js` 為唯讀純函式、`public/task-board.js` 依篩選顯示卡片。原始 `state.tasks` 不被修改，M9-A Dashboard 使用全部任務計算。
+- **排序安全：** 篩選期間禁止拖放、移動與任務狀態變更，避免可見清單與全量資料的排序索引不一致；清除篩選後恢復原本操作。
+- **同步／表單修復：** 移除 `setProjects()` 後錯誤殘留的重複程式碼；同一專案背景更新不再重設正在填寫的任務表單，保留 M7 Socket.IO 同步與既有 REST 授權。
+- **測試（本機終端機截圖）：** `npm test` 306/306 PASS；包含所有 `*.e2e.js` 的完整 Edge E2E 98/98 PASS；M9-B 專項 Node 14/14、Edge 6/6 PASS（已包含於完整回歸，不應加總）。M7-D 修復後單獨 E2E 連續兩次 10/10 PASS。另已回報實際網頁操作正常。
+- **工程限制：** 本階段未增加後端搜尋 API、SQLite migration 或資料庫搜尋索引；適用於已載入目前專案任務的前端篩選。M9-C UX／整合及 M10 部署、安全與 GitHub Release 仍待完成。
+
+### 常用驗證
+
+```powershell
+npm test
+$e2eFiles = @(Get-ChildItem .\e2e -Filter "*.e2e.js" -File | Sort-Object Name | ForEach-Object { $_.FullName })
+node --test --test-concurrency=1 $e2eFiles
+```
+
+---
+
+<!-- /TASKFLOW-M9B-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
 
 ## 最新開發狀態｜M9-A 專案統計儀表板（2026-11-21）

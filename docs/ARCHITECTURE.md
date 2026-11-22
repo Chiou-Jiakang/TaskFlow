@@ -1,5 +1,34 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
+
+## 最新架構快照｜M9-B Search & Multi-filter（2026-11-23）
+
+> 本節覆蓋 M9-B 現行前端架構；下方各階段內容屬歷史快照。
+
+```text
+登入 Session → 現有 REST（projects / members / tasks）
+  → public/task-board.js 的完整 state.tasks（授權的當前專案資料）
+     ├─→ public/task-analytics.js → 全量 Dashboard KPI
+     └─→ public/task-filters.js(filterTasks) → 顯示用任務子集 → Kanban DOM
+```
+
+- `public/task-filters.js` 為純函式：關鍵字、狀態、優先度、負責人交集篩選，保持來源陣列不變；不讀 Cookie、不發 API、不寫 SQLite。
+- `public/task-board.js` 在 render 階段套用篩選；三欄 Kanban 顯示匹配項目、計數與空結果。原本 `state.tasks` 和 Dashboard 計數均維持完整清單。
+- `public/index.html` 掛接工具列，`public/task-filters.css` 套用深色介面；`scripts/apply-m9b2.js` 僅供開發整合，非正式啟動流程。
+- 篩選期間禁用拖放、原子排序與卡片狀態變更，防止 DOM 可見順序與 SQLite 全量 position 不一致。清除篩選後恢復管理操作；後端 Move API 保持不變。
+- 同專案背景同步需保留進行中的表單內容；真正跨專案切換或撤銷權限時清除舊專案畫面與輸入。最新資料仍由授權 REST 取得，Socket 僅通知更新。
+- 權限限制由原有後端 Session／CSRF／RBAC 執行，不因前端篩選而增加任何讀取權限。
+
+### 尚未實作／發布條件
+
+- 目前無伺服器端搜尋 API、跨專案全域搜尋、分頁或大型資料集索引；不要把前端篩選寫成後端權限篩選。
+- M9-C 完整 UX、效能與多人操作整合；M10 HTTPS、部署安全、備份與 Release 仍待執行。
+
+---
+
+<!-- /TASKFLOW-M9B-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
 
 ## 最新架構快照｜M9-A Dashboard Analytics（2026-11-21）

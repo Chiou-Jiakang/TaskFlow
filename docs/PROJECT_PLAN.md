@@ -1,5 +1,35 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
+
+## 最新里程碑狀態｜M9-B（2026-11-23）
+
+> 本節為最新狀態；歷史 M9-A、M8、M7 等快照原文保留。v1.0.0 尚未發布，進度不是程式碼覆蓋率。M9-A 已於 `b316c1e` 完成 GitHub Push 與 SHA 比對。
+
+| 階段 | 狀態 | 驗證與剩餘工作 |
+| --- | --- | --- |
+| M0～M9-A | 已按各階段標準完成 | M9-A Commit `b316c1e` 與遠端一致 |
+| M9-B1｜篩選純函式 | 完成 | 10/10 Node |
+| M9-B2｜介面整合 | 完成 | 14/14 Node 專項，6/6 Edge 專項，整合冪等性通過 |
+| M9-B3｜回歸／手動驗收 | 完成 | 完整 Node 306/306、全部 Edge 98/98，手動功能正常 |
+| M9-B4｜文件／Git 結案 | 文件整理中 | 六份文檔 verify、精確 staged、Commit、Push、HEAD 與遠端 SHA 比對 |
+| M9-C｜UX 與整合優化 | 尚未開始 | 整合操作、同步、空狀態、錯誤處理及易用性 |
+| M10｜安全部署與 Release | 尚未開始 | HTTPS、安全檢查、跨瀏覽器、效能、備份及正式版本 |
+
+### M9-B4 結案判準
+
+- [x] M9-B1 / B2 / B3 的功能與既定回歸、手動驗收完成。
+- [ ] 六份文件更新，`--verify` 與重複 `--dry-run` 不產生變更。
+- [ ] 精確挑選 M9-B 新增／修改檔案，不納入三份 M8 TXT、憑證或正式 SQLite。
+- [ ] `git diff --cached --check` 通過；確認 staged diff 無意外更動。
+- [ ] 完成 Git Commit／Push，並比較 `git rev-parse HEAD` 和 `git ls-remote origin refs/heads/main`。
+
+> 此處查核表記錄文件產生時的結案前狀態；真正的 Git 結案事實以 GitHub 分支與本機終端輸出為準，不能由文件腳本預先標記通過。
+
+---
+
+<!-- /TASKFLOW-M9B-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
 
 ## 最新里程碑狀態｜M9-A（2026-11-21）

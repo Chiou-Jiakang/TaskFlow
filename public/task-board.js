@@ -28,14 +28,81 @@
     busy: false,
     requestId: 0,
     dragging: null,
+    filterProjectId: null,
   };
+
+  // TASKFLOW-M9B2-BEGIN: filters live only in the view; canonical state.tasks remains untouched.
+  const filterControlIds = [
+    "task-filter-keyword",
+    "task-filter-status",
+    "task-filter-priority",
+    "task-filter-assignee",
+  ];
+
+  function readFilters() {
+    return {
+      keyword: el("task-filter-keyword")?.value ?? "",
+      status: el("task-filter-status")?.value ?? "",
+      priority: el("task-filter-priority")?.value ?? "",
+      assignee: el("task-filter-assignee")?.value ?? "",
+    };
+  }
+
+  function filtersActive() {
+    return Object.values(readFilters()).some((value) => value.trim() !== "");
+  }
+
+  function clearFilterControls() {
+    for (const id of filterControlIds) {
+      const control = el(id);
+      if (control) control.value = "";
+    }
+  }
+
+  function renderFilterAssignees() {
+    const select = el("task-filter-assignee");
+    // During refresh, the old project is temporarily cleared. Preserve the selected member.
+    if (!select || !state.project) return;
+    const previous = select.value;
+    const seen = new Set();
+    const choices = [
+      ["", "所有負責人"],
+      ["unassigned", "未指派"],
+    ];
+    for (const member of state.members) {
+      if (
+        !Number.isSafeInteger(member.userId) ||
+        member.userId <= 0 ||
+        seen.has(member.userId)
+      )
+        continue;
+      seen.add(member.userId);
+      choices.push([
+        String(member.userId),
+        member.displayName || member.email || `使用者 ${member.userId}`,
+      ]);
+    }
+    const options = choices.map(([value, label]) => {
+      const item = document.createElement("option");
+      item.value = value;
+      item.textContent = label;
+      return item;
+    });
+    select.replaceChildren(...options);
+    select.value = choices.some(([value]) => value === previous)
+      ? previous
+      : "";
+  }
+  // TASKFLOW-M9B2-END
 
   const dragHelp = document.createElement("p");
   dragHelp.className = "tf-drag-instructions";
   dragHelp.textContent =
     "Owner / Admin：拖曳卡片到其他欄位或調整同欄順序；也可按「上移／下移」操作。";
   dragHelp.hidden = true;
-  document.querySelector(".board-section .section-heading > div")?.append(dragHelp);
+  document
+    .querySelector(".board-section .section-heading > div")
+    ?.append(dragHelp);
 
   function notice(text, error = false) {
     message.textContent = text;
@@ -51,7 +118,13 @@
   }
 
   function canMove() {
-    return Boolean(isManager() && canWrite() && !state.busy && state.csrf);
+    return Boolean(
+      isManager() &&
+      canWrite() &&
+      !state.busy &&
+      state.csrf &&
+      !filtersActive(),
+    );
   }
 
   function taskUrl(id = "") {
@@ -98,7 +171,9 @@
   }
 
   function clearDropMarkers() {
-    for (const list of document.querySelectorAll("#task-workspace .task-list")) {
+    for (const list of document.querySelectorAll(
+      "#task-workspace .task-list",
+    )) {
       list.classList.remove("tf-drop-zone", "tf-drop-at-end");
       for (const card of list.querySelectorAll(".tf-drop-before")) {
         card.classList.remove("tf-drop-before");
@@ -193,7 +268,11 @@
   }
 
   function moveTask(task, status, index) {
-    if (!canMove() || !selector.value || !state.tasks.some((x) => x.id === task.id)) {
+    if (
+      !canMove() ||
+      !selector.value ||
+      !state.tasks.some((x) => x.id === task.id)
+    ) {
       return;
     }
     const remaining = columnTasks(status).filter((item) => item.id !== task.id);
@@ -202,7 +281,9 @@
       return;
     }
     if (task.status === status) {
-      const previousIndex = columnTasks(status).findIndex((x) => x.id === task.id);
+      const previousIndex = columnTasks(status).findIndex(
+        (x) => x.id === task.id,
+      );
       if (previousIndex === index) {
         notice("任務位置沒有變更。");
         return;
@@ -283,6 +364,8 @@
           status.append(option);
         }
         status.value = task.status;
+        status.disabled = filtersActive();
+        if (status.disabled) status.title = "請先清除篩選，再調整任務狀態。";
         status.addEventListener("change", () => {
           if (state.busy || status.value === task.status) return;
           if (isManager()) {
@@ -306,13 +389,20 @@
         actions.append(status);
       }
       if (isManager()) {
-        const withinColumn = columnTasks(task.status);
-        const index = withinColumn.findIndex((item) => item.id === task.id);
-        if (index > 0) {
-          actions.append(button("上移", () => moveTask(task, task.status, index - 1)));
-        }
-        if (index !== -1 && index < withinColumn.length - 1) {
-          actions.append(button("下移", () => moveTask(task, task.status, index + 1)));
+        // When the list is filtered, indices refer to the full task list; hide reorder UI.
+        if (!filtersActive()) {
+          const withinColumn = columnTasks(task.status);
+          const index = withinColumn.findIndex((item) => item.id === task.id);
+          if (index > 0) {
+            actions.append(
+              button("上移", () => moveTask(task, task.status, index - 1)),
+            );
+          }
+          if (index !== -1 && index < withinColumn.length - 1) {
+            actions.append(
+              button("下移", () => moveTask(task, task.status, index + 1)),
+            );
+          }
         }
         actions.append(
           button("編輯", () => editTask(task)),
@@ -323,15 +413,17 @@
     }
     // M8-C1-BEGIN: 專案成員均可查看留言；修改權限由伺服器再次驗證。
     if (state.project) {
-      const comments = button("留言", () => window.TaskComments?.open({
-        projectId: Number(selector.value),
-        taskId: task.id,
-        taskTitle: task.title,
-        userId: state.user?.id,
-        role: state.project.myRole,
-        writable: canWrite(),
-        csrfToken: state.csrf,
-      }));
+      const comments = button("留言", () =>
+        window.TaskComments?.open({
+          projectId: Number(selector.value),
+          taskId: task.id,
+          taskTitle: task.title,
+          userId: state.user?.id,
+          role: state.project.myRole,
+          writable: canWrite(),
+          csrfToken: state.csrf,
+        }),
+      );
       comments.classList.add("tf-comments-trigger");
       card.append(comments);
     }
@@ -346,7 +438,7 @@
     const editAllowed = Boolean(isManager() && canWrite());
     el("task-create-panel").hidden = !editAllowed;
     el("task-readonly-note").hidden = editAllowed || !state.project;
-    dragHelp.hidden = !editAllowed;
+    dragHelp.hidden = !editAllowed || filtersActive();
     if (state.project) {
       el("task-readonly-note").textContent =
         state.project.status === "archived"
@@ -354,21 +446,40 @@
           : "你的角色可查看任務；僅可更改自己受指派任務的狀態。";
     }
     renderAssignees();
-    const tasks = sortedTasks();
+    renderFilterAssignees();
+    const allTasks = sortedTasks();
+    const tasks =
+      state.project && typeof window.TaskFilters?.filterTasks === "function"
+        ? window.TaskFilters.filterTasks(allTasks, readFilters())
+        : allTasks;
+    const filterPanel = el("task-filter-panel");
+    filterPanel.hidden = !state.project;
+    const filtering = filtersActive();
+    el("task-filter-hint").hidden = !filtering;
+    el("task-filter-empty").hidden =
+      !state.project || !filtering || tasks.length !== 0;
+    el("task-filter-count").textContent = state.project
+      ? `顯示 ${tasks.length} / ${allTasks.length} 筆任務`
+      : "請先選擇專案";
+
     for (const [column, backendStatus] of Object.entries(columnStatus)) {
       const section = document.querySelector(
         `.kanban-column[data-status="${column}"]`,
       );
       const filtered = tasks.filter((task) => task.status === backendStatus);
-      section.querySelector(".column-count").textContent = String(filtered.length);
-      section.querySelector(".task-list").replaceChildren(...filtered.map(makeCard));
+      section.querySelector(".column-count").textContent = String(
+        filtered.length,
+      );
+      section
+        .querySelector(".task-list")
+        .replaceChildren(...filtered.map(makeCard));
     }
-    el("total-count").textContent = String(tasks.length);
+    el("total-count").textContent = String(allTasks.length);
     el("progress-count").textContent = String(
-      tasks.filter((x) => x.status === "in_progress").length,
+      allTasks.filter((x) => x.status === "in_progress").length,
     );
     el("done-count").textContent = String(
-      tasks.filter((x) => x.status === "done").length,
+      allTasks.filter((x) => x.status === "done").length,
     );
     // TASKFLOW-M9A-BEGIN：統計僅根據已驗證的目前專案 REST 清單。
     window.TaskAnalytics?.render(state.tasks, state.members, state.project);
@@ -377,6 +488,10 @@
 
   async function refresh() {
     const currentId = selector.value;
+    if (state.filterProjectId !== currentId) {
+      state.filterProjectId = currentId;
+      clearFilterControls();
+    }
     // M8-C1-BEGIN: 切換專案時關閉過時留言內容。
     window.TaskComments?.projectChanged(currentId);
     // M8-C2-BEGIN: 切換專案後不得殘留舊活動紀錄。
@@ -384,10 +499,16 @@
     // 訂閱變更由 M7-A 校驗成員資格，Socket 本身無法修改資料。
     window.TaskRealtime?.setProject(currentId);
     const requestId = ++state.requestId;
-    state.project = null;
-    state.members = [];
-    state.tasks = [];
-    render();
+    // M9-B3：同專案的 Socket／成員同步不能暫時隱藏表單、清掉使用者輸入。
+    // 真正切換專案則立即清空舊專案畫面，避免跨專案殘留資料。
+    const sameLoadedProject =
+      state.project != null && String(state.project.id) === currentId;
+    if (!sameLoadedProject) {
+      state.project = null;
+      state.members = [];
+      state.tasks = [];
+      render();
+    }
     if (!currentId) {
       notice("請先建立或選擇專案。");
       return;
@@ -414,9 +535,13 @@
       render();
       notice(`已載入 ${state.tasks.length} 筆正式任務。`);
     } catch (error) {
-      if (requestId !== state.requestId || error.status === 401) return;
+      if (requestId !== state.requestId) return;
+      // 無論是否為背景同步，載入失敗都不保留可能已失權的專案資料。
+      state.project = null;
+      state.members = [];
+      state.tasks = [];
       render();
-      notice(error.message, true);
+      if (error.status !== 401) notice(error.message, true);
     }
   }
 
@@ -499,7 +624,10 @@
       (card) => Number(card.dataset.taskId) !== state.dragging.taskId,
     );
     const index = visible.findIndex(
-      (card) => clientY < card.getBoundingClientRect().top + card.getBoundingClientRect().height / 2,
+      (card) =>
+        clientY <
+        card.getBoundingClientRect().top +
+          card.getBoundingClientRect().height / 2,
     );
     return index === -1 ? visible.length : index;
   }
@@ -518,7 +646,9 @@
     }
   }
 
-  for (const section of document.querySelectorAll("#task-workspace .kanban-column")) {
+  for (const section of document.querySelectorAll(
+    "#task-workspace .kanban-column",
+  )) {
     section.addEventListener("dragover", (event) => {
       if (!activeDrag(section)) return;
       event.preventDefault();
@@ -535,7 +665,9 @@
       event.preventDefault();
       const targetStatus = columnStatus[section.dataset.status];
       const index = dropIndex(section, event.clientY);
-      const task = state.tasks.find((item) => item.id === state.dragging.taskId);
+      const task = state.tasks.find(
+        (item) => item.id === state.dragging.taskId,
+      );
       endDrag();
       if (task) moveTask(task, targetStatus, index);
     });
@@ -591,40 +723,74 @@
     refresh();
   });
 
+  // TASKFLOW-M9B2-BEGIN: re-render only; never fetch or alter SQLite on input.
+  for (const id of filterControlIds) {
+    el(id).addEventListener(
+      id === "task-filter-keyword" ? "input" : "change",
+      () => {
+        if (!state.busy && state.project) render();
+      },
+    );
+  }
+  el("task-filter-reset").addEventListener("click", () => {
+    if (state.busy) return;
+    clearFilterControls();
+    render();
+  });
+  // TASKFLOW-M9B2-END
+
   function setProjects(projects, preferredId = null) {
     if (!Array.isArray(projects)) return;
+
     const current = selector.value;
     state.projects = projects;
+
     const placeholder = document.createElement("option");
     placeholder.value = "";
     placeholder.textContent = projects.length ? "選擇專案" : "尚無專案";
+
     const options = projects.map((project) => {
       const option = document.createElement("option");
       option.value = String(project.id);
       option.textContent = project.name;
       return option;
     });
+
     selector.replaceChildren(placeholder, ...options);
+
     const wanted = preferredId == null ? current : String(preferredId);
+
     selector.value = projects.some((project) => String(project.id) === wanted)
       ? wanted
       : projects.length
         ? String(projects[0].id)
         : "";
-    resetForm();
+
+    // 同一專案的背景同步不應清空正在填寫的表單。
+    // 只有真正切換專案時才重設編輯狀態。
+    const projectChanged = current !== selector.value;
+
+    if (projectChanged) {
+      resetForm();
+    }
+
     refresh();
   }
 
   // M7-C-BEGIN: 忙碌／編輯／拖曳期間，暫不執行會重建卡片的遠端刷新。
   function canRealtimeSync() {
-    return Boolean(state.csrf && !state.busy && !state.dragging && state.editingId === null);
+    return Boolean(
+      state.csrf && !state.busy && !state.dragging && state.editingId === null,
+    );
   }
 
   window.TaskBoard = {
     realtimeSync(update) {
-      if (!canRealtimeSync() || Number(selector.value) !== update?.projectId) return false;
+      if (!canRealtimeSync() || Number(selector.value) !== update?.projectId)
+        return false;
       if (update.refreshProjects) {
-        if (typeof window.TaskFlowDashboard?.reloadProjects !== "function") return false;
+        if (typeof window.TaskFlowDashboard?.reloadProjects !== "function")
+          return false;
         void window.TaskFlowDashboard.reloadProjects().catch((error) => {
           notice(error.message || "專案資料同步失敗，請重新整理。", true);
         });
@@ -644,6 +810,8 @@
       state.members = [];
       state.tasks = [];
       selector.value = "";
+      state.filterProjectId = "";
+      clearFilterControls();
       resetForm();
       render();
       notice("你已失去此專案的存取權，正在重新讀取專案清單。", true);

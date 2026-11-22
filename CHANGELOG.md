@@ -8,6 +8,38 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
+
+### M9-B — 文件整理：2026-11-23｜Task Search & Multi-filter
+
+#### Added
+
+- 新增 `public/task-filters.js`：任務標題、描述關鍵字、狀態、優先度、負責人及未指派的多條件篩選；不修改來源陣列。
+- 新增 `public/task-filters.css`，並在 `public/index.html` 與 `public/task-board.js` 整合搜尋工具列、結果數量、空結果與清除篩選。
+- 新增 `scripts/apply-m9b2.js`、安全整合腳本測試 `tests/apply-m9b2.test.js`、篩選測試 `tests/task-filters.test.js` 與 Edge E2E `e2e/task-filters.e2e.js`。
+
+#### Fixed
+
+- 修復 `task-board.js` 中 `setProjects()` 函式後殘留重複程式碼的語法問題。
+- 修復同一專案背景更新意外重設任務表單，導致 M7-D 建立任務及後續即時同步測試連鎖失敗的問題。
+- 當有篩選條件時，禁止拖曳／排序／狀態變更以保護位置索引；統計仍依完整任務清單計算。
+
+#### Verified（本機執行紀錄）
+
+- Node 完整回歸 306/306 PASS；所有 Edge E2E 98/98 PASS；無失敗、跳過或取消。
+- M9-B 專項 Node 14/14 PASS、Edge 6/6 PASS；專項包含於完整套件內，不重複加總。
+- M7-D 修正後 E2E 單獨連續兩次 10/10 PASS；使用者回報瀏覽器操作正常。
+- M9-A 先前已於 Commit `b316c1e` Push 並核對遠端 SHA。
+
+#### Scope
+
+- 搜尋／篩選為當前已授權專案的前端唯讀運算，不新增後端搜尋 API 或 SQLite Schema。
+- M9-C、M10 及 v1.0.0 GitHub Release 尚未完成；本段不預先宣告 M9-B Git Push 結果。
+
+---
+
+<!-- /TASKFLOW-M9B-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
 
 ### M9-A — 2026-11-21｜Dashboard Analytics

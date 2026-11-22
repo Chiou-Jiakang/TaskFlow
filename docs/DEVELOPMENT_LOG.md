@@ -1,5 +1,34 @@
 # TaskFlow｜開發歷程紀錄
 
+<!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
+
+## M9-B｜搜尋與多條件篩選開發紀錄（整理日：2026-11-23）
+
+### 工作批次
+
+1. **M9-B1**：加入 `public/task-filters.js` 與 `tests/task-filters.test.js`，純函式 10/10 PASS。
+2. **M9-B2**：以 `scripts/apply-m9b2.js` 增量整合 `index.html`、`task-board.js`、`task-filters.css`，首次 dry-run 不寫入、正式套用前備份、再次 dry-run 不重複改寫。14/14 Node 專項、6/6 Edge 專項通過。
+3. **M9-B3**：全套 Edge 起初 98 tests / 93 pass / 5 fail；定位為 M7-D Owner 建立任務未發出預期 POST，後續狀態變更、版本與排序錯誤屬連鎖失敗。
+4. 修正 `task-board.js`：移除誤貼後殘留的 `setProjects()` 重複程式碼，修正背景同專案刷新不應清空正在編輯的表單；未修改正式 SQLite 或後端授權路由。
+5. 修正後 M7-D 單獨連續兩次 10/10 PASS，隨後完整 `npm test` 306/306 PASS、全部 Edge E2E 98/98 PASS；使用者另確認本機網頁實際操作正常。
+
+### 技術決策與安全邊界
+
+- 篩選不覆寫 `state.tasks`；Dashboard 使用完整任務清單，篩選僅影響顯示。
+- 篩選條件啟用時停用拖放／排序／狀態變更，避免索引與資料庫位置不一致。
+- 保留專案切換資料隔離、角色權限、M7 即時同步、M8 留言與 Activity；維持增量更新文件，不直接改動歷史紀錄。
+- M9-A Git 結案已透過 `b316c1e` 與遠端 main SHA 一致性核對。
+- M9-B 程式碼與文件在功能驗收完成後集中 Git Commit／Push；最終 Git 事實以終端實際輸出為準。
+
+### 下一階段
+
+- M9-C：搜尋、看板、統計、即時協作之 UX／整合與例外操作。
+- M10：正式部署、安全、效能、備份及 v1.0.0 Release。
+
+---
+
+<!-- /TASKFLOW-M9B-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9A-DOCS-2026-11-21 -->
 
 ## 2026-11-21｜M9-A 專案統計儀表板開發紀錄
