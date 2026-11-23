@@ -87,6 +87,23 @@ test("M9-C1 Edge board UX states", { timeout: 90000 }, async (t) => {
   });
 
   await t.test("failed task read exposes retry without stale data, retry recovers", async () => {
+    // TASKFLOW-M9C2-RETRY-ISOLATION-BEGIN
+    // This test isolates the REST retry UX from asynchronous Socket.IO revalidation.
+    // M7-D and M9-C2 cover realtime propagation independently.
+    await page.evaluate(() => {
+      if (typeof window.TaskRealtime?.stop !== "function") {
+        throw new Error("TaskRealtime.stop 未就緒，無法隔離重試測試");
+      }
+      window.TaskRealtime.stop();
+    });
+    // Drain any refresh that was already in progress before installing the 503 route.
+    await page.waitForFunction(() => {
+      const refresh = document.getElementById("task-refresh");
+      const board = document.querySelector(".board-section");
+      return Boolean(refresh && !refresh.disabled && board?.getAttribute("aria-busy") === "false");
+    });
+    // TASKFLOW-M9C2-RETRY-ISOLATION-END
+
     // A deterministic HTTP 503 is a genuine failed REST read. It avoids the
     // unpredictable timing of aborting a transport connection mid-refresh.
     let rejectReads = true;
@@ -151,6 +168,11 @@ test("M9-C1 Edge board UX states", { timeout: 90000 }, async (t) => {
     await page.waitForFunction(() => document.querySelector(".board-section")?.getAttribute("aria-busy") === "false");
     assert.equal(await page.locator("#task-ux-retry").isVisible(), false);
     await page.unrouteAll({ behavior: "wait" });
+    // Restore Socket.IO after the controlled REST failure/recovery scenario.
+    await page.evaluate(() => {
+      window.TaskRealtime?.start();
+      window.TaskRealtime?.setProject(document.getElementById("task-project-select")?.value);
+    });
   });
 
   await t.test("filter-empty does not masquerade as project-empty", async () => {

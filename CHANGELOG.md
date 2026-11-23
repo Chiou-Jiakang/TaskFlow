@@ -8,6 +8,30 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
+### M9-C2 — 2026-11-23｜Search / Analytics / Realtime Consistency
+
+#### Added
+
+- 新增 `e2e/task-consistency.e2e.js`：驗證 Owner 與 Member 對任務的新增、狀態變更，對另一頁的篩選清單、Dashboard KPI 與即時同步的影響，以及切換專案後的資料隔離。
+- 新增 `scripts/fix-m9c1-retry-race.js`：針對既有 UX E2E 的重試時序提供備份、預覽、套用及驗證，不修改正式服務程式。
+
+#### Tests / Reliability
+
+- M9-C2 專項 Edge E2E **7/7 PASS**；M9-C1 重試修正後 Edge 專項 **5/5 PASS**。
+- 初次完整 Edge 回歸 **110 tests / 108 pass / 2 fail**（一個子測試與外層測試）：重試面板在 Playwright 點擊前被背景同步隱藏；修正測試隔離後完整回歸 **110/110 PASS**。
+- 完整 Node 測試 **318/318 PASS**；Node＋Edge 完整回歸合計 **428 項**，0 fail、0 skipped、0 cancelled。專項測試包含於完整回歸，不重複計數。
+
+#### Scope
+
+- 本階段屬整合驗證及測試可靠性改善；未新增後端 API、SQLite 欄位或正式產品功能。
+- 本段不表示 M9-C2 已完成 Git Commit／Push；M9-C3／C4 與 M10 部署、正式發布仍未完成。
+
+---
+
+<!-- /TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
 
 ### M9-C1 — 2026-11-23｜Kanban UX: Loading, Empty States & Retry

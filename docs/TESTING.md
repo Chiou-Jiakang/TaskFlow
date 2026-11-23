@@ -1,5 +1,38 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
+## 最新測試快照｜M9-C2 Search / Dashboard / Realtime（2026-11-23）
+
+> 依使用者本機 PowerShell 截圖記錄；測試通過率不等於程式碼覆蓋率，也不能取代 M10 安全或部署驗收。
+
+| 項目 | 結果 | 備註 |
+| --- | --- | --- |
+| M9-C2 搜尋、Dashboard、多人同步、跨專案專項 E2E | **7/7 PASS** | 隔離 Session／SQLite／專案 |
+| M9-C1 重試測試競態修正後專項 E2E | **5/5 PASS** | 隔離背景 Socket.IO 干擾；不修改正式產品功能 |
+| `npm test` 完整 Node 回歸 | **318/318 PASS** | fail 0、skipped 0、cancelled 0 |
+| 全部 `e2e/*.e2e.js` Microsoft Edge | **110/110 PASS** | fail 0、skipped 0、cancelled 0 |
+| 完整套件合計 | **428 項 PASS** | 318 + 110；上述專項已包含其中 |
+
+### 測試問題與修復記錄
+
+- 初次全套 Edge：110 tests、108 pass、2 fail（M9-C1 retry 子測試與外層測試）。診斷顯示重試按鈕存在、未停用，但面板在點擊前隱藏；當時任務已成功載入。
+- 修正 `e2e/task-ux.e2e.js` 的測試隔離／時序，避免背景 Socket.IO REST 刷新搶先恢復畫面。執行修正工具的 `--dry-run`、`--apply`、`--verify`，再做 `node --check`。
+- 修後單獨 Edge **5/5 PASS**，最後完整 Edge **110/110 PASS**。此測試競態不等同正式產品缺陷。
+- M9-C2 的 7 項 Edge 專項已包括於全部 110 項中，不能另外加總成 117。完整測試不代表所有部署、安全、負載與跨瀏覽器情境都已涵蓋。
+
+### 完整回歸指令
+
+```powershell
+npm test
+$e2eFiles = @(Get-ChildItem .\e2e -Filter "*.e2e.js" -File | Sort-Object Name | ForEach-Object { $_.FullName })
+node --test --test-concurrency=1 $e2eFiles
+```
+
+---
+
+<!-- /TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
 
 ## 最新測試快照｜M9-C1 Kanban UX（2026-11-23）

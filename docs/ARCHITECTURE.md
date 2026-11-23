@@ -1,5 +1,34 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
+## 最新架構驗收快照｜M9-C2 跨功能一致性（2026-11-23）
+
+> 此段是測試與資料流驗收補充，不是產品架構重寫；既有 Session／RBAC、REST、Socket.IO、Kanban、M9-A Analytics、M9-B Filter 與 M9-C1 UX 均保留。
+
+```text
+Owner / Member 獨立 Session
+     ├─→ Task REST 寫入／權限與版本檢查
+     └─→ Socket.IO 專案 Room 變更通知
+                     ↓
+          受權限保護的 REST 重新讀取
+                     ↓
+                TaskBoard
+       ├─→ 全量 tasks → Dashboard KPI
+       └─→ 唯讀篩選 → Kanban 卡片與結果數量
+
+跨專案切換：清理舊篩選條件／不混入其他專案資料
+```
+
+- `e2e/task-consistency.e2e.js` 以獨立資料庫、帳號和專案確認訊息與畫面的一致性；Socket 事件僅是刷新提示，任務實際資料仍由授權 REST 回傳。
+- Dashboard 的計算基於完整任務清單，而非篩選後卡片數；跨專案切換須保留資料隔離。
+- M9-C1 重試 E2E 在完整回歸遇到 Socket 背景刷新與模擬失敗的競態；修正點限於測試時序，測試腳本的暫時隔離不得被誤用為正式產品行為。
+- 本階段未改動正式 SQLite schema、後端 API、Session／RBAC 或業務邏輯。
+
+---
+
+<!-- /TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
 
 ## 最新架構快照｜M9-C1 Kanban UX（2026-11-23）

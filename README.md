@@ -1,5 +1,30 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
+## 最新開發狀態｜M9-C2 跨功能一致性驗收（2026-11-23）
+
+> 本節為本機功能驗收快照，保留下方 M9-C1 與更早階段的原始紀錄。M9-C2 目前**尚未完成 Git Commit／Push**；TaskFlow v1.0.0 **尚未發布**。
+
+- **基準版本：** M9-C1 Commit `294d06b` 已 Push 到 `origin/main`；本機與遠端 SHA 比對一致。
+- **新增驗收：** `e2e/task-consistency.e2e.js` 以獨立 Owner／Member Session 和隔離專案測試搜尋篩選、全量 Dashboard、Socket.IO 任務同步與跨專案隔離；M9-C2 Edge 專項 **7/7 PASS**。
+- **測試可靠性：** 在完整回歸中，M9-C1 的「HTTP 503 後重試」測試曾受背景 Socket.IO 重新載入干擾，使重試面板在點擊前隱藏。以 `scripts/fix-m9c1-retry-race.js` 僅調整 `e2e/task-ux.e2e.js` 的測試隔離及時序；未為此更動產品 REST／SQLite／前端功能。
+- **最終回歸：** 使用者本機 `npm test` **318/318 PASS**；全部 `e2e/*.e2e.js` 依序執行 **110/110 PASS**；合計 **428 項**，0 fail／skipped／cancelled。M9-C2 專項 7 項與 M9-C1 UX 專項 5 項均已包含在 110 項內，**不可重複加總**，也不代表程式碼覆蓋率。
+- **產品化判定：** M9-C2 定義的跨功能場景未觀察到產品缺陷，故不新增不必要的業務功能；仍須完成本階段文件與 Git 結案。
+- **後續：** M9-C3 響應式與基本無障礙驗收、M9-C4 整合結案、M10 安全與部署／`v1.0.0` Release。
+
+### M9-C2 完整回歸指令
+
+```powershell
+npm test
+$e2eFiles = @(Get-ChildItem .\e2e -Filter "*.e2e.js" -File | Sort-Object Name | ForEach-Object { $_.FullName })
+node --test --test-concurrency=1 $e2eFiles
+```
+
+---
+
+<!-- /TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
 
 ## 最新開發狀態｜M9-C1 看板 UX 與載入回饋（2026-11-23）

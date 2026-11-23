@@ -1,5 +1,32 @@
 # TaskFlow｜開發歷程紀錄
 
+<!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
+## 2026-11-23｜M9-C2 跨功能一致性與完整回歸
+
+### 實作／驗收批次
+
+1. 承接 M9-C1 已 Push 並核對 SHA 的 Commit `294d06b`。
+2. 新增 `e2e/task-consistency.e2e.js`，建立隔離帳號、兩個專案及基準任務；測試 Owner／Member 即時更新、搜尋組合篩選、Dashboard 全量統計及跨專案隔離；Edge 專項 **7/7 PASS**。
+3. 完整 Node 回歸 **318/318 PASS**。初次全部 Edge E2E **108/110 PASS**，僅 M9-C1 失敗讀取後重試場景（含其外層測試）受競態影響。
+4. 依 Playwright 診斷：重試按鈕存在但面板已 `hidden`，顯示正常讀取完成；背景 Socket.IO 刷新可能在點擊前清除錯誤狀態。以 `scripts/fix-m9c1-retry-race.js` 僅修正 E2E 隔離／時序，備份原始測試檔，`--verify` 與語法檢查通過。
+5. 修後單獨 M9-C1 E2E **5/5 PASS**；最後完整 Edge E2E **110/110 PASS**，0 fail／skipped／cancelled。整體 Node＋Edge **428 項通過**。
+
+### 技術界線與判定
+
+- 未發現 M9-C2 定義的跨功能一致性產品缺陷；未對正式 `server/`、SQLite 或前端功能做不必要變更。
+- 測試使用隔離記憶體 SQLite、獨立測試 Session；未重新初始化正式資料庫。
+- 此時文件與 Git 結案仍待完成；六份文件必須新增增量快照並保留歷史。
+
+### 下一步
+
+- 更新六份文件、`git diff --check`、精確暫存、Commit／Push 與遠端 SHA 比對。
+- M9-C3 響應式及無障礙、M9-C4 最終整合驗收、M10 安全部署與 Release。
+
+---
+
+<!-- /TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
 
 ## 2026-11-23｜M9-C1 看板 UX 開發與驗收紀錄

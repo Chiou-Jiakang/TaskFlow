@@ -1,5 +1,37 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
+## 最新里程碑狀態｜M9-C2（2026-11-23）
+
+> 本段為最新快照；較下方 M9-C1 段落仍保留當時尚待 Git 結案的歷史描述。TaskFlow **v1.0.0 尚未正式發布**。
+
+| 里程碑 | 當前狀態 | 已確認／待完成 |
+| --- | --- | --- |
+| M0～M9-B | 已結案 | 既有產品核心功能與文件、Git 歷史保留 |
+| M9-C1｜Kanban UX | 已完成 GitHub 結案 | Commit `294d06b`，本機與 GitHub `main` SHA 已核對 |
+| M9-C2｜跨功能一致性 | 功能與完整回歸通過 | Edge 專項 7/7；完整 Node 318/318、Edge 110/110 |
+| M9-C2｜文件與 Git | 目前進行 | 文件預覽／驗證、精確 staging、Commit／Push、SHA 比對 |
+| M9-C3｜響應式與無障礙 | 尚未開始 | 手機／平板版面、鍵盤操作、焦點、ARIA 基礎驗收 |
+| M9-C4｜總整合結案 | 尚未開始 | 全面品質與文件／Git 收斂 |
+| M10｜正式產品化 | 尚未開始 | 安全、部署、備份／復原與 `v1.0.0` Release |
+
+### M9-C2 Git 結案檢核
+
+- [x] M9-C2 專項 Edge **7/7 PASS**。
+- [x] M9-C1 Retry 測試競態修正，單獨 **5/5 PASS**。
+- [x] 完整 Node **318/318**、完整 Edge **110/110**，均 0 failed／skipped／cancelled。
+- [ ] 六份文件已正確新增 M9-C2 快照，`--verify`、重複 `--dry-run` 通過。
+- [ ] Git 精確暫存測試、修正工具與六份文件，不包含 M8 TXT／ZIP 說明／正式 SQLite。
+- [ ] 已檢視 staged diff、`git diff --cached --check` 通過。
+- [ ] 本機 Commit／GitHub Push 成功，`HEAD` 與遠端 `refs/heads/main` 完整 SHA 相同。
+
+> 文件工具只記錄至寫入前已發生的事實；不得提前勾選 Commit／Push 或宣告 v1.0.0 已發布。
+
+---
+
+<!-- /TASKFLOW-M9C2-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
 
 ## 最新里程碑狀態｜M9-C1（2026-11-23）
