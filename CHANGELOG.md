@@ -8,6 +8,31 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
+### M9-C1 — 2026-11-23｜Kanban UX: Loading, Empty States & Retry
+
+#### Added
+
+- 透過 `public/index.html`、`public/task-board.js` 加入載入回饋、全專案空看板與空欄位狀態、讀取失敗重試按鈕；不與搜尋空結果混淆。
+- 新增 `public/task-ux.css`，與既有深色看板風格整合。
+- 新增可預覽／備份／驗證且冪等的 `scripts/apply-m9c1.js`，以及 `tests/apply-m9c1.test.js` 和 `e2e/task-ux.e2e.js`。
+
+#### Tests / Reliability
+
+- 初版重試 E2E 遇到 Playwright 點擊逾時；調整測試等待時序與失敗模擬為可控 HTTP 503，並加入診斷資訊。修正版 Edge E2E 5/5 PASS，未因此修改產品 API／SQLite。
+- 完整 Node 314/314 PASS、全部 Edge E2E 103/103 PASS，0 failed、0 skipped；Node 4 項工具測試包含在 314 項內，Edge 5 項專項包含在 103 項內。
+- 使用者回報 M9-C1 功能操作與本機環境正常；Git 暫存、Commit、Push 尚待結案前確認。
+
+#### Scope
+
+- M9-B 已於 `3581f62` 完成 GitHub 同步；本段為 M9-C1 **功能與測試**階段紀錄，不能視為 M9-C1 Git 結案證據。
+- M9-C2／C3／C4 與 M10 正式部署及 Release 仍待完成。
+
+---
+
+<!-- /TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
 
 ### M9-B — 文件整理：2026-11-23｜Task Search & Multi-filter

@@ -1,5 +1,36 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
+## 最新測試快照｜M9-C1 Kanban UX（2026-11-23）
+
+> 依使用者提供之本機終端截圖與操作回報記錄。下方 M9-B 與更早歷史測試保留。此處不代表 M10 部署安全、負載與跨瀏覽器驗收完成。
+
+| 範圍 | 驗收結果 | 補充 |
+| --- | --- | --- |
+| M9-C1 apply 工具 Node 專項 | 4/4 PASS | 腳本定位、冪等、拒絕非預期結構 |
+| M9-C1 Edge UX 專項（修正版） | 5/5 PASS | 全空專案、空欄位、模擬 503 失敗重試、篩選空結果 |
+| `npm test` 完整 Node 回歸 | 314/314 PASS | fail 0、skipped 0、cancelled 0 |
+| 全部 `e2e/*.e2e.js` | 103/103 PASS | fail 0、skipped 0、cancelled 0 |
+| 本機人工操作 | 使用者回報功能正常 | 不是額外的自動化測試 |
+
+- 兩套完整測試合計 **417 項**，專項測試已包含其中，不能重複加總成 426 項或宣稱程式碼覆蓋率 100%。
+- 初次 M9-C1 Edge E2E 為 5 tests、3 pass、2 fail（包含外層測試）；點擊重試按鈕等待逾時。後以可控 HTTP 503 模擬與操作時序修訂測試，專項 5/5 PASS，隨後完整 Edge 103/103 PASS。
+- 測試資料使用隔離 SQLite、隨機 Port；沒有透過 E2E 重新初始化正式資料庫。
+- 最終確認 `git diff --check` 無格式錯誤，但 M9-C1 的 Git Commit／Push 尚須另行驗證。
+
+### M9-C1 完整回歸指令
+
+```powershell
+npm test
+$e2eFiles = @(Get-ChildItem .\e2e -Filter "*.e2e.js" -File | Sort-Object Name | ForEach-Object { $_.FullName })
+node --test --test-concurrency=1 $e2eFiles
+```
+
+---
+
+<!-- /TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
 
 ## 最新測試快照｜M9-B（驗收紀錄至 2026-11-22，文件整理 2026-11-23）

@@ -1,5 +1,31 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
+## 最新開發狀態｜M9-C1 看板 UX 與載入回饋（2026-11-23）
+
+> 本節為最新進度快照；下方 M9-B 以前段落保留原始歷程。TaskFlow v1.0.0 尚未發布，M9-C1 目前完成實作與本機驗收；本節**不預先宣告** M9-C1 Git Commit／Push。
+
+- **基準版本：** M9-B 已於 Commit `3581f62` Push 至 `origin/main`，並以 40 位 SHA 驗證與本機一致。
+- **UX 改善：** 在現有正式 Kanban 顯示任務載入狀態、全專案無任務提示、空欄位說明及資料讀取失敗時的重新嘗試按鈕。將「篩選沒有結果」與「專案原本沒有任務」區分。
+- **實作檔案：** `public/index.html`、`public/task-board.js` 進行最小掛接；新增 `public/task-ux.css`、`scripts/apply-m9c1.js`、`tests/apply-m9c1.test.js`、`e2e/task-ux.e2e.js`。
+- **測試修正：** 初版重試 E2E 在異常網路模擬中按鈕點擊逾時；後以可控 HTTP 503、等待前項操作結束與診斷資訊改善測試時序。修正後 M9-C1 Edge 專項 5/5 PASS。該問題**不是已證實的產品功能錯誤**。
+- **完整回歸：** 本機 `npm test` 314/314 PASS；所有 `e2e/*.e2e.js` 依序執行 103/103 PASS；總計 417 項測試，0 fail／skipped／cancelled。此數字不是程式碼覆蓋率。M9-C1 整合工具 4/4 Node 測試包含於完整回歸。
+- **設計界線：** 不重置正式 SQLite，不改動 Session／RBAC、REST Payload、Socket.IO、Kanban 原子排序或 M9-A／M9-B 資料邏輯。空狀態與錯誤重試純屬畫面互動層。
+- **後續：** M9-C2 搜尋／Dashboard／即時同步一致性；M9-C3 響應式與無障礙；M9-C4 整體文件與 Git 結案，最後 M10 安全部署與 Release。
+
+### M9-C1 回歸指令
+
+```powershell
+npm test
+$e2eFiles = @(Get-ChildItem .\e2e -Filter "*.e2e.js" -File | Sort-Object Name | ForEach-Object { $_.FullName })
+node --test --test-concurrency=1 $e2eFiles
+```
+
+---
+
+<!-- /TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
 
 ## 最新開發狀態｜M9-B 任務搜尋與多條件篩選（文件整理：2026-11-23）

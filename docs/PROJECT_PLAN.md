@@ -1,5 +1,36 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
+## 最新里程碑狀態｜M9-C1（2026-11-23）
+
+> 此為最新快照；下方 M9-B 和更早階段紀錄是原始歷史，不可將其中舊的「待 Git 結案」誤判為目前狀態。TaskFlow v1.0.0 **尚未發布**。
+
+| 里程碑 | 當前狀態 | 已確認／仍需完成 |
+| --- | --- | --- |
+| M0～M9-B | 已完成階段結案 | M9-B Commit `3581f62` 已與 `origin/main` SHA 比對一致 |
+| M9-C1｜看板 UX | 功能與完整回歸通過 | Node 314/314；Edge 103/103；載入、空狀態、重試的 E2E 5/5 |
+| M9-C1｜六份文件與 Git | 待結案 | 文件 dry-run／verify；精確 staging；Commit、Push、HEAD 與遠端 SHA 比對 |
+| M9-C2｜多功能同步一致性 | 尚未開始 | 搜尋／看板／Dashboard／多人即時變更整合 |
+| M9-C3｜響應式與無障礙 | 尚未開始 | 行動版與鍵盤操作、焦點狀態、基本無障礙 |
+| M9-C4｜整體文件結案 | 尚未開始 | 多階段整合驗收與文件／Git 收斂 |
+| M10｜安全部署與 Release | 尚未開始 | 正式環境配置、風險審核、備份、Release |
+
+### M9-C1 Git 結案標準
+
+- [x] M9-C1 專項 5/5 Edge 與整合工具 4/4 Node 完成。
+- [x] 全部 Node 314/314、全部 Edge 103/103，無失敗與跳過。
+- [ ] 六份文件成功加入 M9-C1 段落，`--verify`、冪等 `--dry-run` 通過。
+- [ ] 精確 staged 必要程式、測試、文件，排除 M8 與工具 README TXT、憑證及正式 SQLite。
+- [ ] `git diff --cached --check` 通過，審查 staged 差異與檔案數量。
+- [ ] Git Commit／Push 後比較 `HEAD` 與 GitHub `refs/heads/main` SHA 完全相同。
+
+> 最後三項僅供結案流程核對，不由文件腳本代替實際驗證。
+
+---
+
+<!-- /TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
 
 ## 最新里程碑狀態｜M9-B（2026-11-23）

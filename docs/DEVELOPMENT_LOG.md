@@ -1,5 +1,31 @@
 # TaskFlow｜開發歷程紀錄
 
+<!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
+## 2026-11-23｜M9-C1 看板 UX 開發與驗收紀錄
+
+### 實作與技術選擇
+
+- 承接 M9-B GitHub 結案版本 `3581f62`。新增看板載入狀態、空專案／空欄提示、載入失敗重試，使用 `public/task-ux.css` 並以 `scripts/apply-m9c1.js` 安全整合進 `public/index.html` 和 `public/task-board.js`。
+- 整合工具先通過 4/4 Node 測試與 dry-run，正式套用後 `--verify` 及重複 `--dry-run` 均顯示已是最新；備份存放於系統 Temp，不涉及 SQLite 重建。
+- 初版 `e2e/task-ux.e2e.js` 出現讀取失敗後點擊重試逾時，修正版改善 E2E 模擬及等待時序，用可控 503 測試；修後 5/5 Edge PASS，不在缺乏證據下直接修改產品 API。
+
+### 已驗證的結果（本機終端輸出）
+
+- 完整 Node `npm test`：314/314 PASS、fail 0、skipped 0、cancelled 0。
+- 全部 Microsoft Edge E2E：103/103 PASS、fail 0、skipped 0、cancelled 0。
+- M9-C1 Edge 專項：5/5 PASS；整合工具 Node：4/4 PASS（均屬上述完整套件子集）。
+- 使用者表示功能操作正常；`git diff --check` 未回報差異格式錯誤；這不代表已完成 Git Commit／Push。
+
+### 後續
+
+- M9-C1 六份文件更新、精確 Git 暫存與遠端 SHA 比對。
+- M9-C2：搜尋、統計、即時同步狀態一致性；M9-C3：響應式與無障礙；M9-C4：UX 整合結案；M10：部署安全與 Release。
+
+---
+
+<!-- /TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
 
 ## M9-B｜搜尋與多條件篩選開發紀錄（整理日：2026-11-23）

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/auth.css" />
     <link rel="stylesheet" href="/task-analytics.css" />
     <link rel="stylesheet" href="/task-filters.css" />
+    <link rel="stylesheet" href="/task-ux.css" />
     <link rel="stylesheet" href="/task-board.css" />
     <!-- M8-C1-BEGIN: 任務留言樣式 -->
     <link rel="stylesheet" href="/task-comments.css" />
@@ -138,6 +139,16 @@
             >
               正在確認任務資料…
             </p>
+            <!-- TASKFLOW-M9C1-BEGIN -->
+            <div id="task-ux-loading" class="tf-ux-loading" aria-hidden="true" hidden>
+              <span class="tf-ux-bar"></span>
+              <span class="tf-ux-bar"></span>
+              <span class="tf-ux-bar"></span>
+            </div>
+            <div id="task-ux-retry" class="tf-ux-retry" hidden>
+              <button id="task-ux-retry-button" type="button">重新嘗試載入任務</button>
+            </div>
+            <!-- /TASKFLOW-M9C1-END -->
 
             <section
               id="task-create-panel"
@@ -315,6 +326,7 @@
               </section>
               <p id="task-filter-empty" class="tf-filter-empty" role="status" hidden>沒有符合條件的任務，請調整或清除篩選。</p>
               <!-- /TASKFLOW-M9B2-END -->
+              <p id="task-board-empty" class="tf-board-empty" hidden>此專案還沒有任務。可在上方建立第一筆任務，或切換至其他專案。</p>
               <div class="kanban-board">
                 <section class="kanban-column" data-status="todo">
                   <h3>

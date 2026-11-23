@@ -1,5 +1,31 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
+## 最新架構快照｜M9-C1 Kanban UX（2026-11-23）
+
+> 本節記錄 M9-C1 的顯示層增量；既有 M9-A Dashboard、M9-B 前端篩選、M7 Socket.IO 與 M5/M6 任務 API 維持原有資料流程。
+
+```text
+Session 驗證 → 現有 Project / Members / Tasks REST
+    → public/task-board.js 的專案狀態與完整任務陣列
+       ├─ M9-A analytics：全量統計，不受篩選影響
+       ├─ M9-B filters：唯讀篩選後呈現卡片
+       └─ M9-C1 UX：載入／錯誤重試／全空專案與空欄位回饋
+                   ↓
+            public/index.html + public/task-ux.css
+```
+
+- `task-board.js` 仍依既有 Session、CSRF 與 RBAC 執行 CRUD、狀態修改及拖放排序；M9-C1 不增加後端新端點、Socket 事件或 SQLite 欄位。
+- UI 空狀態應區分：專案未選取／目前專案沒有任何任務／某一欄沒有任務／篩選條件無符合資料。重試動作僅重新取得既有 REST 資料。
+- 背景刷新同一專案不得清空編輯中的表單；權限撤銷與真正的專案切換仍需清理舊資料。載入失敗不得保留可能失權的舊任務資料。
+- `scripts/apply-m9c1.js` 僅供開發期間安全掛接，禁止視為正式伺服器啟動必備步驟；保留原檔備份與冪等驗證。
+- M9-C2 與 M9-C3 尚需針對同步狀態一致性、響應式與鍵盤操作繼續驗收；M10 另處理部署／安全／效能。
+
+---
+
+<!-- /TASKFLOW-M9C1-DOCS-2026-11-23 -->
+
 <!-- TASKFLOW-M9B-DOCS-2026-11-23 -->
 
 ## 最新架構快照｜M9-B Search & Multi-filter（2026-11-23）

@@ -27,6 +27,8 @@
     editingVersion: null,
     busy: false,
     requestId: 0,
+    loading: false,
+    loadError: false,
     dragging: null,
     filterProjectId: null,
   };
@@ -108,6 +110,22 @@
     message.textContent = text;
     message.dataset.error = String(error);
   }
+
+  // TASKFLOW-M9C1-BEGIN
+  // Loading indicator is decorative; task-message remains the live status region.
+  function setUxLoading(value) {
+    state.loading = Boolean(value);
+    el("task-ux-loading").hidden = !state.loading;
+    document.querySelector(".board-section")?.setAttribute(
+      "aria-busy", String(state.loading),
+    );
+  }
+
+  function setUxRetry(value) {
+    state.loadError = Boolean(value);
+    el("task-ux-retry").hidden = !state.loadError;
+  }
+  // TASKFLOW-M9C1-END
 
   function isManager() {
     return state.project && ["owner", "admin"].includes(state.project.myRole);
@@ -462,6 +480,9 @@
       ? `顯示 ${tasks.length} / ${allTasks.length} 筆任務`
       : "請先選擇專案";
 
+    el("task-board-empty").hidden =
+      !state.project || state.loading || allTasks.length !== 0;
+
     for (const [column, backendStatus] of Object.entries(columnStatus)) {
       const section = document.querySelector(
         `.kanban-column[data-status="${column}"]`,
@@ -470,9 +491,17 @@
       section.querySelector(".column-count").textContent = String(
         filtered.length,
       );
-      section
-        .querySelector(".task-list")
-        .replaceChildren(...filtered.map(makeCard));
+      const cards = filtered.map(makeCard);
+      // Empty-column hints are for views with at least one visible task.
+      if (state.project && tasks.length > 0 && filtered.length === 0) {
+        const hint = document.createElement("p");
+        hint.className = "tf-column-empty";
+        hint.textContent = filtering
+          ? "此欄沒有符合目前篩選條件的任務。"
+          : "此欄目前沒有任務。";
+        cards.push(hint);
+      }
+      section.querySelector(".task-list").replaceChildren(...cards);
     }
     el("total-count").textContent = String(allTasks.length);
     el("progress-count").textContent = String(
@@ -499,6 +528,8 @@
     // 訂閱變更由 M7-A 校驗成員資格，Socket 本身無法修改資料。
     window.TaskRealtime?.setProject(currentId);
     const requestId = ++state.requestId;
+    setUxRetry(false);
+    setUxLoading(Boolean(currentId));
     // M9-B3：同專案的 Socket／成員同步不能暫時隱藏表單、清掉使用者輸入。
     // 真正切換專案則立即清空舊專案畫面，避免跨專案殘留資料。
     const sameLoadedProject =
@@ -532,6 +563,7 @@
       state.project = projectData.project;
       state.members = memberData.members;
       state.tasks = taskData.tasks;
+      setUxLoading(false);
       render();
       notice(`已載入 ${state.tasks.length} 筆正式任務。`);
     } catch (error) {
@@ -540,6 +572,8 @@
       state.project = null;
       state.members = [];
       state.tasks = [];
+      setUxLoading(false);
+      setUxRetry(error.status !== 401);
       render();
       if (error.status !== 401) notice(error.message, true);
     }
@@ -711,6 +745,10 @@
   });
 
   el("task-cancel").addEventListener("click", resetForm);
+  el("task-ux-retry-button").addEventListener("click", () => {
+    if (!state.busy) void refresh();
+  });
+
   el("task-refresh").addEventListener("click", () => {
     if (!state.busy) {
       resetForm();
@@ -809,6 +847,8 @@
       state.project = null;
       state.members = [];
       state.tasks = [];
+      setUxLoading(false);
+      setUxRetry(false);
       selector.value = "";
       state.filterProjectId = "";
       clearFilterControls();
