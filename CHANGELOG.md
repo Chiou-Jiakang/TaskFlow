@@ -8,6 +8,30 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
+
+### M9-C3 / M9-C4 — 2026-11-23｜Responsive Verification Deferred / Documentation Freeze
+
+#### Decision / Documentation
+
+- M9-C3 手機、平板響應式測試及鍵盤／焦點／ARIA 無障礙檢查由使用者決定暫緩；狀態記為 **Deferred / Not Verified**，不是 PASS。
+- 已檢視桌面寬度的空專案／空任務畫面；未進行 320px、390px、768px 真實裝置模擬驗收，也未驗證非空任務卡片在行動版的表現。
+- 已識別候選風險：720px 以下 Sidebar 隱藏、行動版替代導航尚未驗證，以及畫面上仍顯示 `M5-C1` 舊開發標籤。
+- M9-C4 合併處理文件與發版前的待辦收斂；保留 M9-C2 Commit `7e11836` 的 GitHub SHA 比對結果。
+
+#### Previously Verified（沿用，不重新宣稱新測試）
+
+- 上一輪完整 Node **318/318 PASS**、Edge E2E **110/110 PASS**；共 428 項。這不涵蓋此輪未執行的響應式、無障礙及 M10 安全／部署驗收。
+- 本階段無正式產品程式碼、SQLite Schema、REST API 修改。
+
+#### Release status
+
+- **Unreleased**：v1.0.0 尚未發布。正式部署／Release 需在 M10 另行通過安全、環境、備份與復原等檢核；本段不預先宣告 Git Commit／Push 成功。
+
+---
+
+<!-- /TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
+
 <!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
 
 ### M9-C2 — 2026-11-23｜Search / Analytics / Realtime Consistency

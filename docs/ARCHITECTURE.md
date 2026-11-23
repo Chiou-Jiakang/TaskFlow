@@ -1,5 +1,21 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
+
+## M9-C3 / M9-C4｜UI 支援邊界與發布風險（2026-11-23）
+
+> 此節為範圍及技術風險紀錄，不新增架構元件。
+
+- 已觀察桌面寬度的既有 Sidebar、表單、Analytics、Filter 和 Kanban 空狀態排版；沒有取得 768px、390px、320px 或鍵盤／讀屏驗收結論。
+- `public/style.css` 包含 720px 以下隱藏 `.sidebar` 的響應式規則；尚未驗證同等可用的行動版導覽機制。這是待驗證風險，**不能等同已證實無法導航**。
+- `public/index.html` 仍有 `M5-C1` 開發期版本標記；未於本階段修改。
+- 保留既有 `Task REST → 授權讀取 → TaskBoard 完整任務 → Analytics / Filters / Kanban` 以及 Socket.IO 通知／重新抓取資料的架構；M9-C3／C4 不調整 Session／RBAC、REST、SQLite 或 UI 原始碼。
+- M10 若選擇公開部署，必須針對支援裝置、使用者可達性及安全邊界重新檢查；在驗收之前不主張 WCAG 符合性或全裝置支援。
+
+---
+
+<!-- /TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
+
 <!-- TASKFLOW-M9C2-DOCS-2026-11-23 -->
 
 ## 最新架構驗收快照｜M9-C2 跨功能一致性（2026-11-23）
