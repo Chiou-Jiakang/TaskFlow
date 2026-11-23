@@ -1,5 +1,28 @@
 # TaskFlow｜開發歷程紀錄
 
+<!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+## M10-A4｜HTTP 安全標頭與測試環境穩定化（2026-11-24）
+
+### 實作與問題排查
+
+- 在 `server/server.js` 的 Express Middleware 新增三項基礎安全標頭，並對 `/api` 路徑設定 `Cache-Control: no-store`，未更動其他業務 API 或 SQLite Schema。
+- 一度遇到 `EADDRINUSE`：Port 3000 上已有 `node server/server.js` 程序，導致新版服務未成功啟動。辨識並停止舊程序後重新啟動，新版 HTTP 標頭由 `curl.exe` 驗證正常。
+- `tests/security-headers.test.js` 首次只有檔案層級 PASS，之後改為具備三個子測試及外層測試的真正專項驗收，結果 4/4 PASS。
+- 原始 `npm test` 並行執行出現 328 tests／327 pass／1 fail（失敗定位於安全標頭測試檔案層級）；使用 `node --test --test-concurrency=1` 得 331/331 PASS；將此執行模式寫入 `package.json`，正式 `npm test` 再次 331/331 PASS。
+
+### 工程判定與限制
+
+- **已驗證：** 三項安全標頭、API `no-store`、未登入 401、專項 4/4 PASS、循序 Node 331/331 PASS。
+- **未證實：** 並行測試失敗的根本原因；不把循序成功誤寫成已修復並行相容性。
+- **未執行：** 此輪完整 Microsoft Edge E2E、HTTPS／CSP、登入防濫用及備份還原驗收。M9-C3 行動版／無障礙維持 Deferred / Not Verified。
+- **接續：** 完成六份文件增量更新、精確 Git 暫存／Commit／Push 後，進行剩餘安全檢查和 M10-B～D 發布準備。`v1.0.0` 尚未正式 Release。
+
+---
+
+<!-- /TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
 
 ## 2026-11-23｜M9-C3 風險接受與 M9-C4 文件收斂

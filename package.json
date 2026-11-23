@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "node --test",
+    "test": "node --test --test-concurrency=1",
     "start": "node server/server.js",
     "dev": "node --watch server/server.js",
     "db:init": "node server/init-db.js",

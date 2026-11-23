@@ -1,5 +1,23 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+## 最新產品化進度｜M10-A4 HTTP 安全標頭（2026-11-24）
+
+> 此節為 M10-A4 的本機驗收快照。以下更早里程碑段落保留為歷史紀錄；TaskFlow **v1.0.0 尚未發布**。
+
+- **後端變更：** 在 `server/server.js` 的 Express Middleware 新增 `X-Content-Type-Options: nosniff`、`X-Frame-Options: DENY`、`Referrer-Policy: strict-origin-when-cross-origin`；`/api` 與 `/api/*` 回應加上 `Cache-Control: no-store`。
+- **HTTP 實測：** 首頁回傳 200；未登入的 `/api/projects` 回傳 401，並確認 API 回應具有三項安全標頭及 `Cache-Control: no-store`。首頁沿用原本的靜態資產快取行為。
+- **測試：** 新增 `tests/security-headers.test.js`，專項 4/4 PASS；更新 `package.json` 的 `npm test` 為 `node --test --test-concurrency=1`，使用者本機完整 Node 回歸 331/331 PASS，fail／skipped／cancelled 均 0。
+- **限制：** 原本並行模式曾出現測試檔案層級失敗；循序執行可通過，但**尚未定位並行失敗根因**，不可宣稱已修復並行相容性問題。
+- **發布門檻：** CSP／Socket.IO 相容性、部署環境、HTTPS／HSTS、登入防濫用、備份與還原，以及 M9-C3 已暫緩的行動版／無障礙驗證仍未完成。此節不是 production-ready 宣告。
+- **Git 狀態：** 本節建立時尚未執行 M10-A4 Commit／Push；以後續實際 Git 輸出為準。
+
+---
+
+<!-- /TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
 
 ## 最新專案狀態｜M9-C3 暫緩驗收、M9-C4 文件收斂（2026-11-23）

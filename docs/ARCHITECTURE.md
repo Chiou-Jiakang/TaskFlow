@@ -1,5 +1,22 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+## M10-A4｜Express HTTP 安全標頭 Middleware（2026-11-24）
+
+> 在既有 TaskFlow Express 應用中增加回應標頭，不改動 Session、CSRF、RBAC、Socket.IO 或 SQLite 業務資料流。
+
+- **全站回應：** `X-Content-Type-Options: nosniff` 降低 MIME 嗅探；`X-Frame-Options: DENY` 拒絕被嵌入 frame；`Referrer-Policy: strict-origin-when-cross-origin` 限制跨來源 Referrer 資訊。
+- **API 回應：** 路徑為 `/api` 或以 `/api/` 開頭時設 `Cache-Control: no-store`，包含未登入的 401 與其他 API 狀態回應；首頁靜態資產快取策略不在本階段調整。
+- **元件位置：** 共用 Middleware 在 `server/server.js` 的 `createApp()` 中註冊；在路由處理前執行，不依賴外部安全標頭套件。
+- **測試方法：** `tests/security-headers.test.js` 使用 `createApp()` 建立臨時 HTTP 伺服器及隨機 Port，檢查回應標頭，不需初始化正式 SQLite。
+- **尚未覆蓋：** CSP（含 Socket.IO `connect-src`）、HTTPS／HSTS、正式部署代理設定、登入速率限制、完整威脅模型與公開服務的滲透測試。上述內容仍屬 M10 待辦，不應由這三項標頭推論整站已達正式部署安全要求。
+
+---
+
+<!-- /TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
 
 ## M9-C3 / M9-C4｜UI 支援邊界與發布風險（2026-11-23）

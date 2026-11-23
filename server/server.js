@@ -27,6 +27,22 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
 
   app.disable("x-powered-by");
 
+  // ========================================
+  // M10-A4: HTTP 安全標頭與 API 防快取
+  // ========================================
+  app.use((req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+
+    // 防止瀏覽器或共享快取儲存 API 回應（包含錯誤回應）。
+    if (req.path === "/api" || req.path.startsWith("/api/")) {
+      res.setHeader("Cache-Control", "no-store");
+    }
+
+    next();
+  });
+
   // 限制 JSON 請求大小
   app.use(express.json({ limit: "16kb" }));
 

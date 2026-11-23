@@ -1,5 +1,43 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+## M10-A4｜HTTP 安全標頭與 Node 回歸（2026-11-24）
+
+> 本節依 2026-11-23～24 使用者本機終端截圖記錄；下方歷史測試結果保留不更動。測試通過率不等於程式碼覆蓋率，也不是全面安全保證。
+
+| 測試或實測 | 結果 | 備註 |
+| --- | --- | --- |
+| `node --check server/server.js` | **PASS** | JS 語法通過 |
+| `node --test tests/security-headers.test.js` | **4/4 PASS** | 三個具體案例與外層測試；0 fail |
+| 首頁 `GET /` | **200** | 已見安全標頭；首頁不套用 API `no-store` 規則 |
+| 匿名 `GET /api/projects` | **401** | `nosniff`、`DENY`、Referrer-Policy、`Cache-Control: no-store` |
+| 原始並行 `npm test` | **328 total／327 pass／1 fail** | 安全標頭測試檔案層級失敗；尚未定位根因 |
+| `node --test --test-concurrency=1` | **331/331 PASS** | 0 fail、0 skipped、0 cancelled |
+| 更新後正式 `npm test` | **331/331 PASS** | 以 package.json 設定的循序方式執行 |
+| M10-A4 全部 Edge E2E | **Not Re-run** | 前一輪 M9-C2 Edge 110/110 屬歷史快照，不是本輪執行 |
+
+### 可重現指令（Windows PowerShell）
+
+```powershell
+node --check .\server\server.js
+node --test .\tests\security-headers.test.js
+npm test
+curl.exe -sS -D - -o NUL http://127.0.0.1:3000/
+curl.exe -sS -D - -o NUL http://127.0.0.1:3000/api/projects
+```
+
+### 尚未解除的驗證風險
+
+- 並行測試不穩定原因未定位；循序測試通過不證明可安全恢復平行執行。
+- CSP／Socket.IO 相容性、公開 HTTPS／HSTS、登入防濫用、備份／還原及正式部署未於 M10-A4 驗收。
+- M9-C3 響應式、鍵盤與無障礙仍標示 **Deferred / Not Verified**。
+
+---
+
+<!-- /TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
 
 ## 最新驗收快照｜M9-C3 / M9-C4（2026-11-23）

@@ -1,5 +1,38 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+## M10-A4｜安全標頭階段結案進度（2026-11-24）
+
+> 本區僅更新 M10-A4 目前確認的工程結果；下方舊表格是歷史狀態快照。
+
+| 項目 | 目前狀態 | 依據／後續 |
+| --- | --- | --- |
+| HTTP 基礎安全標頭 | **已驗證** | `nosniff`、`DENY`、`Referrer-Policy` 已於 HTTP 回應確認 |
+| API `Cache-Control: no-store` | **已驗證** | 未登入 API 401 與 API 防快取回應正常 |
+| 安全標頭專項測試 | **4/4 PASS** | `tests/security-headers.test.js` |
+| Node 回歸（循序） | **331/331 PASS** | `npm test` 已設 `--test-concurrency=1`；0 fail／skipped／cancelled |
+| 並行測試根因 | **Unresolved** | 並行執行曾有檔案層級失敗；改循序只是穩定化策略 |
+| M10-A4 文件與 Git | **待本次結案** | 六份增量文件、staged diff、Commit／Push、SHA 核對 |
+| M10 其他安全項目 | **Not Verified** | CSP／Socket.IO、HTTPS／HSTS、登入防濫用等 |
+| M10-B～D | **尚未結案** | 備份還原、部署驗收、`v1.0.0` Release |
+
+### M10-A4 結案檢核
+
+- [x] 本機 HTTP 標頭驗證通過。
+- [x] 安全標頭專項 4/4 PASS；循序 Node 331/331 PASS。
+- [x] `package.json` 以 `node --test --test-concurrency=1` 作為目前測試策略。
+- [ ] 六份文件完成增量更新，工具 `--verify` 與重跑 `--dry-run` 通過。
+- [ ] 精準暫存程式、測試、文件與結案腳本，排除暫存 TXT、SQLite／金鑰。
+- [ ] 審核 staged 差異，Commit／Push 並比對本機 HEAD 和遠端完整 SHA。
+
+> 本文件**不預先勾選**尚未實際發生的 Git 操作；也不宣稱已完成 M10 全部安全驗收或正式 Release。
+
+---
+
+<!-- /TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
 
 ## 最新里程碑狀態｜M9-C3 / M9-C4 條件式結案（2026-11-23）

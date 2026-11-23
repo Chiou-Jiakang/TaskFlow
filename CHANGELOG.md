@@ -8,6 +8,32 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+### M10-A4 — 2026-11-24｜HTTP Security Headers & Test Stability
+
+#### Added
+
+- `server/server.js`：新增 `X-Content-Type-Options: nosniff`、`X-Frame-Options: DENY`、`Referrer-Policy: strict-origin-when-cross-origin`。
+- `/api` 及其子路徑回應新增 `Cache-Control: no-store`，降低 API 回應被快取的風險。
+- `tests/security-headers.test.js`：驗證首頁基本標頭、健康檢查 API 防快取及未知 API 的 404／防快取；專項 **4/4 PASS**。
+
+#### Changed / Verified
+
+- `package.json` 的 `scripts.test` 改為 `node --test --test-concurrency=1`；本機 `npm test` **331/331 PASS**（0 fail／skipped／cancelled）。
+- HTTP 實測確認首頁 200、未登入 `/api/projects` 401；API 防快取與安全標頭生效。
+- 舊的並行執行曾出現測試檔層級失敗；目前採循序執行穩定化，**尚未證實或修正並行失敗根因**。
+
+#### Unreleased / Remaining
+
+- 尚未完成 CSP／Socket.IO 相容性、HTTPS／HSTS、登入防濫用、資料庫備份／復原與部署驗收；M9-C3 響應式／無障礙仍為 Deferred / Not Verified。
+- 本段新增時 M10-A4 Git Commit／Push 尚待進行，`v1.0.0` 尚未發布。
+
+---
+
+<!-- /TASKFLOW-M10A4-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M9C34-CLOSEOUT-2026-11-23 -->
 
 ### M9-C3 / M9-C4 — 2026-11-23｜Responsive Verification Deferred / Documentation Freeze
