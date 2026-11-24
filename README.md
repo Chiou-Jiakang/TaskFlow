@@ -1,5 +1,19 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+## 最新進度｜M10-A5b-2 本機認證安全驗收（2026-11-24）
+
+- Git 基準：M10-A5b-1 Commit `f272a51`。
+- 本機 HTTP 驗收：Health 200、匿名 Projects 401、跨來源註冊 403，合計 3/3 PASS。
+- 認證專項回歸：20/20 PASS，涵蓋 Cookie、CSRF、Session 撤銷與防濫用。
+- 手動登入：既有帳號嘗試回傳 401，尚未完成有效帳號端到端驗證。
+- 正式 HTTPS、Secure Cookie、HSTS、反向代理及完整 CSP 尚未完成部署驗收。
+- 此階段僅增加驗收紀錄，不改動產品程式碼或 SQLite。
+- TaskFlow v1.0.0 尚未正式發布。
+<!-- /TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
 
 ## 最新產品化進度｜M10-A5a 基礎 CSP 與瀏覽器權限政策（2026-11-24）

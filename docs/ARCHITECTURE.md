@@ -1,5 +1,19 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+## M10-A5b-2｜認證與 HTTP 安全架構驗收（2026-11-24）
+
+- Session Cookie 使用 `HttpOnly` 與 `SameSite=Strict`。
+- Cookie 的 Secure 屬性由 `NODE_ENV=production` 控制。
+- CSRF Token 由 Session Token 衍生，寫入操作需通過驗證。
+- `sameOriginOnly` 檢查請求來源；本機跨來源請求實測回傳 403。
+- 登入／註冊防濫用目前採單程序記憶體限制。
+- 正式部署仍須確認 `TASKFLOW_ORIGIN`、HTTPS、反向代理與可信任用戶端 IP。
+- 本次沒有修改 Express 路由、Socket.IO 或 SQLite Schema。
+<!-- /TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
 
 ## M10-A5a｜CSP 基線及 Permissions-Policy（2026-11-24）

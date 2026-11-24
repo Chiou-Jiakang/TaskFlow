@@ -8,6 +8,21 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+### M10-A5b-2｜Local Authentication Security Acceptance（2026-11-24）
+
+#### Verified
+- 本機 HTTP 安全驗收 3/3 PASS：200、401、403。
+- 認證安全專項自動化測試 20/20 PASS。
+- 確認 HttpOnly、SameSite、CSRF、Session 撤銷及登入防濫用的既定測試正常。
+
+#### Pending
+- 真實帳號手動登入驗收：本次登入回傳 401。
+- HTTPS、Secure Cookie、HSTS、代理部署及完整 CSP 驗收。
+
+本階段僅更新驗收文件，沒有變更產品功能。
+<!-- /TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+
 <!-- TASKFLOW-M10A5B1-2026-11-24 -->
 
 ### M10-A5b-1｜Authentication Abuse Protection & Session Lifecycle (2026-11-24)

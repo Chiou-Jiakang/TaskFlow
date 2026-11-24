@@ -1,5 +1,27 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+## M10-A5b-2｜本機 HTTP 與認證安全測試（2026-11-24）
+
+| 測試 | 實際結果 | 判定 |
+| --- | --- | --- |
+| GET /api/health | 200 | PASS |
+| 匿名 GET /api/projects | 401 | PASS |
+| 跨來源 POST /api/auth/register | 403 | PASS |
+| HTTP 安全標頭與 API no-store | 均出現在三次 HTTP 回應 | PASS |
+| auth-api、auth-abuse-api、auth-abuse-guard | 20/20，ExitCode 0 | PASS |
+| 既有帳號手動登入 | 401 | 未完成驗收 |
+| 正式 HTTPS／Secure Cookie／HSTS | 未執行 | NOT RUN |
+| 完整 CSP 與代理部署 | 未執行 | NOT RUN |
+
+三項 HTTP 測試及 20 項 Node 認證測試屬不同驗證範圍。
+本次沒有重新執行完整 Node、Edge E2E。
+20 項認證測試不可額外加至先前 350 項完整 Node 回歸。
+測試通過不代表程式碼覆蓋率或正式環境安全性 100%。
+<!-- /TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
 
 ## M10-A5a｜基礎 CSP／Permissions-Policy 自動化驗收（2026-11-24）
