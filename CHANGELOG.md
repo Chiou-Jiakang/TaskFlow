@@ -8,6 +8,21 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M10A5B1-2026-11-24 -->
+
+### M10-A5b-1｜Authentication Abuse Protection & Session Lifecycle (2026-11-24)
+
+#### Added
+- 新增 `server/auth-abuse-guard.js`：註冊 IP 限流、登入失敗與並行請求名額控管，以及記憶體上限。
+- 新增 `tests/auth-abuse-guard.test.js` 與 `tests/auth-abuse-api.test.js`：驗證限流邊界、並行保護及過期 Session 回收。
+- 新增啟動及按需 Session 清理機制，保留所有未過期 Session。
+
+#### Security / Compatibility
+- 維持原本 10 次失敗／15 分鐘的登入防護規則，成功登入仍清除失敗計數。
+- 不變更 Cookie、CSRF、現有 SQLite 表結構與 API 成功回應格式。
+- 正式多節點部署前仍需共享式限流與 HTTPS/反向代理驗收。
+
+
 <!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
 
 ### M10-A5a — 2026-11-24｜Baseline CSP & Browser Permissions Policy

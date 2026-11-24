@@ -947,3 +947,14 @@ git diff --check
 M7-D E2E 使用 `:memory:` SQLite、隨機 Loopback Port 與測試帳號，不讀寫正式 `data/taskflow.db`。以上為驗收範圍，不代表正式 HTTPS、效能、跨瀏覽器或完整安全審核已完成。M8～M10 及正式 GitHub Release 仍待後續進行。
 
 <!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+<!-- TASKFLOW-M10A5B1-2026-11-24 -->
+
+### M10-A5b-1｜Authentication 防濫用與 Session 清理
+
+- 註冊依用戶端 IP 限制：15 分鐘最多 10 次嘗試，超限回傳 HTTP 429。
+- 登入維持 15 分鐘最多 10 次失敗限制，並預留並行驗證名額，避免同步發起的登入請求繞過原本的失敗計數。
+- 啟動時清除過期 Session，後續有已驗證的 API 流量時，最多每小時檢查一次。
+- 沒有變更 SQLite Schema、Cookie 格式、CSRF 流程及正式任務 API。
+- 限制：本階段使用單一 Node.js 行程記憶體，重新啟動後限流會重置；正式多節點部署須改用共享限流儲存。
+- 驗收：`node --test tests/auth-abuse-guard.test.js tests/auth-abuse-api.test.js`、`npm test`、`node --test --test-concurrency=1 e2e/*.e2e.js`。

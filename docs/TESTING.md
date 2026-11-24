@@ -1246,3 +1246,15 @@ git diff --check
 - Git Commit／Push 並非自動執行，須核對 `git status -sb`、`HEAD`、`origin/main`。
 
 <!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+<!-- TASKFLOW-M10A5B1-2026-11-24 -->
+
+### M10-A5b-1｜驗收指令及涵蓋範圍
+
+1. `node --check server/auth-routes.js` 與 `node --check server/auth-abuse-guard.js`。
+2. `node --test tests/auth-abuse-guard.test.js tests/auth-abuse-api.test.js`：限流視窗、10 次失敗、並發保護、錯誤釋放、容量上限、HTTP 429、Session 啟動清理。
+3. `npm test`：驗證既有 Auth/Project/Task API 回歸。
+4. `node --test --test-concurrency=1 e2e/*.e2e.js`：Edge 瀏覽器多階段回歸（需本機 Edge）。
+5. `git diff --check`、`git status --short`。
+
+**注意：** 本文件只列測試方法，不預先聲稱測試已通過；以本機終端機最後的 pass/fail 實際紀錄為準。

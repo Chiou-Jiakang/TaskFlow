@@ -1031,3 +1031,13 @@ TaskFlow v1.0.0 **尚未正式發布**。整體工作量目前估計約完成 65
 M8 通知／留言及協作延伸、M9 統計／搜尋、M10 部署及安全壓力驗收，正式 v1.0.0 Release 另需審核。
 
 <!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+<!-- TASKFLOW-M10A5B1-2026-11-24 -->
+
+### M10-A5b-1｜Authentication Abuse Protection & Session Lifecycle
+
+**範圍：** 註冊限流、並發登入限制、過期 Session 定期機會式清理、單元與 API 整合回歸。
+
+**驗收條件：** 新增測試、原本 `npm test`、Edge E2E 均 PASS；無正式資料庫重建；六份文件完成更新；GitHub 同步。
+
+**剩餘工作：** 多行程／反向代理限流策略、HTTPS 與 Cookie 驗收、資料備份／還原演練、正式部署、v1.0.0 Release。

@@ -11,7 +11,9 @@ const {
 
 const COOKIE = "taskflow_session";
 const WEEK = 7 * 24 * 60 * 60 * 1000;
-const WINDOW = 15 * 60 * 1000;
+// TASKFLOW-M10A5B1-BEGIN
+const { createAbuseGuard, createSessionSweeper } = require("./auth-abuse-guard");
+// TASKFLOW-M10A5B1-END
 
 // 統一建立驗證錯誤
 function error(status, code, message) {
@@ -148,11 +150,14 @@ function createAuthContext(db) {
   const repo = createAuthRepository(db);
   const router = express.Router();
 
-  // 本機 MVP 的基本登入失敗計數
-  const failures = new Map();
+  const abuse = createAbuseGuard();
+  const sweepExpiredSessions = createSessionSweeper(() => repo.pruneExpiredSessions());
+  // 啟動時清除過期 Session；不修改未過期 Session。
+  sweepExpiredSessions(true);
 
   // 解析目前使用者 Session
   function session(req) {
+    sweepExpiredSessions();
     if (req.taskflowSession !== undefined) {
       return req.taskflowSession;
     }
@@ -213,6 +218,13 @@ function createAuthContext(db) {
   router.post("/register", jsonRequired, async (req, res) => {
     exactFields(req.body, ["email", "password", "displayName"]);
 
+    if (!abuse.allowRegistration(req.ip || req.socket.remoteAddress || "unknown")) {
+      return res.status(429).json({
+        error: "TOO_MANY_ATTEMPTS",
+        message: "註冊嘗試過多，請稍後再試。",
+      });
+    }
+
     const user = await repo.register(req.body);
 
     res.status(201).json({ user });
@@ -225,32 +237,24 @@ function createAuthContext(db) {
     exactFields(req.body, ["email", "password"]);
 
     const key = req.ip || req.socket.remoteAddress || "unknown";
-
-    const time = Date.now();
-    const previous = failures.get(key);
-
-    // 超過連續失敗次數，暫時限制登入
-    if (previous && previous.until > time && previous.count >= 10) {
+    const attempt = abuse.beginLogin(key);
+    if (!attempt) {
       return res.status(429).json({
         error: "TOO_MANY_ATTEMPTS",
         message: "登入嘗試過多，請稍後再試。",
       });
     }
 
-    // 清除已過期的失敗紀錄
-    if (previous && previous.until <= time) {
-      failures.delete(key);
+    let user;
+    try {
+      user = await repo.authenticate(req.body);
+    } catch (err) {
+      attempt.cancel();
+      throw err;
     }
 
-    const user = await repo.authenticate(req.body);
-
     if (!user) {
-      const latest = failures.get(key);
-
-      failures.set(key, {
-        count: (latest?.count ?? 0) + 1,
-        until: latest?.until ?? time + WINDOW,
-      });
+      attempt.failure();
 
       return res.status(401).json({
         error: "INVALID_CREDENTIALS",
@@ -259,7 +263,7 @@ function createAuthContext(db) {
     }
 
     // 成功登入後清除失敗計數
-    failures.delete(key);
+    attempt.success();
 
     // 避免沿用舊的 Session
     const oldToken = readCookie(req);

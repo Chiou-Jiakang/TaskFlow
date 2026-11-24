@@ -1170,3 +1170,14 @@ Drag & Drop（M6）、WebSocket（M7）、留言／通知（M8）、分析／搜
 - 不包含跨程序訊息中介、耐久事件佇列、正式反向代理與多節點 Socket.IO Adapter；這些仍待部署階段評估。
 
 <!-- /TASKFLOW-M7-CLOSEOUT-2026-11-19 -->
+
+<!-- TASKFLOW-M10A5B1-2026-11-24 -->
+
+### M10-A5b-1｜Auth Abuse Guard 與 Session Lifecycle
+
+- `server/auth-routes.js` 建立 per-app `createAbuseGuard()`。
+- Registration：IP 固定視窗（10 次／15 分鐘），在執行昂貴的 scrypt 前同步計數。
+- Login：原本失敗限制改為 `failure + inFlight` 的同步預留名額；成功後清除失敗，錯誤時釋放名額。
+- 記憶體限制：各策略最多 10,000 個 IP key，過期項目機會式清理，滿額時拒絕新來源。
+- Session：初始化及已驗證流量中每小時最多呼叫一次 `pruneExpiredSessions()`；不建立持續運作的 Timer。
+- Scope：單 Node 行程、本機 MVP；跨程序共用限流及代理部署設定保留後續階段。
