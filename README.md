@@ -1,5 +1,20 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
+## 最新進度｜M10-A5c 安全盤點與 M10-B 備份驗收
+
+- GitHub 基準：`a7d1a7ca6090b5396dd59c930cbe191df362c7ce`，本機與遠端 SHA 相同。
+- M10-A5c 本機安全設定盤點完成；目前為 localhost 開發部署。
+- 正式 HTTPS、HSTS、反向代理、完整 CSP 仍待驗證。
+- M10-B SQLite 備份及隔離還原測試：6/6 PASS，ExitCode 0。
+- 備份包含 7 張資料表，大小 86,016 bytes。
+- 備份位置：`%LOCALAPPDATA%\TaskFlow\Backups`，不納入 Git。
+- 尚未演練正式應用程式切換至還原資料庫。
+- TaskFlow v1.0.0 尚未正式發布。
+<!-- /TASKFLOW-M10A5C-M10B-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
 ## 最新進度｜M10-A5b-2 本機認證安全驗收（2026-11-24）
 

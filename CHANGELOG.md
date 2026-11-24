@@ -8,6 +8,25 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
+### M10-A5c / M10-B｜Deployment Preflight & SQLite Backup
+
+#### Verified
+- GitHub main 與本機 HEAD 完整 SHA 一致。
+- 完成本機 Cookie、Origin、CSP 及部署環境設定盤點。
+- SQLite 備份、完整性檢查、隔離還原及 SHA-256 核對：6/6 PASS。
+- 備份檔案位於專案資料夾之外。
+
+#### Pending
+- 公開 HTTPS、HSTS、可信代理及完整 CSP 驗收。
+- 正式應用程式災難復原演練。
+- 有效帳號的手動登入驗收。
+- GitHub v1.0.0 Release。
+
+本階段沒有修改產品程式碼或正式 SQLite Schema。
+<!-- /TASKFLOW-M10A5C-M10B-2026-11-24 -->
+
+
 <!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
 ### M10-A5b-2｜Local Authentication Security Acceptance（2026-11-24）
 

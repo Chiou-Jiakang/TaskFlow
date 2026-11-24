@@ -1,5 +1,31 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
+## M10-A5c / M10-B｜驗收紀錄（2026-11-24）
+
+| 測試 | 結果 |
+| --- | --- |
+| Local SHA = Remote SHA | PASS |
+| 部署設定與安全程式位置盤點 | 完成 |
+| 原始 SQLite 檢查 | PASS |
+| VACUUM INTO 備份建立 | PASS |
+| 備份資料庫檢查 | PASS |
+| 隔離還原 | PASS |
+| 還原資料驗證 | PASS |
+| SHA-256 一致性核對 | PASS |
+| 正式 HTTPS、HSTS、完整 CSP | NOT RUN |
+| 正式應用程式災難復原 | NOT RUN |
+
+M10-B：6/6 PASS，ExitCode 0。
+資料表：7；備份大小：86,016 bytes。
+SHA-256：
+`b04f0c429abddf9446203af7ff7b933c7aecbc9bd46c4c176edbb83154d06c9c`
+
+本次測試不等於完整災難復原或公開環境資安驗收。
+<!-- /TASKFLOW-M10A5C-M10B-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
 ## M10-A5b-2｜本機 HTTP 與認證安全測試（2026-11-24）
 

@@ -1,5 +1,21 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
+## M10-A5c / M10-B｜部署安全與資料備份架構
+
+- 開發環境監聽 `127.0.0.1:3000`。
+- `NODE_ENV` 與 `TASKFLOW_ORIGIN` 在本機盤點時均未設定。
+- Session Cookie 的 Secure 屬性依 `NODE_ENV` 決定。
+- 公開部署必須另外驗證 HTTPS、Origin、可信代理、IP 限流及 HSTS。
+- 目前僅有基礎 CSP，尚非完整資源來源政策。
+- SQLite 使用 WAL 模式；本次以 `VACUUM INTO` 建立資料庫一致性快照。
+- 備份儲存於 `%LOCALAPPDATA%\TaskFlow\Backups`。
+- 使用隔離檔案檢查 SQLite quick_check、foreign_key_check、資料表筆數及 SHA-256。
+- 尚未測試由備份完整恢復正式應用程式的操作程序。
+<!-- /TASKFLOW-M10A5C-M10B-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
 ## M10-A5b-2｜認證與 HTTP 安全架構驗收（2026-11-24）
 

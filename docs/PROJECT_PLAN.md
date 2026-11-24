@@ -1,5 +1,26 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
+## 最新發布計畫｜M10-A5c / M10-B
+
+| 項目 | 狀態 |
+| --- | --- |
+| M10-A5b-2 文件與 GitHub 同步 | 已確認，SHA 一致 |
+| M10-A5c 本機部署安全盤點 | 完成 |
+| 公開 HTTPS、HSTS 與可信代理 | Deferred / Not Verified |
+| 完整 CSP 相容性 | Deferred / Not Verified |
+| M10-B SQLite 備份 | PASS |
+| M10-B 隔離還原與完整性檢查 | PASS |
+| 正式應用程式災難復原 | Not Run |
+| 有效帳號手動登入 | 待驗證 |
+| v1.0.0 最終驗收與 Release | 待執行 |
+
+M9-C3 行動裝置及無障礙驗收仍保留 Deferred 狀態。
+不得將本機測試通過解讀為公開部署已通過安全審核。
+<!-- /TASKFLOW-M10A5C-M10B-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5B2-LOCAL-2026-11-24 -->
 ## M10-A5b-2｜目前進度與後續計畫（2026-11-24）
 
