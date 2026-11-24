@@ -1,5 +1,33 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-V100-RELEASE-2026-11-24 -->
+## M10-C / M10-D｜v1.0.0 最終驗收證據
+
+| 測試項目 | 實際結果 | 判定 |
+| --- | --- | --- |
+| Node.js tests | 350/350 | PASS |
+| Node.js fail / skipped / cancelled | 0 / 0 / 0 | PASS |
+| Node.js ExitCode | 0 | PASS |
+| Microsoft Edge E2E | 110/110 | PASS |
+| Edge fail / skipped / cancelled | 0 / 0 / 0 | PASS |
+| Edge ExitCode | 0 | PASS |
+| 有效帳號登入 | 成功 | PASS |
+| Dashboard | 成功 | PASS |
+| 登出 | 成功 | PASS |
+| SQLite 備份與隔離還原 | 6/6 | PASS |
+| 公開 HTTPS / HSTS / 完整 CSP | 未執行 | NOT VERIFIED |
+| 正式災難復原 | 未執行 | NOT VERIFIED |
+| 行動裝置與無障礙 | 暫緩 | DEFERRED |
+
+最終 Node.js 與 Edge 合計 460 項測試通過。
+350 與 110 分屬不同測試集合。
+
+測試通過數不等於程式碼覆蓋率。
+本結果不構成公開部署安全性或完整跨裝置相容性保證。
+<!-- /TASKFLOW-V100-RELEASE-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
 ## M10-A5c / M10-B｜驗收紀錄（2026-11-24）
 

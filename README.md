@@ -1,5 +1,39 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-V100-RELEASE-2026-11-24 -->
+## TaskFlow v1.0.0｜第一個穩定本機版本
+
+本版本完成多人專案管理平台的既定功能及發布前驗收。
+
+### 核心功能
+- 使用者註冊、登入、登出及 Session 驗證。
+- 專案建立、管理與多人角色權限控制。
+- 專案成員管理與任務 CRUD。
+- Kanban 看板與任務拖曳排序。
+- 任務搜尋、多條件篩選及 Dashboard。
+- Socket.IO 多人即時同步。
+- SQLite 資料持久化與備份。
+
+### 最終驗收
+- Node.js：350/350 PASS。
+- Microsoft Edge E2E：110/110 PASS。
+- 有效帳號手動登入、Dashboard、登出：全部成功。
+- SQLite 備份及隔離還原：6/6 PASS。
+- 驗收日期：2026-11-24。
+
+### 發布範圍
+此版本定位為 Stable Local Full-Stack Release。
+
+正式 HTTPS、HSTS、反向代理及完整 CSP 尚未完成公網驗收。
+行動裝置與無障礙驗收仍為 Deferred / Not Verified。
+尚未驗證異地備份及正式應用程式災難復原。
+
+正式發布狀態以 GitHub Releases 頁面為準。
+以下先前里程碑內容為當時的歷史紀錄。
+<!-- /TASKFLOW-V100-RELEASE-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
 ## 最新進度｜M10-A5c 安全盤點與 M10-B 備份驗收
 

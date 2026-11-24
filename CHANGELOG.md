@@ -4,9 +4,40 @@
 
 採累積式管理，保留重要歷史紀錄。
 
-本專案尚未發布正式 v1.0.0，現階段變更統一記錄於 Unreleased。
+本文件依版本整理變更；歷史里程碑保留當時的開發狀態。
 
 ## [Unreleased]
+
+尚無後續變更。
+
+## [1.0.0] - 2026-11-24
+
+<!-- TASKFLOW-V100-RELEASE-2026-11-24 -->
+### v1.0.0｜First Stable Local Full-Stack Release
+
+#### Features
+- 多人專案、成員管理及角色權限控制。
+- 任務 CRUD、Kanban 看板與拖曳排序。
+- 任務搜尋、多條件篩選及 Dashboard。
+- Socket.IO 即時協作。
+- Session 認證、CSRF 防護及既定防濫用機制。
+- SQLite 資料持久化與備份演練。
+
+#### Verified
+- Node.js 自動化測試：350/350 PASS。
+- Microsoft Edge E2E：110/110 PASS。
+- 有效帳號登入、Dashboard、登出：手動 PASS。
+- SQLite 備份與隔離還原：6/6 PASS。
+- 測試失敗、取消、跳過：均為 0。
+
+#### Known Limitations
+- 發布定位為本機版本，未經公開 HTTPS 部署驗收。
+- HSTS、反向代理、完整 CSP 尚待驗證。
+- 行動裝置及無障礙驗收維持 Deferred。
+- 尚未完成異地備份及完整災難復原演練。
+
+先前 M0 至 M10 子階段紀錄保留原始時間點與歷史狀態。
+<!-- /TASKFLOW-V100-RELEASE-2026-11-24 -->
 
 <!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
 ### M10-A5c / M10-B｜Deployment Preflight & SQLite Backup

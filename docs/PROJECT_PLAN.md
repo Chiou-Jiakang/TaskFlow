@@ -1,5 +1,28 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-V100-RELEASE-2026-11-24 -->
+## v1.0.0｜最終發布狀態與後續方向
+
+| 項目 | 驗收狀態 |
+| --- | --- |
+| M0～M9 既定核心功能 | 完成 |
+| M10-A 本機安全驗收 | 完成既定項目 |
+| M10-B SQLite 備份及隔離還原 | 6/6 PASS |
+| M10-C Node.js 回歸 | 350/350 PASS |
+| M10-C Edge E2E | 110/110 PASS |
+| M10-D 登入、Dashboard、登出 | PASS |
+| v1.0.0 Package Version | 1.0.0 |
+| 公開 HTTPS、HSTS、完整 CSP | Not Verified |
+| 正式災難復原與異地備份 | Not Verified |
+| M9-C3 行動裝置及無障礙 | Deferred |
+| 正式 GitHub Release | 以 Releases 頁面為準 |
+
+本機穩定版驗收完成後進入版本發布。
+後續公開部署及非核心相容性改善可另行安排。
+<!-- /TASKFLOW-V100-RELEASE-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
 ## 最新發布計畫｜M10-A5c / M10-B
 

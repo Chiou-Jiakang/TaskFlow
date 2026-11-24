@@ -1,5 +1,35 @@
 # TaskFlow｜開發歷程紀錄
 
+<!-- TASKFLOW-V100-RELEASE-2026-11-24 -->
+## M10-C / M10-D｜v1.0.0 發布前最終驗收
+
+### 自動化回歸
+1. 執行完整 Node.js 測試。
+2. Node.js：350 tests，350 pass，0 fail。
+3. 執行完整 Microsoft Edge E2E 測試。
+4. Edge：110 tests，110 pass，0 fail。
+5. 兩組測試 ExitCode 均為 0。
+
+### 手動驗收
+1. 以有效帳號成功登入。
+2. 成功進入 Dashboard。
+3. 正常執行登出。
+4. 以上項目均由使用者回報 PASS。
+
+### 資料保護
+- SQLite 備份及隔離還原 6/6 PASS。
+- 7 張資料表；備份大小 86,016 bytes。
+- 正式資料庫未被覆蓋或重新初始化。
+
+### 發布判定
+- 核心本機功能驗收完成。
+- v1.0.0 定位為 Stable Local Full-Stack Release。
+- 公網部署安全、完整災難復原與 M9-C3 保留事項未宣稱通過。
+- Git Tag 與 Release 須以實際 GitHub 發布結果確認。
+<!-- /TASKFLOW-V100-RELEASE-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
 ## M10-A5c / M10-B｜安全盤點與備份開發紀錄
 

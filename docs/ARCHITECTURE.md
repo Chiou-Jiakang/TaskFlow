@@ -1,5 +1,27 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-V100-RELEASE-2026-11-24 -->
+## v1.0.0｜穩定本機版本架構基準
+
+- Frontend：既有網頁介面與 JavaScript。
+- Backend：Node.js、Express REST API。
+- Realtime：Socket.IO 多人即時同步。
+- Database：SQLite，採 WAL 模式。
+- Authentication：Session Cookie、CSRF 與角色權限控制。
+- Local Runtime：既定 localhost 模式。
+- Tested Runtime：Node.js v24.15.0。
+- Backup：SQLite VACUUM INTO 建立一致性備份。
+
+架構及既定測試已通過本機驗收。
+正式公開部署仍須另外驗證 HTTPS、HSTS、可信代理、
+完整 CSP、持久化限流與相關安全設定。
+
+備份驗證涵蓋隔離開啟、完整性、資料表筆數與 SHA-256。
+不等同已完成正式應用程式災難復原。
+<!-- /TASKFLOW-V100-RELEASE-2026-11-24 -->
+
+---
+
 <!-- TASKFLOW-M10A5C-M10B-2026-11-24 -->
 ## M10-A5c / M10-B｜部署安全與資料備份架構
 
