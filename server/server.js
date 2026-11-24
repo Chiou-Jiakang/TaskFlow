@@ -34,6 +34,12 @@ function createApp({ database = null, getAuthenticatedUserId = null } = {}) {
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("X-Frame-Options", "DENY");
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    // TASKFLOW-M10A5A-HEADERS-BEGIN
+    // 只限制不影響現有外部 JS/CSS 與 Socket.IO 的 CSP 指令。
+    // script-src / connect-src 將在相容性驗收後獨立強化。
+    res.setHeader("Content-Security-Policy", "base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    // TASKFLOW-M10A5A-HEADERS-END
 
     // 防止瀏覽器或共享快取儲存 API 回應（包含錯誤回應）。
     if (req.path === "/api" || req.path.startsWith("/api/")) {

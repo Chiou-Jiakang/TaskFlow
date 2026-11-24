@@ -1,5 +1,23 @@
 # TaskFlow｜系統架構說明
 
+<!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+## M10-A5a｜CSP 基線及 Permissions-Policy（2026-11-24）
+
+> 本階段僅擴充共用 Express 回應 Middleware，沒有修改應用授權流程、資料庫或前端任務狀態資料流。
+
+- **位置：** `server/server.js` 的 `createApp()` 共用 Middleware；沿用 M10-A4 的 `nosniff`、`X-Frame-Options: DENY`、`Referrer-Policy` 及 `/api` `Cache-Control: no-store`。
+- **CSP 基線：** `base-uri 'self'` 限制 Base URL；`object-src 'none'` 禁止 Object 類型載入；`frame-ancestors 'none'` 限制嵌入；`form-action 'self'` 約束表單提交。`frame-ancestors` 在 HTTP 回應中設定，不以 HTML meta 取代。
+- **Permissions-Policy：** `camera=(), microphone=(), geolocation=()`，不對未使用的敏感瀏覽器能力授權。
+- **相容界線：** 尚未定義 `default-src`、`script-src`、`style-src`、`connect-src` 等完整資源來源政策，故不會因本節新增而封鎖既有頁面腳本、樣式或 Socket.IO 連線；其餘來源政策需另案分析並在正式部署環境驗證。
+- **驗收方式：** `tests/security-policy.test.js` 以隔離 HTTP 應用檢查安全標頭及 API 行為；完整 Node 336/336、Microsoft Edge E2E 110/110 PASS 代表既定路徑正常，不能替代正式 CSP report-only／違規監測或 TLS 測試。
+- **後續安全階段：** 登入防濫用、Session／Cookie、HTTPS／HSTS、可信代理、秘密管理和完整 CSP 相容性檢查仍為發版門檻。
+
+---
+
+<!-- /TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
 
 ## M10-A4｜Express HTTP 安全標頭 Middleware（2026-11-24）

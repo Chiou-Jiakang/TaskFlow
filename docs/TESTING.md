@@ -1,5 +1,40 @@
 # TaskFlow｜測試與驗證紀錄
 
+<!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+## M10-A5a｜基礎 CSP／Permissions-Policy 自動化驗收（2026-11-24）
+
+> 依使用者本機 PowerShell 截圖記錄，並保留過往歷史結果；測試通過數量不是程式碼覆蓋率，也不能取代正式安全稽核。
+
+| 範圍 | 實際結果 | 證據／限制 |
+| --- | --- | --- |
+| `node --check scripts/apply-m10a5a.js` | **PASS** | 無語法錯誤輸出 |
+| `scripts/apply-m10a5a.js --apply/--verify/--dry-run` | **PASS** | 只修改 `server/server.js`、保留備份、再次執行跳過 |
+| `node --check server/server.js` | **PASS** | 增量更新後可正常解析 |
+| `node --test tests/security-policy.test.js` | **5/5 PASS** | 首頁 CSP／Permissions、Health 200／no-store、未知 API 404／政策、本機 HSTS 行為 |
+| `npm test` | **336/336 PASS** | fail 0／cancelled 0／skipped 0 |
+| 全體 Edge E2E | **110/110 PASS** | 以 `node --test --test-concurrency=1` 依序執行所有 `*.e2e.js` |
+| 公網 TLS／HSTS、全面 CSP 驗證 | **NOT RUN** | 當前僅基礎 CSP，尚未設定完整來源限制 |
+| M9-C3 手機／鍵盤／無障礙 | **Deferred / Not Verified** | 延續已知保留事項 |
+
+### 重現指令
+
+```powershell
+node --test .\tests\security-policy.test.js
+npm test
+$e2eFiles = @(Get-ChildItem .\e2e -Filter "*.e2e.js" -File | Sort-Object Name | ForEach-Object { $_.FullName })
+node --test --test-concurrency=1 $e2eFiles
+```
+
+- 5/5 Node 專項**包含在** 336/336 完整 Node 中，不能重複算成 341；Node 336 與 Edge 110 為兩組測試計數。
+- 全部 Edge 綠燈表示既定瀏覽器互動測試通過，並未直接證明所有 CSP 資源違規、正式 HTTPS、Session 生產環境、滲透測試或可用性符合標準。
+- M10-A5a 文件工具相關測試需完成後補充本節以外的執行證據，不預先宣告已通過或 Git Push 已完成。
+
+---
+
+<!-- /TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
 
 ## M10-A4｜HTTP 安全標頭與 Node 回歸（2026-11-24）

@@ -1,5 +1,23 @@
 # TaskFlow｜多人專案管理平台
 
+<!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+## 最新產品化進度｜M10-A5a 基礎 CSP 與瀏覽器權限政策（2026-11-24）
+
+> 此節記錄 M10-A5a 的本機驗收快照。以下舊章節為當時的歷史紀錄；TaskFlow **v1.0.0 尚未發布**。
+
+- **Git 基準：** M10-A4 已於 Commit `712b432` Push 至 `origin/main`，本機與 GitHub 完整 SHA 核對相同。
+- **本次實作：** `server/server.js` 加入 `Content-Security-Policy`（僅 `base-uri 'self'`、`object-src 'none'`、`frame-ancestors 'none'`、`form-action 'self'`）與 `Permissions-Policy`（`camera=(), microphone=(), geolocation=()`）。保留 M10-A4 安全標頭及 API `no-store`。
+- **相容性策略：** 目前沒有強制設定 `script-src`、`style-src`、`connect-src` 或 HSTS；不能將這套 CSP 基線寫成完整 CSP 及 HTTPS 安全驗收。既有 Session、CSRF、RBAC、Socket.IO、REST、SQLite 未因本次修改變更。
+- **驗收（使用者本機終端截圖）：** `node --test tests/security-policy.test.js` **5/5 PASS**；`npm test` **336/336 PASS**；所有 `e2e/*.e2e.js` 依序執行 **110/110 PASS**，各組均 0 fail／skipped／cancelled。專項 Node 5 項已計入完整 Node 336 項，不重複加總。
+- **界線：** 自動化 Edge 回歸通過表示既定情境沒有觀察到功能回歸，不代表已涵蓋所有 CSP 違規、公開 HTTPS、登入防暴力破解、滲透測試或手機／無障礙驗收。
+- **Git 狀態：** M10-A5a 此節建立時尚未 Commit／Push；須另行精準暫存，並比對本機及遠端 SHA。
+
+---
+
+<!-- /TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
 
 ## 最新產品化進度｜M10-A4 HTTP 安全標頭（2026-11-24）

@@ -1,5 +1,38 @@
 # TaskFlow｜專案開發計畫
 
+<!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+## M10-A5a｜安全政策子階段驗收與發布待辦（2026-11-24）
+
+> 以下為最新階段快照；下方歷史區塊的「尚未開始」和「待 Git」僅表示當時狀態。`v1.0.0` 尚未發布。
+
+| 工作項目 | 當前狀態 | 依據／限制 |
+| --- | --- | --- |
+| M10-A4 HTTP 基礎安全標頭 | **GitHub 已結案** | Commit `712b432`、本機與遠端 SHA 相同 |
+| M10-A5a CSP 基礎四指令 | **實作及既定測試通過** | `base-uri`、`object-src`、`frame-ancestors`、`form-action` |
+| M10-A5a Permissions-Policy | **實作及既定測試通過** | camera／microphone／geolocation 停用 |
+| M10-A5a Node 專項 | **5/5 PASS** | `tests/security-policy.test.js`，包含於完整 Node 測試 |
+| 完整 Node 回歸 | **336/336 PASS** | `npm test`；0 fail／skipped／cancelled |
+| 完整 Edge E2E | **110/110 PASS** | 所有 `e2e/*.e2e.js` 依序執行 |
+| M10-A5a 六份文件及 Git | **結案中** | 增量工具、精準 staging、Commit／Push、遠端 SHA 核對 |
+| M10-A5b／A5c | **尚未驗證** | 登入／Session、完整 CSP、HTTPS／HSTS、正式代理環境 |
+| M10-B～Release | **尚未完成** | 備份、還原、部署及 v1.0.0 Release |
+
+### M10-A5a 結案檢核
+
+- [x] 安全基線增量套用、`--verify`、冪等 `--dry-run` 通過。
+- [x] Node 安全專項 5/5、完整 Node 336/336、全體 Edge E2E 110/110 PASS。
+- [ ] 六份文件增量紀錄及工具測試通過。
+- [ ] 精準 Git 暫存、`git diff --cached --check` 與差異審查。
+- [ ] Commit／Push 成功，`HEAD` 與 `origin/main` 完整 SHA 一致。
+
+> 未驗證項目不可勾選通過；不得將此階段寫成完整 CSP 或正式環境安全結案。
+
+---
+
+<!-- /TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
 
 ## M10-A4｜安全標頭階段結案進度（2026-11-24）

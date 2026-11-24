@@ -8,6 +8,31 @@
 
 ## [Unreleased]
 
+<!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+### M10-A5a — 2026-11-24｜Baseline CSP & Browser Permissions Policy
+
+#### Added
+
+- `server/server.js`：新增有限範圍 `Content-Security-Policy`，含 `base-uri 'self'`、`object-src 'none'`、`frame-ancestors 'none'`、`form-action 'self'`。
+- 加入 `Permissions-Policy: camera=(), microphone=(), geolocation=()`，限制非必要瀏覽器功能。
+- 加入 `scripts/apply-m10a5a.js` 及 `tests/security-policy.test.js`；新增 M10-A5a 文件增量工具與文件工具測試。
+
+#### Verified
+
+- CSP／Permissions-Policy 專項 **5/5 PASS**、`npm test` **336/336 PASS**、全套 Edge E2E **110/110 PASS**；皆未出現 fail／cancelled／skipped。專項 Node 測試已包含在 336 項之中。
+- 更新工具 `--verify` 與重複 `--dry-run` 可辨識 M10-A5a 標頭已存在，未重複修改產品程式碼。
+
+#### Remaining / Unreleased
+
+- 未實施完整 `script-src`、`style-src`、`connect-src` 限制；公開 HTTPS／HSTS、登入防濫用及 Session 正式環境驗證、SQLite 備份還原和部署／Release 尚待後續階段。
+- 既有 M9-C3 行動版／無障礙驗收維持 Deferred / Not Verified。此段新增時尚未 M10-A5a Git Commit／Push；`v1.0.0` 尚未發布。
+
+---
+
+<!-- /TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
 
 ### M10-A4 — 2026-11-24｜HTTP Security Headers & Test Stability

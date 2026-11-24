@@ -1,5 +1,28 @@
 # TaskFlow｜開發歷程紀錄
 
+<!-- TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+## M10-A5a｜基礎 CSP／Permissions-Policy 開發及驗收（2026-11-24）
+
+### 本次實作
+
+1. 承接已 GitHub 結案的 M10-A4 Commit `712b432`；下載並解壓 `TaskFlow-M10A5a-Security-Policy-Kit`，兩個必要 JS 檔案的 `Test-Path` 均為 True。
+2. `scripts/apply-m10a5a.js` 通過 `node --check`，`--dry-run` 顯示僅更新 `server/server.js`。執行 `--apply` 後備份原檔，再以 `--verify` 核對完整標記並確認重複 `--dry-run` 不再寫入。
+3. 新增 CSP 四個基礎指令與 Permissions-Policy 三項停用權限；未改動 Task REST Payload、Socket.IO、Session／CSRF、SQLite Schema 或 Git 既有歷史。
+4. 使用者本機執行 `node --test tests/security-policy.test.js` 5/5 PASS、`npm test` 336/336 PASS，隨後全體 Edge E2E 110/110 PASS；fail、skipped、cancelled 均 0。
+
+### 工程結論及限制
+
+- **已驗證：** 基礎政策標頭及目前既定的 Node／Edge 回歸情境。
+- **未驗證：** 完整 CSP 來源限制、正式 HTTPS／HSTS、反暴力破解／代理部署、秘密管理與資料庫備份還原。Edge E2E 不等於全面 CSP 安全稽核。
+- **文件／Git：** 本節建立時尚未執行 M10-A5a Commit／Push；須精準暫存本次程式、測試、六份文件與文件工具，再檢查 SHA。
+- **產品化後續：** M10-A5b 身分與 Session 防護、M10-A5c 部署安全前置檢查，接著 M10-B 備份復原與正式 Release Gate。M9-C3 手機／無障礙維持 Deferred / Not Verified。
+
+---
+
+<!-- /TASKFLOW-M10A5A-DOCS-2026-11-24 -->
+
+
 <!-- TASKFLOW-M10A4-DOCS-2026-11-24 -->
 
 ## M10-A4｜HTTP 安全標頭與測試環境穩定化（2026-11-24）
